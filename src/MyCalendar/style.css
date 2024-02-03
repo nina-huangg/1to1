@@ -1,0 +1,89 @@
+body {
+    background: #F4F3ED;
+    font-family: 'Aleo';
+    color: #444242;
+    font-size: 14px;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 80px;
+}
+
+.split-layout {
+    display: flex;
+}
+
+.confirmed-meetings {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.meeting-entry {
+    display: flex;
+    align-items: center;
+}
+
+.page-container {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.meeting-details {
+    flex: 1;
+    padding: 6px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.meeting-box {
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    min-width: 60px;
+    padding: 10px;
+    color: #000000;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.meeting-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    background-color: #55db34;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+
+
+.attendees, .meeting-time {
+    background-color: #edd786;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.calendar {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    border-left: 1px solid #ddd;
+}
+
+.pink {
+    background-color: #FBB5A5;
+}
+
+.orange {
+    background-color: #F27458;
+}
+
+.blue {
+    background-color: #6EB3AF;
+}
