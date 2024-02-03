@@ -7,8 +7,10 @@ module.exports = {
       colors: {
         'background-color': '#F4F3ED',
         'logo-color': "#005A5B",
-        'dark-green': '#005A5B',
+        'primary-blue': '#52B7B1',
+        'primary-blue-hover': "#2B928B",
         'orange': '#EE6A4C',
+        'orange-hover': '#DD4522'
 
     },
     fontFamily: {
