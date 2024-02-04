@@ -3,8 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="../output.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
+      </style>
+    <title>Sign up Page</title>
 </head>
-<body>
+<!-- component -->
+<body class="bg-background-color">
+    <header class="h-60px">
+        <div class="flex flex-row items-center justify-between">
+            <a class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white" href="../LandingPage/index.html">
+                1 ON 1
+            </a>
+            <div class="align-right border-black">
+            <a class="w-30 h-9 px-8 py-2 mx-5 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white" href="login.html">
+            Log In
+            </a>
+            <a class="w-30 h-9 px-8 py-2 mx-10 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 border-solid border-0
+            border-gray-500 bg-orange hover:bg-orange-hover text-white" href="signup.html" href="signup.html">
+                Sign up
+        </a>
+            </div>
+        </div>
+    </header>
+    <main class="w-screen flex flex-col justify-center">
+            <p class="text-3xl mt-20 font-bold text-center mb-6">Create an 1on1 account</p>
+            <div class="flex flex-col justify-center items-center">
+                <form class="shadow-xl border-solid border-2 border-gray-200 rounded px-8 pt-6 pb-8 w-full max-w-sm">
+                    <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
+                        Your Name:
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="John Smith">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                        Your Email:
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="johnsmith@gmail.com">
+                </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                          Your Password:
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="*******">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="re-password">
+                            Please re-enter your password:
+                        </label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="re-password" type="password" placeholder="*******">
+                    </div>
+                    <div class="text-center mb-6">
+                        <button class="w-30 h-10 px-8 py-2 mx-10 my-1 text-l shadow-gray-400 rounded-full text-center shadow-lg bg-orange text-white hover:bg-orange-hover">
+                        Sign up
+                        </button>
+                    </div>
+                </form>
+            
+        </div>
+            
+        </div>
+        
+    </main>
 </body>
+
 </html>
