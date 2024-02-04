@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="../output.css" rel="stylesheet" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
+  </style>
+  <title>Create Meeting</title>
+</head>
+<!-- component -->
+
+<body class="bg-background-color">
+  <header class="h-60px">
+    <div class="flex flex-row items-center justify-between">
+      <a class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white"
+        href="../LandingPage/index.html">
+        1 ON 1
+      </a>
+      <div class="align-right border-black">
+        <a class="w-30 h-9 px-8 py-2 mx-5 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
+          href="login.html">
+          Log In
+        </a>
+        <a class="w-30 h-9 px-8 py-2 mx-10 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white"
+          href="signup.html" href="signup.html">
+          Sign up
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-screen flex flex-col justify-center">
+
+
+    <body>
+
+      <div class="rounded bg-gray-300 p-8 m-8">
+        <p class="text-3xl font-bold text-center p-0 m-0 mb-6">Highlight Available Times</p>
+
+        <div class="flex flex-row items-center justify-between m-8">
+          <div class="align-left">
+            <label class="inline-flex items-center">
+              <input type="radio" name="scheduleOption" class="form-radio" checked>
+              <span class="ml-2">Low Preference</span>
+            </label>
+
+            <label class="inline-flex items-center ml-4">
+              <input type="radio" name="scheduleOption" class="form-radio">
+              <span class="ml-2">Medium Preference</span>
+            </label>
+
+            <label class="inline-flex items-center ml-4">
+              <input type="radio" name="scheduleOption" class="form-radio">
+              <span class="ml-2">High Preference</span>
+            </label>
+          </div>
+
+          <div class="align-right">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded">Cancel</button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded ml-4">Confirm</button>
+          </div>
+        </div>
+
+        <!-- Start of Schedule -->
+        <div class="grid grid-cols-8 gap-0 ml-8 mr-8">
+          <!-- Time column -->
+          <div class="bg-gray-400 p-1 col-span-1">Time</div>
+
+          <!-- Days of the week -->
+          <div class="bg-gray-400 p-1">Sunday</div>
+          <div class="bg-gray-400 p-1">Monday</div>
+          <div class="bg-gray-400 p-1">Tuesday</div>
+          <div class="bg-gray-400 p-1">Wednesday</div>
+          <div class="bg-gray-400 p-1">Thursday</div>
+          <div class="bg-gray-400 p-1">Friday</div>
+          <div class="bg-gray-400 p-1">Saturday</div>
+
+          <!-- Time slots -->
+          <script>
+            for (let hour = 8; hour <= 17; hour++) {
+              // Time slot for each hour
+              document.write(`<div class="bg-gray-200 p-1">${hour}:00</div>`);
+              document.write(`<div class="bg-white border p-1 col-span-1"></div>`);
+              document.write(`<div class="bg-gray-200 border p12 col-span-1"></div>`);
+              document.write(`<div class="bg-white border p-1 col-span-1"></div>`);
+              document.write(`<div class="bg-gray-200 border p-1 col-span-1"></div>`);
+              document.write(`<div class="bg-white border p-1 col-span-1"></div>`);
+              document.write(`<div class="bg-gray-200 border p-1 col-span-1"></div>`);
+              document.write(`<div class="bg-white border p-1 col-span-1"></div>`);
+
+              // 30-minute blocks for each hour
+              for (let min = 30; min < 60; min += 30) {
+                document.write(`<div class="bg-white border p-1 col-span-1">${hour}:${min < 10 ? '0' : ''}${min}</div>`);
+                document.write(`<div class="bg-gray-200 border p-1 col-span-1"></div>`);
+                document.write(`<div class="bg-white border p-1 col-span-1"></div>`);
+                document.write(`<div class="bg-gray-200 border p-1 col-span-1"></div>`);
+                document.write(`<div class="bg-white border p-1 col-span-1"></div>`);
+                document.write(`<div class="bg-gray-200 border p-1 col-span-1"></div>`);
+                document.write(`<div class="bg-white border p-1 col-span-1"></div>`);
+                document.write(`<div class="bg-gray-200 border p-1 col-span-1"></div>`);
+              }
+            }
+          </script>
+        </div>
+    </body>
+
+  </main>
+
+</html>
