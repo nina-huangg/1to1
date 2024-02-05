@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="./style.css" rel="stylesheet">
+    <link href="../output.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
+    </style>
+    <title>Book Meeting Page</title>
+</head>
+
+<body class="text-gray-700 bg-background-color h-full">
+
+    <div class="page-container max-h-full overflow-hidden">
+
+        <header class="h-60px mb-5">
+            <div class="flex flex-row items-center justify-between">
+              <a class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white"
+                href="../LandingPage/index.html">
+                1 ON 1
+              </a>
+              <div class="align-right border-black">
+                <a class="w-30 h-9 px-8 py-2 mx-5 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
+                  href="./index.html">
+                  Book Meeting
+                </a>
+            
+                <a class="w-30 h-9 px-8 py-2 mx-5 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
+                    href="../Login/login.html">
+                    Contact
+                </a>
+                <a class="w-30 h-9 px-8 py-2 mx-10 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white"
+                  href="" href="">
+                  Profile
+                </a>
+              </div>
+            </div>
+          </header>
+
+
+
+        <h1 class="text-3xl mt-19 font-bold text-center mb-8">Book Meeting</h1>
+
+        <main class="grid grid-cols-2">
+            <!-- LEFT COLUMN -->
+            <div class="left-column ml-19 mt-5" style="max-height:500px; overflow-y:auto;">
+
+                <script src="display-confirmed-meetings.js"></script>
+                <script>
+                    // Call the addMeetingEntry function with predefined values
+                    addMeetingEntry('Jan 10', 'Meeting 1', '4:00 PM - 5:00 PM', 'Link 1', '10 people');
+                    addMeetingEntry('', 'Meeting 2', '2:00 PM - 3:00 PM', 'Link 2', '8 people');
+                    addMeetingEntry('Jan 12', 'Meeting 3', '1:00 PM - 2:00 PM', 'Link 4', '12 people');
+                    addMeetingEntry('', 'Meeting 4', '1:00 PM - 2:00 PM', 'Link 4', '12 people');
+                    addMeetingEntry('', 'Meeting 5', '1:00 PM - 2:00 PM', 'Link 5', '11 people');
+                    addMeetingEntry('Jan 13', 'Meeting 6', '5:00 PM - 6:00 PM', 'Link 6', '5 people');
+                    addMeetingEntry('', 'Meeting 7', '3:00 PM - 4:00 PM', 'Link 7', '2 people');
+                </script>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="right-column mr-19" style="max-height: 600px">
+                <div class="grid grid-cols-6 gap-2 mx-10 h-full rounded-lg">
+                    <div class="pb-60 col-start-1 col-span-4">
+
+                        <!-- Buttons in a div -->
+                        <div class="flex mt-4 justify-center">
+                            <button class="bg-logo-color hover:bg-green-700 text-white px-4 py-2 rounded-l">Month</button>
+                            <button class="bg-orange hover:bg-orange-300 text-white px-4 py-2 rounded-r">Year</button>
+                        </div>
+
+                        <h1 class="text-xl mt-7 font-bold text-center">January 2024</h1>
+
+                        <div class="calendar-container mx-11 mt-2 mb-10"></div>
+
+                        <div class="flex mt-4 justify-center">
+                            <button class="bg-logo-color hover:bg-green-700 text-white px-4 py-2 rounded-lg">Create A Meeting</button>
+                        </div>
+
+                        <div class="flex mt-4 justify-center">
+                            <button <button id="bookMeetingBtn" class="bg-logo-color hover:bg-green-700 text-white px-5 py-2 rounded-lg">Book A Meeting </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <script src="create-calendar.js"></script>
+                <script>
+                    // Call the createCalendar function with the desired year and month
+                    document.addEventListener('DOMContentLoaded', function () {
+                        createCalendar(2024, 1);
+                    });
+                </script>
+                <script>
+                    document.getElementById('bookMeetingBtn').addEventListener('click', function() {
+                        // Redirect to the specified link when the button is clicked
+                        window.location.href = '../Login/login.html';
+                    });
+                </script>
+            </div>
+
+        </div>
+
+        </main>
+    </div>
+</body>
+
+</html>
