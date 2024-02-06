@@ -16,11 +16,11 @@ function addMeetingEntry(date, meetingName, meetingTime, meetingLink, attendees)
 
     // Create a new meeting entry HTML structure
     const newMeetingEntry = `
-        <div class="meeting-entry grid grid-cols-8 gap-2 mb-4 ml-10">
-            <div class="date col-start-2 col-span-1">
-                <p class="font-bold">${date}</p>
-            </div>
-            <div class="meeting-details col-span-6 flex">
+        <div class="meeting-entry grid grid-cols-8 gap-2 mb-4 ml-10 flex flex-wrap">
+            <div class="meeting-details col-span-6">
+                <div class="date col-start-2 col-span-1 ">
+                    <p class="font-bold">${date}</p>
+                </div>
                 <div class="meeting-box grid flex text-sm shadow-xl rounded-md w-4/4" style="background-color: ${randomColor};">
                     <div class="info-right-col ml-4 m-2 pr-14">
                         <p class="meeting-name">${meetingName}</p>

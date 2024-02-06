@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="./style.css" rel="stylesheet">
     <link href="../output.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
@@ -18,7 +17,7 @@
     <div class="page-container max-h-full overflow-hidden">
 
         <header class="h-60px mb-5">
-            <div class="flex flex-row items-center justify-between">
+            <div class="flex flex-row items-center justify-between flex-auto">
               <a class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white"
                 href="../LandingPage/index.html">
                 1 ON 1
@@ -45,9 +44,9 @@
 
         <h1 class="text-3xl mt-19 font-bold text-center mb-8">Book Meeting</h1>
 
-        <main class="grid grid-cols-2">
+        <main class="justify-center grid grid-cols-2  flex flex-wrap">
             <!-- LEFT COLUMN -->
-            <div class="left-column ml-19 mt-5" style="max-height:500px; overflow-y:auto;">
+            <div class="left-column pr-5 mr-17 mt-5" style="max-height:500px; overflow-y:auto">
 
                 <script src="display-confirmed-meetings.js"></script>
                 <script>
@@ -64,7 +63,7 @@
 
             <!-- RIGHT COLUMN -->
             <div class="right-column mr-19" style="max-height: 600px">
-                <div class="grid grid-cols-6 gap-2 mx-10 h-full rounded-lg">
+                <div class="grid grid-cols-6 gap-2 mx-10 h-full rounded-lg flex flex-wrap">
                     <div class="pb-60 col-start-1 col-span-4">
 
                         <!-- Buttons in a div -->

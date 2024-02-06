@@ -35,7 +35,7 @@ function createCalendar(year, month) {
                 dayCell.textContent = dayCount;
                 dayCount++;
 
-                if (i === 1) {
+                if (i === 3) {
                     dayCell.classList.add('bg-blue-300');
                 }
             }
