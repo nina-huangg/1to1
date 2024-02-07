@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Contacts_style.css">
+    <link href="../output.css" rel="stylesheet">
+    <title>1 ON 1 - Edit Contact</title>
+</head>
+<body class="bg-background-color">
+    <header class="h-60px">
+        <div class="flex flex-row items-center justify-between">
+            <a class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white" href="../LandingPage/index.html">
+                1 ON 1
+            </a>
+            <div class="align-right border-black">
+            </div>
+        </div>
+    </header>
+
+    <section class="main-section">
+        <h1 class="my-contacts-title">Edit Contact</h1>
+
+        <div class="contact-container">
+            <!-- <div class="image-container"> -->
+                <!-- Input for user to upload their own image -->
+                <!-- <input type="file" id="imageUpload" accept="image/*">
+                <img id="contactImage">
+            </div> -->
+
+            <div class="large-pink-rectangle">
+                <input type="file" id="imageUpload" accept="image/*">
+                <img id="contactImage">
+                <!-- Fields for user to provide information -->
+                <form>
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                
+                    <label for="phoneNumber">Phone Number:</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber"> <!-- Removed the 'required' attribute -->
+                
+                    <button type="submit">Save Information</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
