@@ -3,13 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./output.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="../output.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
+    </style>
     <title>1 to 1</title>
 </head>
-<body>
-    <h1 class="text-3xl font-bold underline">
-        Welcome to 1 to 1
-      </h1>
+
+<body class="text-gray-700 bg-background-color h-full">
+    <header class="h-60px">
+        <div class="flex flex-row items-center justify-between">
+            <a class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white" href="../LandingPage/index.html">
+                1 ON 1
+            </a>
+            <div class="align-right border-black">
+            <a class="w-30 h-9 px-8 py-2 mx-5 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white" href="../Login/login.html">
+                Log In
+            </a>
+            <a class="w-30 h-9 px-8 py-2 mx-10 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 border-solid border-0
+            border-gray-500 bg-orange hover:bg-orange-hover text-white" href="../Login/signup.html">
+                Sign up
+        </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="mt-20 mb-20 px-4 lg:flex lg:justify-center lg:items-center">
+        <div class="lg:w-1/2 lg:pr-8">
+            <h1 class="text-3xl font-bold mb-4 text-primary">
+                Calendar Booking
+            </h1>
+            <p class="text-lg text-justify text-gray-800 leading-relaxed">
+                Welcome to our convenient calendar booking system! Easily schedule appointments, manage your time, and streamline your daily routine. Our intuitive platform allows you to view real-time availability and book appointments with just a few clicks. Enjoy customizable reminders, synchronization with existing calendars, and seamless integration with productivity tools. Join thousands of satisfied users and take control of your schedule today.
+            </p>
+        </div>
+        <div class="lg:w-1/2 lg:pl-8">
+            <img src="landing_img.png" alt="Calendar Image" class="w-full h-full">
+        </div>
+    </main>
+    
     
 </body>
 </html>
