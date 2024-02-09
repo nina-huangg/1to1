@@ -12,6 +12,7 @@ function createCalendar(year, month) {
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     weekdays.forEach(day => {
         const dayCell = document.createElement('div');
+        dayCell.classList.add('text-center', 'py-2');
         dayCell.textContent = day;
         headerRow.appendChild(dayCell);
     });
@@ -25,7 +26,7 @@ function createCalendar(year, month) {
 
         for (let j = 0; j < 7; j++) {
             const dayCell = document.createElement('div');
-            dayCell.classList.add('py-3', 'px-3', 'border', 'border-gray-300');
+            dayCell.classList.add('justify-center', 'items-center', 'py-2', 'px-1', 'border', 'border-gray-300', 'shadow-md'); // Added items-center class
 
             if (i === 0 && j < firstDayOfMonth) {
                 dayCell.textContent = '';
