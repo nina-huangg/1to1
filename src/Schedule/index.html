@@ -15,27 +15,27 @@
     <header class="h-60px">
       <div class="flex flex-row items-center justify-between">
         <a
-          class="h-30 mx-10 my-5 w-40 rounded-full bg-logo-color px-8 py-2 text-center align-middle text-xl text-white shadow-lg shadow-gray-200"
+          class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white"
           href="../LandingPage/index.html"
         >
           1 ON 1
         </a>
         <div class="align-right border-black">
-          <a class="pl-2 pr-2 font-bold hover:underline" href="TODO">
+          <a class="hover:underline font-bold pl-2 pr-2" href="TODO">
             My Calendars</a
           >
-          <a class="pl-2 pr-2 font-bold hover:underline" href="TODO">
+          <a class="hover:underline font-bold pl-2 pr-2" href="TODO">
             My Meetings</a
           >
-          <a class="pl-2 pr-6 font-bold hover:underline" href="TODO">
+          <a class="hover:underline font-bold pl-2 pr-6" href="TODO">
             My Contacts</a
           >
           <a
-            class="inline-flex items-center rounded-full bg-gray-200 px-2 py-2 text-white"
+            class="inline-flex items-center bg-gray-200 text-white px-2 py-2 rounded-full"
             href="TODO"
           >
             <svg
-              class="h-6 w-6"
+              class="w-6 h-6"
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               version="1.1"
@@ -143,7 +143,7 @@
             </svg>
           </a>
           <a
-            class="w-30 text-l mx-10 my-5 h-9 rounded-full border-0 border-solid border-gray-500 bg-orange px-8 py-2 text-center align-middle text-white shadow-lg shadow-gray-400 hover:bg-orange-hover"
+            class="w-30 h-9 px-8 py-2 mx-10 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange-primary hover:bg-orange-hover text-white"
             href="TODO"
           >
             Profile
@@ -151,13 +151,13 @@
         </div>
       </div>
     </header>
-    <main class="flex w-screen flex-col justify-center">
-      <div class="m-8 rounded bg-gray-300 p-8">
-        <p class="m-0 mb-6 p-0 text-center text-3xl font-bold">
+    <main class="w-screen flex flex-col justify-center">
+      <div class="rounded bg-gray-300 p-8 m-8">
+        <p class="text-3xl font-bold text-center p-0 m-0 mb-6">
           Highlight Available Times
         </p>
 
-        <div class="m-8 flex flex-row items-center justify-between">
+        <div class="flex flex-row items-center justify-between m-8">
           <div class="align-left">
             <label class="inline-flex items-center">
               <input
@@ -169,31 +169,31 @@
               <span class="ml-2">Low Preference</span>
             </label>
 
-            <label class="ml-4 inline-flex items-center">
+            <label class="inline-flex items-center ml-4">
               <input type="radio" name="scheduleOption" class="form-radio" />
               <span class="ml-2">Medium Preference</span>
             </label>
 
-            <label class="ml-4 inline-flex items-center">
+            <label class="inline-flex items-center ml-4">
               <input type="radio" name="scheduleOption" class="form-radio" />
               <span class="ml-2">High Preference</span>
             </label>
           </div>
 
           <div class="align-right">
-            <button class="rounded bg-blue-500 px-4 py-2 text-white">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded">
               Cancel
             </button>
-            <button class="ml-4 rounded bg-green-500 px-4 py-2 text-white">
+            <button class="bg-green-500 text-white px-4 py-2 rounded ml-4">
               Confirm
             </button>
           </div>
         </div>
 
         <!-- Start of Schedule -->
-        <div class="ml-8 mr-8 grid grid-cols-8 gap-0">
+        <div class="grid grid-cols-8 gap-0 ml-8 mr-8">
           <!-- Time column -->
-          <div class="col-span-1 bg-gray-400 p-1">Time</div>
+          <div class="bg-gray-400 p-1 col-span-1">Time</div>
 
           <!-- Days of the week -->
           <div class="bg-gray-400 p-1">Sunday</div>
