@@ -1,11 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
-  content: [
-    './src/**/*.{html,js}',
-    './src/Login/login.html',
-    './src/BookCalendar/index.html',
-  ],
+  content: ["./src/**/*.{html,js}", "./src/Login/login.html", "./src/MyMeetings/index.html"],
   theme: {
     extend: {
       colors: {
