@@ -1,0 +1,29 @@
+@media screen and (min-width: 767px) and (max-width: 1025px) {
+    .meeting-entry {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .meeting-details {
+        grid-column: auto / span 2;
+    }
+
+    .date {
+        text-align: left;
+        font-size: 14px; /* Adjusted font size */
+    }
+
+    .info-right-col {
+        margin-left: 0;
+    }
+
+    .info-left-col {
+        margin-left: 10;
+        margin-bottom:0.5rem;
+        text-align: right;
+        font-size: 12px; /* Adjusted font size */
+    }
+
+    .meeting-name,
+
+}
+
