@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="../output.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
+      </style>
+    <title>My Profile</title>
+</head>
+<!-- component -->
+<body class="bg-background-color">
+    <header class="h-30px xl:h-60px lg:h-60px md:h-40px sm:h-40px">
+        <div class="flex flex-row items-center justify-between">
+          <a class="xl:w-40 lg:w-40 md:w-32 sm:w-32 w-28 xl:h-12 lg:h-12 md:h-10 sm:h-10 h-8 
+            xl:px-8 lg:px-8 md:px-6 sm:px-6 px-4 xl:py-2.5 lg:py-2.5 md:py-1.5 sm:py-1.5 py-1.5 xl:mx-10 lg:mx-10 md:mx-7 sm:mx-7
+            mx-4 my-5 xl:text-xl lg:text-xl md:text-lg sm:text-lg text-sm rounded-full text-center align-middle shadow-lg
+             shadow-gray-400 bg-logo-color text-white" href="../LandingPage/index.html">
+                1 ON 1
+            </a>
+          <div class="align-right">
+            <a class="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+            xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
+            xl:mr-5 lg:mr-5 md:mr-4 sm:mr-3 mr-2 my-5 
+            xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+            shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
+              href="../BookCalendar/index.html">
+              My Meetings
+            </a>
+        
+            <a class="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+            xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
+            xl:mr-5 lg:mr-5 md:mr-4 sm:mr-3 mr-2 my-5 
+            xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+            shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
+                href="../MyContacts/Contacts_index.html">
+                My Contacts
+            </a>
+            <a class="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+            xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
+            xl:mr-8 lg:mr-8 md:mr-6 sm:mr-4 mr-2 my-5 
+            xl:inline lg:inline md:inline sm:inline hidden
+            xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+            shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white"
+              href="../Profile/profile.html">
+              Profile
+            </a>
+          </div>
+        </div>
+      </header>
+    <main>
+        <div class="w-screen">
+            <div class="flex flex-col justify-center">
+            <p class="xl:text-3xl lg:text-3xl md:text-3xl sm:text-3xl text-xl
+             mt-20 font-bold text-center mb-6">My Profile</p>
+            </div>
+            <div class="text-left align-left ml-7 xl:ml-80 lg:ml-80 mb-10 md:ml-32 sm:ml-28 ">
+                <p class="xl:text-lg lg:text-lg md:text-lg sm:text-sm text-sm font-bold">Account Details</p>
+                <div class="xl:w-96 lg:w-96 md:w-64 sm:w-64 w-60">
+                    <form class="pt-5 xl:w-full lg:w-96 md:w-96 sm:w-80 align-left">
+                        <div class="mb-6 text-left">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                Name:
+                            </label>
+                            <input class="shadow appearance-none border rounded-xl w-full py-2 px-3 placeholder-black leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="John Smith">
+                        </div>
+                        <div class="mb-4 text-left">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="message">
+                                Welcome Message:
+                            </label>
+                            <textarea class="shadow appearance-none border text-xs rounded-xl w-full py-2 px-3 text-gray-700 placeholder-black leading-tight focus:outline-none focus:shadow-outline" placeholder="Welcome to my scheduling page..." id="message" type="text" ></textarea>
+                        </div>
+                        <div class="mb-6 text-left">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="language">
+                                Language:
+                            </label>
+                            <button class="flex flex-row justify-between shadow appearance-none border rounded-xl w-full py-2 px-3 text-left aria-expanded='true' aria-haspopup='true' bg-white">
+                                English<svg class="h-5 w-5  text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                  </svg>
+                            </button>
+                            <div class="w-full z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                <div class="py-1" role="none">
+                                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0">English</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-1">French</a>
+                                </div>
+                              </div>
+                            </div>
+                        <div class="mb-6 text-left">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                Date Format:
+                            </label>
+                            <button class="flex flex-row justify-between shadow appearance-none border rounded-xl w-full py-2 px-3 text-left aria-expanded='true' aria-haspopup='true' bg-white">
+                                DD/MM/YY<svg class="h-5 w-5  text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                  </svg>
+                            </button>
+                            <div class="w-full z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                <div class="py-1" role="none">
+                                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0">DD/MM/YYYY</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-1">MM/DD/YYYY</a>
+                                </div>
+                              </div>
+                            </div>
+                        <div class="mb-6 text-left">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                Country:
+                            </label>
+                            <button class="flex flex-row justify-between shadow appearance-none border rounded-xl w-full py-2 px-3 text-left aria-expanded='true' aria-haspopup='true' bg-white">
+                                Canada<svg class="h-5 w-5  text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                  </svg>
+                            </button>
+                            <div class="w-full z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                <div class="py-1" role="none">
+                                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0">Canada</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-1">United States</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-2">Other</a>
+                                
+                                </div>
+                              </div>
+                        </div>
+                        <div class="mb-6 text-left">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                Timezone:
+                            </label>
+                            <button class="flex flex-row justify-between shadow appearance-none border rounded-xl w-full py-2 px-3 text-left aria-expanded='true' aria-haspopup='true' bg-white">
+                                Eastern Time - US & Canada<svg class="h-5 w-5  text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                                  </svg>
+                            </button>
+                            <div class="w-full h-56 z-10 mt-2 overflow-y-scroll origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+                                <div class="py-1" role="none">
+                                  <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-0">Hawaii Time</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-1">Alaska Time</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-2">Pacific Time</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-3">Mountain Time</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-4">Arizona, Yukon Time</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-5">Central Time</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-6">Eastern Time</a>
+                                  <a href="#" class="text-gray-700 block px-4 py-2 w-full text-sm hover:bg-gray-100" role="menuitem" tabindex="-1" id="menu-item-7">Newfoundland Time</a>
+                                
+                                </div>
+                              </div>
+                            </div>
+                        <button class="w-28 h-10 mb-5 text-l shadow-gray-400 rounded-full text-center shadow-lg bg-orange text-white hover:bg-orange-hover">
+                                Save
+                        </button>
+                    </form>
+                    
+                </div>
+
+            </div>
+            <div>
+            </div>
+
+    </main>
+        
+</body>
+
+</html>
