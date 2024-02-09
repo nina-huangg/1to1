@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="./output.css" rel="stylesheet">
+    <link href="../output.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
     </style>
@@ -42,66 +42,58 @@
 
 
 
-        <h1 class="text-3xl mt-19 font-bold text-center mb-8">My Meetings</h1>
+          <h1 class="text-3xl mt-19 font-bold text-center mb-8">My Meetings</h1>
 
-        <main class="justify-center grid grid-cols-2  flex flex-wrap">
-            
-            <!-- LEFT COLUMN -->
-            <div class="left-column pr-5 mr-17 mt-5" style="max-height:500px; overflow-y:auto">
-
-                <script src="display-confirmed-meetings.js"></script>
-                <script>
-                    // Call the addMeetingEntry function with predefined values
-                    addMeetingEntry('Jan 10', 'Meeting 1', '4:00 PM - 5:00 PM', 'Link 1', '10 people');
-                    addMeetingEntry('', 'Meeting 2', '2:00 PM - 3:00 PM', 'Link 2', '8 people');
-                    addMeetingEntry('Jan 12', 'Meeting 3', '1:00 PM - 2:00 PM', 'Link 4', '12 people');
-                    addMeetingEntry('', 'Meeting 4', '1:00 PM - 2:00 PM', 'Link 5', '12 people');
-                    addMeetingEntry('', 'Meeting 5', '1:00 PM - 2:00 PM', 'Link 6', '11 people');
-                    addMeetingEntry('Jan 13', 'Meeting 6', '5:00 PM - 6:00 PM', 'Link 7', '5 people');
-                    addMeetingEntry('', 'Meeting 7', '3:00 PM - 4:00 PM', 'Link 8', '2 people');
-                </script>
-            </div>
-
-            <!-- RIGHT COLUMN -->
-            <div class="right-column mr-19" style="max-height: 600px">
-                <div class="grid grid-cols-6 gap-2 mx-10 h-full rounded-lg flex flex-wrap">
-                    <div class="pb-60 col-start-1 col-span-4">
-
+          <main class="justify-center grid grid-cols-1 sm:grid-cols-2  flex flex-wrap">
+  
+              <!-- LEFT COLUMN -->
+              <div class="left-column pr-6 mt-5" style="max-height:500px; overflow-y:auto">
+  
+                  <script src="display-confirmed-meetings.js"></script>
+                  <script>
+                      // Call the addMeetingEntry function with predefined values
+                      addMeetingEntry('Jan 10', 'Meeting 1', '4:00 PM - 5:00 PM', 'Link 1', '10 people');
+                      addMeetingEntry('', 'Meeting 2', '2:00 PM - 3:00 PM', 'Link 2', '8 people');
+                      addMeetingEntry('Jan 12', 'Meeting 3', '1:00 PM - 2:00 PM', 'Link 4', '12 people');
+                      addMeetingEntry('', 'Meeting 4', '1:00 PM - 2:00 PM', 'Link 5', '12 people');
+                      addMeetingEntry('', 'Meeting 5', '1:00 PM - 2:00 PM', 'Link 6', '11 people');
+                      addMeetingEntry('Jan 13', 'Meeting 6', '5:00 PM - 6:00 PM', 'Link 7', '5 people');
+                      addMeetingEntry('', 'Meeting 7', '3:00 PM - 4:00 PM', 'Link 8', '2 people');
+                  </script>
+              </div>
+  
+              <!-- RIGHT COLUMN -->
+              <div class="right-column md:ml-20" style="max-height: 600px">
+                <div class=" gap-2 mx-10 h-full rounded-lg flex flex-wrap">
+                    <div class="pb-60 col-start-2 col-span-3">
                         <!-- Buttons in a div -->
                         <div class="flex mt-14 justify-center">
                             <button class="bg-logo-color hover:bg-green-700 text-white px-4 py-2 rounded-l shadow-md">Month</button>
                             <button class="bg-orange hover:bg-orange-300 text-white px-4 py-2 rounded-r shadow-md">Year</button>
                         </div>
-
                         <h1 class="text-xl mt-7 font-bold text-center">January 2024</h1>
-
-                        <div class="calendar-container mx-11 mt-2 mb-5   flex flex-col"></div>
-
+                        <div class="calendar-container col-span-3 mt-2 mb-5 flex flex-col"></div>
                         <div class="flex mt-4 justify-center">
-                            <button <button id="bookMeetingBtn" class="bg-logo-color hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow-md">Create A Meeting </button>
+                            <button id="bookMeetingBtn" class="bg-logo-color hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow-md">Create A Meeting </button>
                         </div>
-
                     </div>
                 </div>
-
-                <script src="create-calendar.js"></script>
-                <script>
-                    // Call the createCalendar function with the desired year and month
-                    document.addEventListener('DOMContentLoaded', function () {
-                        createCalendar(2024, 1);
-                    });
-                </script>
-                <script>
-                    document.getElementById('bookMeetingBtn').addEventListener('click', function() {
-                        // Redirect to the specified link when the button is clicked
-                        window.location.href = '../Schedule/editMeeting.html';
-                    });
-                </script>
-            </div>
-
-        </div>
-
-        </main>
+                  <script src="create-calendar.js"></script>
+                  <script>
+                      // Call the createCalendar function with the desired year and month
+                      document.addEventListener('DOMContentLoaded', function () {
+                          createCalendar(2024, 1);
+                      });
+                  </script>
+                  <script>
+                      document.getElementById('bookMeetingBtn').addEventListener('click', function() {
+                          // Redirect to the specified link when the button is clicked
+                          window.location.href = '../Schedule/editMeeting.html';
+                      });
+                  </script>
+              </div>
+  
+          </main>
     </div>
 </body>
 
