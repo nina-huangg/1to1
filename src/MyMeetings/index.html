@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="../output.css" rel="stylesheet">
+    <link href="./output.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
     </style>
-    <title>Book Meeting Page</title>
+    <title>My Meetings Page</title>
 </head>
 
 <body class="text-gray-700 bg-background-color h-full">
@@ -25,12 +25,12 @@
               <div class="align-right border-black">
                 <a class="w-30 h-9 px-8 py-2 mx-5 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
                   href="./index.html">
-                  Book Meeting
+                  My Meetings
                 </a>
             
                 <a class="w-30 h-9 px-8 py-2 mx-5 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
                     href="../MyContacts/Contacts_index.html">
-                    Contact
+                   My Contacts
                 </a>
                 <a class="w-30 h-9 px-8 py-2 mx-10 my-5 text-l rounded-full text-center align-middle shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white"
                   href="../Profile/profile.html">
@@ -42,9 +42,10 @@
 
 
 
-        <h1 class="text-3xl mt-19 font-bold text-center mb-8">Book Meeting</h1>
+        <h1 class="text-3xl mt-19 font-bold text-center mb-8">My Meetings</h1>
 
         <main class="justify-center grid grid-cols-2  flex flex-wrap">
+            
             <!-- LEFT COLUMN -->
             <div class="left-column pr-5 mr-17 mt-5" style="max-height:500px; overflow-y:auto">
 
@@ -67,21 +68,17 @@
                     <div class="pb-60 col-start-1 col-span-4">
 
                         <!-- Buttons in a div -->
-                        <div class="flex mt-4 justify-center">
-                            <button class="bg-logo-color hover:bg-green-700 text-white px-4 py-2 rounded-l">Month</button>
-                            <button class="bg-orange hover:bg-orange-300 text-white px-4 py-2 rounded-r">Year</button>
+                        <div class="flex mt-14 justify-center">
+                            <button class="bg-logo-color hover:bg-green-700 text-white px-4 py-2 rounded-l shadow-md">Month</button>
+                            <button class="bg-orange hover:bg-orange-300 text-white px-4 py-2 rounded-r shadow-md">Year</button>
                         </div>
 
                         <h1 class="text-xl mt-7 font-bold text-center">January 2024</h1>
 
-                        <div class="calendar-container mx-11 mt-2 mb-10"></div>
+                        <div class="calendar-container mx-11 mt-2 mb-5   flex flex-col"></div>
 
                         <div class="flex mt-4 justify-center">
-                            <button class="bg-logo-color hover:bg-green-700 text-white px-4 py-2 rounded-lg">Create A Meeting</button>
-                        </div>
-
-                        <div class="flex mt-4 justify-center">
-                            <button <button id="bookMeetingBtn" class="bg-logo-color hover:bg-green-700 text-white px-5 py-2 rounded-lg">Book A Meeting </button>
+                            <button <button id="bookMeetingBtn" class="bg-logo-color hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow-md">Create A Meeting </button>
                         </div>
 
                     </div>
@@ -97,7 +94,7 @@
                 <script>
                     document.getElementById('bookMeetingBtn').addEventListener('click', function() {
                         // Redirect to the specified link when the button is clicked
-                        window.location.href = '../Login/login.html';
+                        window.location.href = '../Schedule/editMeeting.html';
                     });
                 </script>
             </div>
