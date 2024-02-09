@@ -84,7 +84,8 @@
         </div>
 
         <!-- Start of Schedule -->
-        <div class="ml-8 mr-8 grid grid-cols-8 gap-0">
+        <div class="overflow-auto">
+        <div class="ml-8 mr-8 grid grid-cols-8 gap-0 grid-flow-row auto-cols-max">
           <!-- Time column -->
           <div class="col-span-1 bg-gray-400 p-1">Time</div>
 
@@ -103,59 +104,63 @@
               // Time slot for each hour
               document.write(`<div class="bg-gray-200 p-1">${hour}:00</div>`)
               document.write(
-                `<div class="bg-white border p-1 col-span-1"></div>`,
+                `<div class="bg-white border"></div>`,
               )
               document.write(
-                `<div class="bg-gray-200 border p12 col-span-1"></div>`,
+                `<div class="bg-gray-200 border"></div>`,
               )
               document.write(
-                `<div class="bg-white border p-1 col-span-1"></div>`,
+                `<div class="bg-white border"></div>`,
               )
               document.write(
-                `<div class="bg-gray-200 border p-1 col-span-1"></div>`,
+                `<div class="bg-gray-200 border"></div>`,
               )
               document.write(
-                `<div class="bg-white border p-1 col-span-1"></div>`,
+                `<div class="bg-white border"></div>`,
               )
               document.write(
-                `<div class="bg-gray-200 border p-1 col-span-1"></div>`,
+                `<div class="bg-gray-200 border"></div>`,
               )
               document.write(
-                `<div class="bg-white border p-1 col-span-1"></div>`,
+                `<div class="bg-white border"></div>`,
               )
 
               // 30-minute blocks for each hour
               for (let min = 30; min < 60; min += 30) {
                 document.write(
-                  `<div class="bg-white border p-1 col-span-1">${hour}:${
+                  `<div class="bg-white border p-1">${hour}:${
                     min < 10 ? '0' : ''
                   }${min}</div>`,
                 )
                 document.write(
-                  `<div class="bg-gray-200 border p-1 col-span-1"></div>`,
+                  `<div class="bg-gray-200 border"></div>`,
                 )
                 document.write(
-                  `<div class="bg-white border p-1 col-span-1"></div>`,
+                  `<div class="bg-white border"></div>`,
                 )
                 document.write(
-                  `<div class="bg-gray-200 border p-1 col-span-1"></div>`,
+                  `<div class="bg-gray-200 border"></div>`,
                 )
                 document.write(
-                  `<div class="bg-white border p-1 col-span-1"></div>`,
+                  `<div class="bg-white border"></div>`,
                 )
                 document.write(
-                  `<div class="bg-gray-200 border p-1 col-span-1"></div>`,
+                  `<div class="bg-gray-200 border"></div>`,
                 )
                 document.write(
-                  `<div class="bg-white border p-1 col-span-1"></div>`,
+                  `<div class="bg-white border"></div>`,
                 )
                 document.write(
-                  `<div class="bg-gray-200 border p-1 col-span-1"></div>`,
+                  `<div class="bg-gray-200 border"></div>`,
                 )
               }
             }
           </script>
         </div>
+        </div>
+
+
+
       </div>
     </main>
   </body>
