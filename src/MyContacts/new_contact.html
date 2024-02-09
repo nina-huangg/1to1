@@ -5,50 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Contacts_style.css">
     <link href="../output.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
+    </style>
     <title>1 ON 1 - Edit Contact</title>
 </head>
 <body class="bg-background-color">
-    <header class="h-60px">
+    <header class="h-30px xl:h-60px lg:h-60px md:h-40px sm:h-40px">
         <div class="flex flex-row items-center justify-between">
-            <a class="w-40 h-30 px-8 py-2 mx-10 my-5 text-xl rounded-full text-center align-middle shadow-lg shadow-gray-200 bg-logo-color text-white" href="../LandingPage/index.html">
+            <a class="xl:w-40 lg:w-40 md:w-32 sm:w-32 w-28 xl:h-12 lg:h-12 md:h-10 sm:h-10 h-8 
+            xl:px-8 lg:px-8 md:px-6 sm:px-6 px-4 xl:py-2.5 lg:py-2.5 md:py-1.5 sm:py-1.5 py-1.5 xl:mx-10 lg:mx-10 md:mx-7 sm:mx-7
+            mx-4 my-5 xl:text-xl lg:text-xl md:text-lg sm:text-lg text-sm rounded-full text-center align-middle shadow-lg
+             shadow-gray-400 bg-logo-color text-white" href="../LandingPage/index.html">
                 1 ON 1
             </a>
-            <div class="align-right border-black">
+            <div class="align-right">
+                <a class="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+            xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
+            xl:mr-5 lg:mr-5 md:mr-4 sm:mr-3 mr-2 my-5 
+            xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+            shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
+                    href="../BookCalendar/index.html">
+                    My Meetings
+                </a>
+
+                <a class="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+            xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
+            xl:mr-5 lg:mr-5 md:mr-4 sm:mr-3 mr-2 my-5 
+            xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+            shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white"
+                    href="../MyContacts/Contacts_index.html">
+                    My Contacts
+                </a>
+
+                <a class="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+            xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
+            xl:mr-8 lg:mr-8 md:mr-6 sm:mr-4 mr-2 my-5 
+            xl:inline lg:inline md:inline sm:inline hidden
+            xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+            shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white"
+                    href="../Profile/profile.html">
+                    Profile
+                </a>
             </div>
         </div>
     </header>
 
     <section class="main-section">
         <h1 class="my-contacts-title">Edit Contact</h1>
-
+    
+        <button type="button" class="back-button" onclick="goBack()">Go Back</button>
+    
         <div class="contact-container">
-            <!-- <div class="image-container"> -->
-                <!-- Input for user to upload their own image -->
-                <!-- <input type="file" id="imageUpload" accept="image/*">
-                <img id="contactImage">
-            </div> -->
-
             <div class="large-pink-rectangle">
                 <input type="file" id="imageUpload" accept="image/*">
-                <img id="contactImage">
-                <!-- Fields for user to provide information -->
-                <form>
+                <img id="contactImage" class="profile-image">
+                
+                <form id="contactForm">
                     <label for="firstName">First Name:</label>
                     <input type="text" id="firstName" name="firstName" required>
-                
+    
                     <label for="lastName">Last Name:</label>
                     <input type="text" id="lastName" name="lastName" required>
-                
+    
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
-                
+    
                     <label for="phoneNumber">Phone Number:</label>
-                    <input type="tel" id="phoneNumber" name="phoneNumber"> <!-- Removed the 'required' attribute -->
-                
-                    <button type="submit">Save Information</button>
+                    <input type="tel" id="phoneNumber" name="phoneNumber">
+
+                    <button type="submit" class="submit-button" onclick="saveContact()">Save Information</button>
+    
+
+                    <button type="button" class="delete-button" onclick="deleteContact()">Delete Contact</button>
                 </form>
             </div>
         </div>
+    
+        <script>
+            function goBack() {
+                window.location.href = 'Contacts_index.html';
+            }
+    
+            function saveContact() {
+
+                window.location.href = 'Contacts_index.html';
+            }
+    
+            function deleteContact() {
+
+                window.location.href = 'Contacts_index.html';
+            }
+        </script>
     </section>
 </body>
 </html>

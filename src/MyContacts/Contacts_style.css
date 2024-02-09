@@ -112,42 +112,47 @@ nav a {
     }
 }
 
+.contacts-container {
+    max-height: 300px; 
+    overflow-y: auto; 
+    margin-top: 20px; 
+}
+
 .pink-rectangles-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: 20px; /* Adjusted margin for spacing */
-    padding: 0 20px; /* Added padding to the container for space on both sides */
+    padding: 0 20px; 
 }
 
 .pink-rectangle {
-    flex-basis: calc(20% - 20px); /* Adjusted width for space on both sides and 5 rectangles in a row */
-    margin: 0 5px 10px 5px; /* Adjusted margin for space on both sides and between rows */
-    height: 200px; /* Adjusted height */
-    background-color: #f8d8dd; /* Light pink color */
-    border: 2px solid #000; /* Black border */
-    border-radius: 10px; /* Curved edges */
+    flex-basis: calc(20% - 20px);
+    margin: 0 5px 10px 5px;
+    height: 200px;
+    background-color: #f8d8dd;
+    border: 2px solid #000;
+    border-radius: 10px;
 }
 
 .pink-rectangle:hover {
-    background-color: #ffcc99; /* Light orange color on hover */
+    background-color: #ffcc99;
 }
 
 .large-pink-rectangle {
     width: 70%;
     height: 400px;
-    background-color: #f8d8dd; /* Light pink color */
-    margin: 0 auto; /* Center the rectangle horizontally */
+    background-color: #f8d8dd; 
+    margin: 0 auto; 
     padding: 20px;
-    border: 2px solid #000; /* Black border */
-    border-radius: 10px; /* Curved edges */
+    border: 2px solid #000; 
+    border-radius: 10px; 
 }
 
 form {
     display: flex;
     flex-direction: column;
     max-width: 300px;
-    margin: 0 auto; /* Center the form within the rectangle */
+    margin: 0 auto; 
 }
 
 label {
@@ -162,7 +167,7 @@ input, button {
 }
 
 button {
-    background-color: #006400; /* Dark green color */
+    background-color: #006400; 
     color: #fff;
     cursor: pointer;
 }
@@ -185,6 +190,98 @@ button {
     margin-top: 10px;
 }
 
+
+.contact-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.image-container {
+    width: 40%;
+    text-align: center;
+}
+
+#contactImage1,
+#contactImage2 {
+    max-width: 100%;
+    max-height: 100px; 
+    border-radius: 50%; 
+}
+
 .contact-info {
     width: 50%;
+    text-align: left;
+    padding-left: 20px; 
+}
+
+.profile-image {
+    max-width: 100%;
+    max-height: 60px; 
+    border-radius: 50%; 
+    margin: 10px auto; 
+    display: block;
+}
+
+.back-button,
+.submit-button,
+.delete-button {
+    font-weight: bold;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+
+
+.back-button:hover {
+    background-color: #52b7b1;
+    color: rgb(255, 255, 255);
+}
+
+.back-button {
+    color: rgb(0, 0, 0);
+    border: none;
+    border: 2px solid #000;
+}
+
+
+.submit-button {
+    background-color: #32CD32;
+    color: rgb(0, 0, 0);
+    border: none;
+}
+
+.submit-button:hover {
+    background-color: #58c758;
+}
+
+
+.delete-button {
+    background-color: #FF4500;
+    color: rgb(0, 0, 0);
+    border: none;
+}
+
+.delete-button:hover {
+    background-color: #FF6347;
+}
+
+@media (max-width: 768px) {
+    .pink-rectangles-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .contact-card {
+        margin-bottom: 20px; 
+        padding: 10px;
+    }
 }
