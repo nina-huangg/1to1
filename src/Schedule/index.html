@@ -67,7 +67,7 @@
             </label>
           </div>
 
-          <div class="flex flex-col md:flex-row align-right">
+          <div class="align-right flex flex-col md:flex-row">
             <a
               class="m-2 rounded bg-blue-500 px-4 py-2 text-white"
               href="../MyMeetings/index.html"
@@ -85,82 +85,96 @@
 
         <!-- Start of Schedule -->
         <div class="overflow-auto">
-        <div class="ml-8 mr-8 grid grid-cols-8 gap-0 grid-flow-row auto-cols-max">
-          <!-- Time column -->
-          <div class="col-span-1 bg-gray-400 p-1">Time</div>
-
-          <!-- Days of the week -->
-          <div class="bg-gray-400 p-1">Sunday</div>
-          <div class="bg-gray-400 p-1">Monday</div>
-          <div class="bg-gray-400 p-1">Tuesday</div>
-          <div class="bg-gray-400 p-1">Wednesday</div>
-          <div class="bg-gray-400 p-1">Thursday</div>
-          <div class="bg-gray-400 p-1">Friday</div>
-          <div class="bg-gray-400 p-1">Saturday</div>
-
-          <!-- Time slots -->
-          <script>
-            for (let hour = 8; hour <= 17; hour++) {
-              // Time slot for each hour
-              document.write(`<div class="bg-gray-200 p-1">${hour}:00</div>`)
-              document.write(
-                `<div class="bg-white border"></div>`,
-              )
-              document.write(
-                `<div class="bg-gray-200 border"></div>`,
-              )
-              document.write(
-                `<div class="bg-white border"></div>`,
-              )
-              document.write(
-                `<div class="bg-gray-200 border"></div>`,
-              )
-              document.write(
-                `<div class="bg-white border"></div>`,
-              )
-              document.write(
-                `<div class="bg-gray-200 border"></div>`,
-              )
-              document.write(
-                `<div class="bg-white border"></div>`,
-              )
-
-              // 30-minute blocks for each hour
-              for (let min = 30; min < 60; min += 30) {
-                document.write(
-                  `<div class="bg-white border p-1">${hour}:${
-                    min < 10 ? '0' : ''
-                  }${min}</div>`,
-                )
-                document.write(
-                  `<div class="bg-gray-200 border"></div>`,
-                )
-                document.write(
-                  `<div class="bg-white border"></div>`,
-                )
-                document.write(
-                  `<div class="bg-gray-200 border"></div>`,
-                )
-                document.write(
-                  `<div class="bg-white border"></div>`,
-                )
-                document.write(
-                  `<div class="bg-gray-200 border"></div>`,
-                )
-                document.write(
-                  `<div class="bg-white border"></div>`,
-                )
-                document.write(
-                  `<div class="bg-gray-200 border"></div>`,
-                )
-              }
-            }
-          </script>
+          <div
+            class="ml-8 mr-8 grid auto-cols-fr grid-flow-col auto-rows-fr gap-0 min-w-max "
+          >
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <!-- Time column -->
+              <div class="bg-gray-400 p-1">Time</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(
+                    `<div class="bg-gray-200 p-1">${hour}:00</div>`,
+                  )
+                  document.write(
+                    `<div class="bg-gray-400 p-1">${hour}:30</div>`,
+                  )
+                }
+              </script>
+            </div>
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <div class="bg-gray-400 p-1">Sunday</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(`<div class="bg-gray-400 p-1"></div>`)
+                  document.write(`<div class="bg-gray-200 p-1"></div>`)
+                }
+              </script>
+            </div>
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <div class="bg-gray-200 p-1">Monday</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(`<div class="bg-gray-200 p-1"></div>`)
+                  document.write(`<div class="bg-gray-400 p-1"></div>`)
+                }
+              </script>
+            </div>
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <div class="bg-gray-400 p-1">Tuesday</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(`<div class="bg-gray-400 p-1"></div>`)
+                  document.write(`<div class="bg-gray-200 p-1"></div>`)
+                }
+              </script>
+            </div>
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <div class="bg-gray-200 p-1">Wednesday</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(`<div class="bg-gray-200 p-1"></div>`)
+                  document.write(`<div class="bg-gray-400 p-1"></div>`)
+                }
+              </script>
+            </div>
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <div class="bg-gray-400 p-1">Thursday</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(`<div class="bg-gray-400 p-1"></div>`)
+                  document.write(`<div class="bg-gray-200 p-1"></div>`)
+                }
+              </script>
+            </div>
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <div class="bg-gray-200 p-1">Friday</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(`<div class="bg-gray-200 p-1"></div>`)
+                  document.write(`<div class="bg-gray-400 p-1"></div>`)
+                }
+              </script>
+            </div>
+            <div class="grid auto-cols-auto auto-rows-fr gap-0">
+              <div class="bg-gray-400 p-1">Saturday</div>
+              <script>
+                for (let hour = 8; hour <= 17; hour++) {
+                  // Time slot for each hour
+                  document.write(`<div class="bg-gray-400 p-1"></div>`)
+                  document.write(`<div class="bg-gray-200 p-1"></div>`)
+                }
+              </script>
+            </div>
+          </div>
         </div>
-        </div>
-
-
-
       </div>
     </main>
   </body>
