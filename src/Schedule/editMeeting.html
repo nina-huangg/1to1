@@ -1,87 +1,102 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../output.css" rel="stylesheet" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Aleo&display=swap");
+    </style>
+    <title>Edit Meeting</title>
+  </head>
+  <!-- component -->
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="../output.css" rel="stylesheet" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Aleo&display=swap');
-  </style>
-  <title>Edit Meeting</title>
-</head>
-<!-- component -->
-
-<body class="bg-background-color">
-  <header class="h-30px xl:h-60px lg:h-60px md:h-40px sm:h-40px">
-    <div class="flex flex-row items-center justify-between">
-      <a class="mx-4 my-5 h-8 w-28 rounded-full bg-logo-color px-4 py-1.5 text-center align-middle text-sm text-white shadow-lg shadow-gray-400 sm:mx-7 sm:h-10 sm:w-32 sm:px-6 sm:py-1.5 sm:text-lg md:mx-7 md:h-10 md:w-32 md:px-6 md:py-1.5 md:text-lg lg:mx-10 lg:h-12 lg:w-40 lg:px-8 lg:py-2.5 lg:text-xl xl:mx-10 xl:h-12 xl:w-40 xl:px-8 xl:py-2.5 xl:text-xl"
-        href="">
-        1 ON 1
-      </a>
-      <div class="align-right">
-        <a class="xl:w-30 lg:w-30 xl:text-l lg:text-l my-5 mr-2 h-5 w-14 rounded-full bg-primary-blue px-2 py-2 text-center align-middle text-xs text-white shadow-lg shadow-gray-400 hover:bg-primary-blue-hover sm:mr-3 sm:h-7 sm:w-20 sm:px-4 sm:text-sm md:mr-4 md:h-7 md:w-24 md:px-6 md:text-sm lg:mr-5 lg:h-9 lg:px-8 xl:mr-5 xl:h-9 xl:px-8"
-          href="../MyMeetings/index.html">
-          My Meetings
+  <body class="bg-background-color">
+    <header class="h-30px xl:h-60px lg:h-60px md:h-40px sm:h-40px">
+      <div class="flex flex-row items-center justify-between">
+        <a
+          class="mx-4 my-5 h-8 w-28 rounded-full bg-logo-color px-4 py-1.5 text-center align-middle text-sm text-white shadow-lg shadow-gray-400 sm:mx-7 sm:h-10 sm:w-32 sm:px-6 sm:py-1.5 sm:text-lg md:mx-7 md:h-10 md:w-32 md:px-6 md:py-1.5 md:text-lg lg:mx-10 lg:h-12 lg:w-40 lg:px-8 lg:py-2.5 lg:text-xl xl:mx-10 xl:h-12 xl:w-40 xl:px-8 xl:py-2.5 xl:text-xl"
+          href=""
+        >
+          1 ON 1
         </a>
-
-        <a class="xl:w-30 lg:w-30 xl:text-l lg:text-l my-5 mr-2 h-5 w-14 rounded-full bg-primary-blue px-2 py-2 text-center align-middle text-xs text-white shadow-lg shadow-gray-400 hover:bg-primary-blue-hover sm:mr-3 sm:h-7 sm:w-20 sm:px-4 sm:text-sm md:mr-4 md:h-7 md:w-24 md:px-6 md:text-sm lg:mr-5 lg:h-9 lg:px-8 xl:mr-5 xl:h-9 xl:px-8"
-          href="../MyContacts/Contacts_index.html">
-          My Contacts
-        </a>
-        <a class="xl:w-30 lg:w-30 xl:text-l lg:text-l my-5 mr-2 hidden h-5 w-14 rounded-full border-0 border-solid border-gray-500 bg-orange px-2 py-2 text-center align-middle text-xs text-white shadow-lg shadow-gray-400 hover:bg-orange-hover sm:mr-4 sm:inline sm:h-7 sm:w-20 sm:px-4 sm:text-sm md:mr-6 md:inline md:h-7 md:w-24 md:px-6 md:text-sm lg:mr-8 lg:inline lg:h-9 lg:px-8 xl:mr-8 xl:inline xl:h-9 xl:px-8"
-          href="../Profile/profile.html">
-          Profile
-        </a>
-      </div>
-    </div>
-  </header>
-  <main class="flex w-screen flex-col justify-center">
-    <div class="m-8 flex h-screen flex-row rounded bg-gray-300 p-8">
-      <div class="overflow-x-auto">
-        <div class="max-h-60 w-1/2 min-w-max bg-gray-200 p-4">
-          <ul class="min-w-max divide-y divide-gray-300">
-            <!-- Example list items -->
-            <li class="flex justify-between px-2 py-2">
-              <span> Alice</span><button class="rounded bg-blue-500 ml-2 px-4 py-2 text-white">
-                Remove
-              </button>
-            </li>
-            <li class="flex justify-between px-2 py-2">
-              <span> Bob (unconfirmed)</span><button class="rounded bg-blue-500 ml-2 px-4 py-2 text-white">
-                Remove
-              </button>
-            </li>
-            <li class="flex justify-between px-2 py-2">
-              <span> Charlie (unconfirmed)</span><button class="rounded bg-blue-500 ml-2 px-4 py-2 text-white">
-                Remove
-              </button>
-            </li>
-            <li class="flex justify-between px-2 py-2 font-bold italic">
-              Invite New Participant
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="flex w-1/2 float-end flex-col justify-between p-4">
-        <div class="mb-4 self-end py-4">
-          <a class="rounded bg-blue-500 px-4 py-2 text-white" href="index.html">
-            Close
+        <div class="align-right">
+          <a
+            class="xl:w-30 lg:w-30 xl:text-l lg:text-l my-5 mr-2 h-5 w-14 rounded-full bg-primary-blue px-2 py-2 text-center align-middle text-xs text-white shadow-lg shadow-gray-400 hover:bg-primary-blue-hover sm:mr-3 sm:h-7 sm:w-20 sm:px-4 sm:text-sm md:mr-4 md:h-7 md:w-24 md:px-6 md:text-sm lg:mr-5 lg:h-9 lg:px-8 xl:mr-5 xl:h-9 xl:px-8"
+            href="../MyMeetings/index.html"
+          >
+            My Meetings
           </a>
-        </div>
 
-        <div class="flex flex-col self-end md:flex-row">
-          <a class="m-2 rounded bg-green-500 px-4 py-2 text-white">
-            Prompt Unconfirmed Users
+          <a
+            class="xl:w-30 lg:w-30 xl:text-l lg:text-l my-5 mr-2 h-5 w-14 rounded-full bg-primary-blue px-2 py-2 text-center align-middle text-xs text-white shadow-lg shadow-gray-400 hover:bg-primary-blue-hover sm:mr-3 sm:h-7 sm:w-20 sm:px-4 sm:text-sm md:mr-4 md:h-7 md:w-24 md:px-6 md:text-sm lg:mr-5 lg:h-9 lg:px-8 xl:mr-5 xl:h-9 xl:px-8"
+            href="../MyContacts/Contacts_index.html"
+          >
+            My Contacts
           </a>
-          <a class="m-2 rounded bg-green-500 px-4 py-2 text-white" href="../MyMeetings/index.html">
-            Finalize Meeting Time
+          <a
+            class="xl:w-30 lg:w-30 xl:text-l lg:text-l my-5 mr-2 hidden h-5 w-14 rounded-full border-0 border-solid border-gray-500 bg-orange px-2 py-2 text-center align-middle text-xs text-white shadow-lg shadow-gray-400 hover:bg-orange-hover sm:mr-4 sm:inline sm:h-7 sm:w-20 sm:px-4 sm:text-sm md:mr-6 md:inline md:h-7 md:w-24 md:px-6 md:text-sm lg:mr-8 lg:inline lg:h-9 lg:px-8 xl:mr-8 xl:inline xl:h-9 xl:px-8"
+            href="../Profile/profile.html"
+          >
+            Profile
           </a>
         </div>
       </div>
-    </div>
-  </main>
-</body>
+    </header>
+    <main class="flex w-screen flex-col justify-center">
+      <div class="m-8 flex h-screen flex-row rounded bg-gray-300 p-8">
+        <div class="overflow-x-auto">
+          <div class="max-h-60 w-1/2 min-w-max bg-gray-200 p-4">
+            <ul class="min-w-max divide-y divide-gray-300">
+              <!-- Example list items -->
+              <li class="flex justify-between px-2 py-2">
+                <span> Alice</span
+                ><button class="ml-2 rounded bg-blue-500 px-4 py-2 text-white">
+                  Remove
+                </button>
+              </li>
+              <li class="flex justify-between px-2 py-2">
+                <span> Bob (unconfirmed)</span
+                ><button class="ml-2 rounded bg-blue-500 px-4 py-2 text-white">
+                  Remove
+                </button>
+              </li>
+              <li class="flex justify-between px-2 py-2">
+                <span> Charlie (unconfirmed)</span
+                ><button class="ml-2 rounded bg-blue-500 px-4 py-2 text-white">
+                  Remove
+                </button>
+              </li>
+              <li class="flex justify-between px-2 py-2 font-bold italic">
+                Invite New Participant
+              </li>
+            </ul>
+          </div>
+        </div>
 
+        <div class="float-end flex w-1/2 flex-col justify-between p-4">
+          <div class="mb-4 self-end py-4">
+            <a
+              class="rounded bg-blue-500 px-4 py-2 text-white"
+              href="index.html"
+            >
+              Close
+            </a>
+          </div>
+
+          <div class="flex flex-col self-end md:flex-row">
+            <a class="m-2 rounded bg-green-500 px-4 py-2 text-white">
+              Prompt Unconfirmed Users
+            </a>
+            <a
+              class="m-2 rounded bg-green-500 px-4 py-2 text-white"
+              href="../MyMeetings/index.html"
+            >
+              Finalize Meeting Time
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>

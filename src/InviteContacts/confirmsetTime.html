@@ -1,99 +1,109 @@
 <!doctype html>
-        <html lang="en">
-          <head>
-            <meta charset="UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <link href="../output.css" rel="stylesheet" />
-            <style>
-              @import url("https://fonts.googleapis.com/css2?family=Aleo&display=swap");
-            </style>
-            <title>Meeting Invite Details</title>
-          </head>
-          <!-- component -->
-        
-          <body class="bg-background-color">
-            <header class="h-30px xl:h-60px lg:h-60px md:h-40px sm:h-40px">
-              <div class="flex flex-row items-center justify-between">
-                <a class="xl:w-40 lg:w-40 md:w-32 sm:w-32 w-28 xl:h-12 lg:h-12 md:h-10 sm:h-10 h-8 
-                    xl:px-8 lg:px-8 md:px-6 sm:px-6 px-4 xl:py-2.5 lg:py-2.5 md:py-1.5 sm:py-1.5 py-1.5 xl:mx-10 lg:mx-10 md:mx-7 sm:mx-7
-                    mx-4 my-5 xl:text-xl lg:text-xl md:text-lg sm:text-lg text-sm rounded-full text-center align-middle shadow-lg
-                     shadow-gray-400 bg-logo-color text-white" href="">
-                        1 ON 1
-                    </a>
-               
-                  
-                    </div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../output.css" rel="stylesheet" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Aleo&display=swap");
+    </style>
+    <title>Meeting Invite Details</title>
+  </head>
+  <!-- component -->
+
+  <body class="bg-background-color">
+    <header class="h-30px sm:h-40px md:h-40px lg:h-60px xl:h-60px">
+      <div class="flex flex-row items-center justify-between">
+        <a
+          class="mx-4 my-5 h-8 w-28 rounded-full bg-logo-color px-4 py-1.5 text-center align-middle text-sm text-white shadow-lg shadow-gray-400 sm:mx-7 sm:h-10 sm:w-32 sm:px-6 sm:py-1.5 sm:text-lg md:mx-7 md:h-10 md:w-32 md:px-6 md:py-1.5 md:text-lg lg:mx-10 lg:h-12 lg:w-40 lg:px-8 lg:py-2.5 lg:text-xl xl:mx-10 xl:h-12 xl:w-40 xl:px-8 xl:py-2.5 xl:text-xl"
+          href=""
+        >
+          1 ON 1
+        </a>
+      </div>
+    </header>
+    <main
+      class="flex w-screen flex-row justify-center text-center align-middle"
+    >
+      <div
+        class="mx-3 mb-3 mt-3 flex max-w-lg flex-col rounded bg-gray-200 p-8 shadow-lg shadow-gray-400"
+      >
+        <p
+          class="mb-8 mt-10 text-center text-xl font-bold sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl"
+        >
+          Meet with John S.
+        </p>
+
+        <div class="mx-8 mb-1 mt-3 flex flex-col items-start justify-between">
+          <div class="text-start">
+            <p
+              class="mb-5 text-sm font-extrabold sm:text-sm md:text-lg lg:text-lg xl:text-lg"
+            >
+              Meeting Details:
+            </p>
+            <div class="w-60 sm:w-64 md:w-64 lg:w-96 xl:w-96">
+              <p class="text-md mb-4 font-extrabold text-gray-700">
+                Date: 9:30am - 10:00am, Tuesday, February 9, 2024
+              </p>
+              <p class="text-md mb-4 font-extrabold text-gray-700">
+                Eastern Time - US & Canada
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 text-start">
+            <p
+              class="text-sm font-extrabold sm:text-sm md:text-lg lg:text-lg xl:text-lg"
+            >
+              Enter Information:
+            </p>
+            <div class="w-60 sm:w-64 md:w-64 lg:w-96 xl:w-96">
+              <form class="align-left pt-3 sm:w-80 md:w-96 lg:w-96 xl:w-full">
+                <div class="mb-4 text-left">
+                  <label
+                    class="mb-2 block text-sm font-bold text-gray-700"
+                    for="username"
+                  >
+                    Name:
+                  </label>
+                  <input
+                    class="focus:shadow-outline max-w-sm appearance-none rounded-xl border px-3 py-2 leading-tight placeholder-black shadow focus:outline-none sm:max-w-sm md:max-w-md lg:w-full xl:w-full"
+                    id="username"
+                    type="text required"
+                  />
                 </div>
-              </div>
-            </header>
-            <main class="flex w-screen flex-row align-middle text-center justify-center">
-              <div class="flex flex-col mx-3 mb-3 mt-3 rounded bg-gray-200 p-8 
-              max-w-lg shadow-lg shadow-gray-400">
-                <p class="xl:text-3xl lg:text-3xl md:text-3xl sm:text-3xl text-xl
-                     mt-10 font-bold text-center mb-8 ">Meet with John S.
-                </p>
-        
-                <div class="mx-8 mt-3 mb-1 flex flex-col items-start justify-between">
-                    <div class="text-start">
-                        <p class="font-extrabold xl:text-lg lg:text-lg md:text-lg sm:text-sm text-sm mb-5">
-                            Meeting Details:
-                        </p>
-                        <div class="xl:w-96 lg:w-96 md:w-64 sm:w-64 w-60">
-                            <p class="text-gray-700 text-md font-extrabold mb-4">
-                                Date: 9:30am - 10:00am, Tuesday, February 9, 2024
-                            </p>
-                            <p class="text-gray-700 text-md font-extrabold mb-4">
-                                Eastern Time - US & Canada
-                            </p>
-                        </div>
-                    </div>
-        
-                    <div class="text-start mt-6">
-                    <p class="font-extrabold xl:text-lg lg:text-lg md:text-lg sm:text-sm text-sm">
-                        Enter Information:
-                    </p>
-                    <div class="xl:w-96 lg:w-96 md:w-64 sm:w-64 w-60">
-                        <form class="xl:w-full lg:w-96 md:w-96 sm:w-80 align-left pt-3">
-                            <div class="mb-4 text-left">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                                    Name:
-                                </label>
-                                <input class="shadow appearance-none border rounded-xl 
-                                xl:w-full lg:w-full md:max-w-md sm:max-w-sm max-w-sm py-2 px-3 placeholder-black 
-                                leading-tight focus:outline-none focus:shadow-outline" id="username" type="text required">
-                            </div>
-                            <div class="mb-4 text-left">
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
-                                    Email:
-                                </label>
-                                <input class="shadow appearance-none border rounded-xl 
-                                xl:w-full lg:w-full md:max-w-md sm:max-w-sm max-w-sm py-2 px-3 placeholder-black leading-tight focus:outline-none focus:shadow-outline" id="email" type="email required">
-                            </div>
-                        </form>
-                    </div>
-                 
-                  <div class="mt-8 text-center">
-                    <p class="font-bold xl:text-md lg:text-md md:text-md sm:text-sm text-sm mb-4">
-                        Meeting details will be sent to your email.
-                    </p>
-                    <a class="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
-                    xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
-                    xl:mr-8 lg:mr-8 md:mr-6 sm:mr-4 mr-2 my-5 
-                    xl:inline lg:inline md:inline sm:inline
-                    xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
-                    shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white"
-                      href="">
-                      Confirm
-                    </a>
-                  </div>
+                <div class="mb-4 text-left">
+                  <label
+                    class="mb-2 block text-sm font-bold text-gray-700"
+                    for="username"
+                  >
+                    Email:
+                  </label>
+                  <input
+                    class="focus:shadow-outline max-w-sm appearance-none rounded-xl border px-3 py-2 leading-tight placeholder-black shadow focus:outline-none sm:max-w-sm md:max-w-md lg:w-full xl:w-full"
+                    id="email"
+                    type="email required"
+                  />
                 </div>
-                </div>
-                
-            </main>
-          </body>
-        </html>
+              </form>
+            </div>
 
-
-
-
-  
+            <div class="mt-8 text-center">
+              <p
+                class="md:text-md lg:text-md xl:text-md mb-4 text-sm font-bold sm:text-sm"
+              >
+                Meeting details will be sent to your email.
+              </p>
+              <a
+                class="lg:w-30 lg:text-l xl:w-30 xl:text-l my-5 mr-2 h-5 w-14 rounded-full border-0 border-solid border-gray-500 bg-orange px-2 py-2 text-center align-middle text-xs text-white shadow-lg shadow-gray-400 hover:bg-orange-hover sm:mr-4 sm:inline sm:h-7 sm:w-20 sm:px-4 sm:text-sm md:mr-6 md:inline md:h-7 md:w-24 md:px-6 md:text-sm lg:mr-8 lg:inline lg:h-9 lg:px-8 xl:mr-8 xl:inline xl:h-9 xl:px-8"
+                href=""
+              >
+                Confirm
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
