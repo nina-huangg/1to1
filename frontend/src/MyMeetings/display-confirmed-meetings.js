@@ -1,24 +1,18 @@
 function getRandomColor() {
-  // Array of predefined colors
-  const colors = ["#52B7B1", "#EE6A4C", "#6EB3AF", "#F4F3ED", "#FBB5A5"];
+    // Array of predefined colors
+    const colors = ['#52B7B1', '#EE6A4C', '#6EB3AF', '#F4F3ED', '#FBB5A5'];
 
-  // Get a random index from the colors array
-  const randomIndex = Math.floor(Math.random() * colors.length);
+    // Get a random index from the colors array
+    const randomIndex = Math.floor(Math.random() * colors.length);
 
-  // Return the random color
-  return colors[randomIndex];
+    // Return the random color
+    return colors[randomIndex];
 }
 
-function addMeetingEntry(
-  date,
-  meetingName,
-  meetingTime,
-  meetingLink,
-  attendees,
-) {
-  const randomColor = getRandomColor();
+function addMeetingEntry(date, meetingName, meetingTime, meetingLink, attendees) {
+    const randomColor = getRandomColor();
 
-  const newMeetingEntry = `
+    const newMeetingEntry = `
     <div class="meeting-entry grid grid-cols-3 md:grid-cols-8 gap-2 mb-6 flex flex-wrap">
         <div class="meeting-details ml-10 col-span-3 md:col-start-3 md:col-span-5">
             <div class="date">
@@ -39,7 +33,5 @@ function addMeetingEntry(
     </div>
 `;
 
-  document
-    .querySelector(".left-column")
-    .insertAdjacentHTML("beforeend", newMeetingEntry);
+    document.querySelector('.left-column').insertAdjacentHTML('beforeend', newMeetingEntry);
 }
