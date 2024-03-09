@@ -38,8 +38,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('password2', None)
         user = User.objects.create_user(username=validated_data['username'], password=validated_data['password'])
 
-        user.email = validated_data.get('email', None)
-        user.first_name = validated_data.get('first_name', None)
-        user.last_name  = validated_data.get('last_name', None)
+        user.email = validated_data.get('email', '')
+        user.first_name = validated_data.get('first_name', '')
+        user.last_name  = validated_data.get('last_name', '')
         user.save()
         return user
