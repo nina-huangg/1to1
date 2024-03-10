@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from django.core.validators import EmailValidator
-from django.core.exceptions import ValidationError
+from profile_info.models import Dashboard
+
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -42,4 +42,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.first_name = validated_data.get('first_name', '')
         user.last_name  = validated_data.get('last_name', '')
         user.save()
+
+        dashboard = Dashboard.objects.create(owner=user)
+        dashboard.save()
+
         return user
