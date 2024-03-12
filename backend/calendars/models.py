@@ -19,18 +19,19 @@ class Calendar(models.Model):
     # owner = models.ForeignKey(User, on_delete=models.CASCADE)
     # invitation = models.ForeignKey(Invitation, on_delete=models.CASCADE, related_name='invitations')
 
-# class AvailabilitySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Availability
-#         fields = ('id', 'date', 'start_time', 'end_time')
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = ('id', 'date', 'start_time', 'end_time')
 
-# class CalendarSerializer(serializers.ModelSerializer):
-#     availability_set = AvailabilitySerializer(many=True, read_only=True)
+class CalendarSerializer(serializers.ModelSerializer):
+    availability_set = AvailabilitySerializer(many=True, read_only=True)
 
-#     class Meta:
-#         model = Calendar
-#         fields = ('id', 'name', 'description', 'availability_set')
-#         depth = 1
+    class Meta:
+        model = Calendar
+        fields = ('id', 'name', 'description', 'availability_set')
+        depth = 1
+
 
 # class InvitationSerializer(serializers.ModelSerializer):
 #     class Meta:
