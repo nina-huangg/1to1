@@ -14,6 +14,7 @@ pip install djangorestframework-simplejwt
 cd backend
 
 # run migrations
+python manage.py makemigrations
 python manage.py migrate
 
 
