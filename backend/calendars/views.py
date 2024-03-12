@@ -54,12 +54,12 @@ class CalendarDetailsView(View):
     View for retrieving details of a calendar.
     """
     
-    def get(self, request, name):
+    def get(self, request, id):
         """
         Handles GET requests to retrieve details of a specific calendar.
         """
         try:
-            calendar = Calendar.objects.get(name=name)
+            calendar = Calendar.objects.get(id=id)
 
             calendar_serializer = CalendarSerializer(calendar)
             return JsonResponse(calendar_serializer.data, status=200, safe=False)
