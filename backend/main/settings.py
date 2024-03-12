@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-u8axhe*m8ssz4+i*@_&bld3c(^9qxj9=^clody9v!9)g1wjvqv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['1.0.0.127.in-addr.arpa', '127.0.0.1']
+ALLOWED_HOSTS = ['1.0.0.127.in-addr.arpa', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'profile_info',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'contacts',
 ]
 
 REST_FRAMEWORK = {
