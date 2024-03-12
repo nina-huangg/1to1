@@ -8,6 +8,7 @@ class LoginSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super(LoginSerializer, cls).get_token(user)
+        token['username'] = user.username
 
         return token
 
