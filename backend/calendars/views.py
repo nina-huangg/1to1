@@ -147,8 +147,9 @@ class AddContactView(APIView):
         deserialized_contacts = []
 
         for contact_data in contacts_data:
+            contact_data['owner'] = user.id
+
             serializer = ContactSerializer(data=contact_data)
-            serializer['owner'] = user.id
             if serializer.is_valid():
                 serializer.save()
                 deserialized_contacts.append(serializer.instance)
