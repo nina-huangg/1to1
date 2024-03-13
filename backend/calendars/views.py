@@ -3,8 +3,8 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from contacts.serializers.contact_serializer import ContactSerializer
-from .models import Calendar, Availability, SuggestedSchedule, SuggestedMeetingSerializer, Invitation, BoundedTime
-from .serializers import AvailabilitySerializer, CalendarSerializer, BoundedTimeSerializer
+from .models import Calendar, Availability, SuggestedSchedule, Invitation, BoundedTime
+from .serializers import AvailabilitySerializer, CalendarSerializer, BoundedTimeSerializer, SuggestedMeetingSerializer
 from intervals import DateTimeInterval
 import datetime
 from django.contrib.auth.models import User
