@@ -26,10 +26,11 @@ class Availability(models.Model):
     
 
 class Invitation(models.Model):
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE)
     invitee = models.ForeignKey(Contact, on_delete=models.CASCADE)
-    meeting = models.ForeignKey("Meeting", on_delete=models.CASCADE)
-    confirmed = models.BooleanField()
-    
+    meeting = models.ForeignKey("Meeting", on_delete=models.CASCADE, null=True)
+    confirmed = models.BooleanField(default=False)
+    calendar = models.ForeignKey("Calendar", on_delete=models.CASCADE, null=True)
 
 
 class Calendar(models.Model):
