@@ -4,12 +4,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from contacts.serializers.contact_serializer import ContactSerializer
 from .models import Calendar, Availability, SuggestedSchedule, Invitation, BoundedTime
-from .serializers import AvailabilitySerializer, CalendarSerializer, BoundedTimeSerializer, SuggestedMeetingSerializer
+from .serializers import AvailabilitySerializer, CalendarSerializer, BoundedTimeSerializer, SuggestedMeetingSerializer, AddContactSerializer
 from intervals import DateTimeInterval
 import datetime
 from django.contrib.auth.models import User
 import time
 from django.db.models import Q
+from contacts.models import Contact
 
 
 class CalendarsView(View):
@@ -157,12 +158,18 @@ class AddContactView(APIView):
         deserialized_contacts = []
 
         for contact_data in contacts_data:
-            contact_data["owner"] = user.id
 
-            serializer = ContactSerializer(data=contact_data)
+            data = contact_data
+            data["user"] = user.id
+
+            serializer = AddContactSerializer(data=data)
             if serializer.is_valid():
-                serializer.save()
-                deserialized_contacts.append(serializer.instance)
+                instance_with_attributes = serializer.validated_data
+ 
+                id_value = instance_with_attributes['id']
+                user_value = instance_with_attributes['user']
+                contact = Contact.objects.get(id=id_value, user=user_value)
+                deserialized_contacts.append(contact)
             else:
                 return JsonResponse(serializer.errors, status=400)
 
