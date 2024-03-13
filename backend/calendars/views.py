@@ -3,7 +3,7 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from contacts.serializers.contact_serializer import ContactSerializer
-from .models import Calendar, Availability
+from .models import Calendar, Availability, SuggestedSchedule
 from .serializers import AvailabilitySerializer, CalendarSerializer, BoundedTimeSerializer
 from intervals import DateTimeInterval
 import datetime
@@ -197,6 +197,7 @@ class SuggestScheduleView(APIView):
     View for suggesting schedules.
     """
 
+
     def get(self, request, id):
         if id is None:
             return JsonResponse({"error": "calendar_id is required"}, status=400)
@@ -214,7 +215,8 @@ class SuggestScheduleView(APIView):
         sorted_intersection_intervals = self.overlapping_invitee_availability(owner_availabilities, invitee_availabilities, bounded_times)
 
         return JsonResponse(sorted_intersection_intervals, status=200)
-            
+    
+    
 
     @classmethod
     def split_availability_set(cls, calendar_id):

@@ -29,3 +29,10 @@ class BoundedTimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoundedTime
         fields = ['id', 'duration', 'start_time', 'end_time', 'start_date', 'end_date']
+        
+class SuggestedScheduleSerializer(serializers.ModelSerializer):
+    availability_set = AvailabilitySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SuggestedSchedule
+        fields = ['bounded_time', 'availability_set']

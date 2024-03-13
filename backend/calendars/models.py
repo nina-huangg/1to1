@@ -56,3 +56,7 @@ class BoundedTime(models.Model):
     end_time = models.TimeField(default=DEFAULT_END_TIME)
     start_date = models.DateField()
     end_date = models.DateField()
+    
+
+class SuggestedSchedule(models.Model):
+    bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)

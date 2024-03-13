@@ -14,7 +14,7 @@ app_name = "calendars"
 urlpatterns = [
     path("", CalendarsView.as_view(), name="calendars"),
     path("create/", CreateCalendarView.as_view(), name="create_calendar"),
-    path("calendar/<int:id>/", CalendarDetailsView.as_view(), name="calendar_details"),
+    path("calendar/<int:id>/", CalendarDetailsView.as_view(), name="calendar_details"),   
     path(
         "<int:id>/availability/select/", ChooseAvailabilityView.as_view(), name="choose_availability"
     ),
