@@ -77,6 +77,8 @@ class CalendarDetailsView(View):
     """
     View for retrieving details of a calendar.
     """
+    
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         """
