@@ -23,9 +23,8 @@ class Availability(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     calendar = models.ForeignKey("Calendar", on_delete=models.CASCADE)
 
-
-# class Invitation(models.Model):
-#     number = models.IntegerField()
+    def __str__(self):
+        return f"{self.date} {self.start_time} - {self.end_time}"
 
 
 class Calendar(models.Model):
