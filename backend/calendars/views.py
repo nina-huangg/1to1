@@ -211,8 +211,7 @@ class InviteeResponseView(APIView):
             availabilities = Availability.objects.filter(calendar_id=id)
             availability_list = []
             for availability in availabilities:
-                availability_list.append(f"{availability.date}: {
-                                         availability.start_time}-{availability.end_time}")
+                availability_list.append(f"{availability.date}: {availability.start_time}-{availability.end_time}")
 
             invitee_response = {
                 "inviter": calendar.owner.id,
