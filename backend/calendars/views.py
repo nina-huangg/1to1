@@ -300,6 +300,8 @@ class InvitesStatusView(APIView):
     Field/Payload: meeting_name
 
     """
+    permission_classes = [IsAuthenticated]
+
 
     def get(self, request, id):
         calendar = Calendar.objects.get(id=id)

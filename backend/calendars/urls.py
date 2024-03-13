@@ -28,5 +28,3 @@ urlpatterns = [
     path("<int:id>/meetings/invite/remind/",InviteeRemindView.as_view(),name="view_invite_remind",),
     path("<int:id>/meetings/suggest_schedules/", SuggestMeetingView.as_view(),name="suggest_meeting",)
 ]
-
-
