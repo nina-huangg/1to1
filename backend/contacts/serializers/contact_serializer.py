@@ -11,8 +11,7 @@ class ContactSerializer(serializers.ModelSerializer):
         existing_contact = Contact.objects.filter(
             first_name=attrs.get('first_name'),
             last_name=attrs.get('last_name'),
-            email=attrs.get('email'),
-            phone_number=attrs.get('phone_number')
+            email=attrs.get('email')
         ).exists()
 
         if existing_contact:
