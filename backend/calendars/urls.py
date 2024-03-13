@@ -9,7 +9,7 @@ from .views import (
     ChooseAvailabilityView,
     ContactDetailView,
     InvitesStatusView,
-    InviteeRemindView
+    InviteeRemindView,
     SuggestMeetingView,
 )
 
