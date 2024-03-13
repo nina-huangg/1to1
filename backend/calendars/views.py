@@ -170,6 +170,12 @@ class AddContactView(APIView):
                 user_value = instance_with_attributes['user']
                 contact = Contact.objects.get(id=id_value, user=user_value)
                 deserialized_contacts.append(contact)
+
+                if not Invitation.objects.filter(invitee=contact, inviter=user_value, calendar=calendar).exists():
+                    invitation = Invitation.objects.create(invitee=contact,inviter=user_value, calendar=calendar)
+                else:
+                    return JsonResponse({'error': 'Contact already added to calendar'}, status=400)
+
             else:
                 return JsonResponse(serializer.errors, status=400)
 
@@ -213,6 +219,8 @@ class InviteeResponseView(APIView):
         """
         Handles GET requests to retrieve invitee responses.
         """
+        if not Invitation.objects.filter(id=invite_id).exists():
+            return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
             calendar = Calendar.objects.get(id=id)
             availabilities = Availability.objects.filter(calendar_id=id)
@@ -221,7 +229,7 @@ class InviteeResponseView(APIView):
                 availability_list.append(f"{availability.date}: {availability.start_time}-{availability.end_time}")
 
             invitee_response = {
-                "inviter": calendar.owner.id,
+                "inviter": f'{calendar.owner.first_name} {calendar.owner.last_name}',
                 "availability_set": availability_list,
             }
             return JsonResponse(invitee_response, status=200, safe=False)
@@ -234,27 +242,41 @@ class InviteeResponseView(APIView):
         """
         user = request.user
         request_data = request.data
+        if not Invitation.objects.filter(id=invite_id).exists():
+            return JsonResponse({"error": "invite does not exist"}, status=400)
         if id is None:
             return JsonResponse({"error": "calendar_id is required"}, status=400)
         if "availability_set" not in request_data:
             return JsonResponse({"error": "availability_set is required"}, status=400)
+        
         availability_data = request_data["availability_set"]
         try:
             calendar = Calendar.objects.get(id=id)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
+        
+        invitation = Invitation.objects.get(id=invite_id)
+
+
         availability_data_with_owner = []
         for availability in availability_data:
-            availability["owner"] = user.id
+            availability["owner"] = invitation.inviter.id
+            print(user.id)
             availability_data_with_owner.append(availability)
         availability_serializer = AvailabilitySerializer(
             data=availability_data_with_owner, many=True
         )
         if availability_serializer.is_valid():
             availability_serializer.save(calendar=calendar)
+
+            # inviter = User.objects.get(id=user.id)
+            # invitee = Contact.objects.get(id=invite_id)
+            # invitation = Invitation.objects.filter(invitee=invitee, inviter=inviter)
+            Invitation.objects.filter(invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
+
             return JsonResponse(availability_serializer.data, status=200, safe=False)
         else:
-            return JsonResponse(availability_serializer.errors, status=400)
+            return JsonResponse(availability_serializer.errors, status=400, safe=False)
 
 
 class InvitesStatusView(APIView):
@@ -269,7 +291,8 @@ class InvitesStatusView(APIView):
     def get(self, request, id):
         calendar = Calendar.objects.get(id=id)
         if calendar is None:
-            return JsonResponse({"error": "calenar with id does not exist"}, status=400)
+            return JsonResponse({"error": "calendar with id does not exist"}, status=400)
+        
         calendar_invitations = Invitation.objects.filter(calendar=calendar)
         responsed = []
         not_responsed = []
