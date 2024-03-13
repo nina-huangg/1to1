@@ -8,7 +8,7 @@ from .views import (
     InviteeResponseView,
     ChooseAvailabilityView,
     ContactDetailView,
-    InvitesStatusView,
+    # InvitesStatusView,
 )
 
 app_name = "calendars"
@@ -31,11 +31,11 @@ urlpatterns = [
     ),
     path("<int:id>/contacts/", ContactDetailView.as_view(),
          name="view_contact_list"),
-    path(
-        "<int:id>/meetings/invite/status/",
-        InvitesStatusView.as_view(),
-        name="view_invite_status",
-    ),
+    # path(
+    #     "<int:id>/meetings/invite/status/",
+    #     InvitesStatusView.as_view(),
+    #     name="view_invite_status",
+    # ),
 ]
 
 
