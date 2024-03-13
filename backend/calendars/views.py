@@ -236,8 +236,7 @@ class InviteeResponseView(APIView):
             availability_list = []
             for availability in availabilities:
                 availability_list.append(
-                    f"{availability.date}: {
-                        availability.start_time}-{availability.end_time}"
+                    f"{availability.date}: {availability.start_time}-{availability.end_time}"
                 )
 
             invitee_response = {
