@@ -20,16 +20,16 @@ class Availability(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="owned_availabilities", null=True
-    )
-    invitee = models.ForeignKey(
-        "Invitation",
-        on_delete=models.CASCADE,
-        related_name="invited_availabilities",
-        null=True,
-    )
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_availabilities', null=True)
+    invitee = models.ForeignKey('Invitation', on_delete=models.CASCADE, related_name='invited_availabilities', null=True)
     calendar = models.ForeignKey("Calendar", on_delete=models.CASCADE)
+    
+
+class Invitation(models.Model):
+    invitee = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    meeting = models.ForeignKey("Meeting", on_delete=models.CASCADE)
+    confirmed = models.BooleanField()
+    
 
 
 class Calendar(models.Model):
@@ -52,13 +52,6 @@ class Meeting(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     date = models.DateField()
-
-
-class Invitation(models.Model):
-    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
-    invitee = models.ForeignKey(User, on_delete=models.CASCADE)
-    confirmed = models.BooleanField()
-
 
 class BoundedTime(models.Model):
     DEFAULT_START_TIME = "09:00:00"
