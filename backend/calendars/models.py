@@ -29,17 +29,8 @@ class Availability(models.Model):
 class Calendar(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
-    # owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     contacts = models.ManyToManyField(Contact, related_name='calendars', blank=True)
-    # invitation = models.ForeignKey(Invitation, on_delete=models.CASCADE, related_name='invitations')
-
-
-class Contact(models.Model):
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
     
        
 class AvailabilitySerializer(serializers.ModelSerializer):

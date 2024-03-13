@@ -142,11 +142,13 @@ class AddContactView(APIView):
             return JsonResponse({'error': 'Calendar not found'}, status=404)
 
         contacts_data = request_data['contacts']
+        user = request.user
 
         deserialized_contacts = []
 
         for contact_data in contacts_data:
             serializer = ContactSerializer(data=contact_data)
+            serializer['owner'] = user.id
             if serializer.is_valid():
                 serializer.save()
                 deserialized_contacts.append(serializer.instance)
