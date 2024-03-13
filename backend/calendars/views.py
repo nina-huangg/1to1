@@ -4,6 +4,8 @@ from .models import Calendar
 from django.http import JsonResponse
 from django.views import View
 from .models import Calendar
+
+from contacts.serializers.contact_serializer import ContactSerializer
 from .models import Calendar, CalendarSerializer, AvailabilitySerializer
 from rest_framework.permissions import IsAuthenticated
 
@@ -103,8 +105,6 @@ class CreateMeetingView(APIView):
 
   
         availability_serializer = AvailabilitySerializer(data=availability_data_with_owner, many=True)
-
-        availability_serializer["calendar_id"] = id
         
         if availability_serializer.is_valid():
             # Save the availability slots associated with the calendar
@@ -112,3 +112,68 @@ class CreateMeetingView(APIView):
             return JsonResponse(availability_serializer.data, status=200, safe=False)
         else:
             return JsonResponse(availability_serializer.errors, status=400)
+
+
+from rest_framework import status
+
+class AddContactView(APIView):
+    """
+    View for adding contacts to a calendar.
+    """
+
+    permission_classes = [IsAuthenticated]
+
+  
+    def post(self, request, id=None):
+        """
+        Handles POST requests to add contacts to a calendar.
+        """
+        request_data = request.data
+
+        if id is None:
+            return JsonResponse({'error': 'calendar_id is required'}, status=400)
+
+        if 'contacts' not in request_data:
+            return JsonResponse({'error': 'contacts is required'}, status=400)
+
+        try:
+            calendar = Calendar.objects.get(id=id)
+        except Calendar.DoesNotExist:
+            return JsonResponse({'error': 'Calendar not found'}, status=404)
+
+        contacts_data = request_data['contacts']
+
+        deserialized_contacts = []
+
+        for contact_data in contacts_data:
+            serializer = ContactSerializer(data=contact_data)
+            if serializer.is_valid():
+                serializer.save()
+                deserialized_contacts.append(serializer.instance)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+
+        calendar.contacts.add(*deserialized_contacts)
+
+        # Serialize the added contacts
+        added_contacts_serializer = ContactSerializer(deserialized_contacts, many=True)
+
+        return JsonResponse(added_contacts_serializer.data, status=200, safe=False)
+
+        
+class ContactDetailView(APIView):
+    """
+    View for retrieving contact list of a calendar.
+    """
+    
+    def get(self, request, id):
+        """
+        Handles GET requests to retrieve contact list of a specific calendar.
+        """
+        try:
+            calendar = Calendar.objects.get(id=id)
+            contact_list = calendar.contacts.all()
+            contact_serializer = ContactSerializer(contact_list, many=True)
+            return JsonResponse(contact_serializer.data, status=200, safe=False)
+        except Calendar.DoesNotExist:
+            return JsonResponse({'error': 'Calendar not found'}, status=404)

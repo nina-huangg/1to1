@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Contact",
+            name="Dashboard",
             fields=[
                 (
                     "id",
@@ -26,15 +26,12 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("first_name", models.CharField(max_length=255)),
-                ("last_name", models.CharField(max_length=255)),
-                ("email", models.EmailField(max_length=254)),
+                ("message", models.CharField(blank=True, max_length=300, null=True)),
+                ("language", models.CharField(default="English", max_length=25)),
+                ("country", models.CharField(default="Canada", max_length=50)),
+                ("timezone", models.CharField(default="Eastern", max_length=25)),
                 (
-                    "phone_number",
-                    models.CharField(blank=True, max_length=15, null=True),
-                ),
-                (
-                    "user",
+                    "owner",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
