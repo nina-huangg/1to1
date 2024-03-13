@@ -27,20 +27,24 @@ class Availability(models.Model):
 class Invitation(models.Model):
     invitee = models.ForeignKey(Contact, on_delete=models.CASCADE)
     meeting = models.ForeignKey("Meeting", on_delete=models.CASCADE)
+    def __str__(self):
+        return f"{self.date} {self.start_time} - {self.end_time}"
+
 
 class Calendar(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    contacts = models.ManyToManyField(Contact, related_name="calendars", blank=True)
-
+    contacts = models.ManyToManyField(
+        Contact, related_name="calendars", blank=True)
 
 
 class Meeting(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=120)
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
-    contacts = models.ManyToManyField(Contact, related_name="meetings", blank=True)
+    contacts = models.ManyToManyField(
+        Contact, related_name="meetings", blank=True)
     duration = models.DurationField()
     last_modified = models.DateTimeField(auto_now=True)
     confirmed = models.BooleanField(default=False)
@@ -48,9 +52,16 @@ class Meeting(models.Model):
     end_time = models.TimeField()
     date = models.DateField()
 
+
+class Invitation(models.Model):
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
+    invitee = models.ForeignKey(User, on_delete=models.CASCADE)
+    confirmed = models.BooleanField()
+
+
 class BoundedTime(models.Model):
-    DEFAULT_START_TIME = '09:00:00'
-    DEFAULT_END_TIME = '17:00:00'
+    DEFAULT_START_TIME = "09:00:00"
+    DEFAULT_END_TIME = "17:00:00"
     duration = models.DurationField()
     start_time = models.TimeField(default=DEFAULT_START_TIME)
     end_time = models.TimeField(default=DEFAULT_END_TIME)

@@ -3,7 +3,7 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from contacts.serializers.contact_serializer import ContactSerializer
-from .models import Calendar, Availability, SuggestedSchedule, SuggestedMeetingSerializer
+from .models import Calendar, Availability, SuggestedSchedule, SuggestedMeetingSerializer, Invitation, BoundedTime
 from .serializers import AvailabilitySerializer, CalendarSerializer, BoundedTimeSerializer
 from intervals import DateTimeInterval
 import datetime
@@ -169,7 +169,8 @@ class AddContactView(APIView):
         calendar.contacts.add(*deserialized_contacts)
 
         # Serialize the added contacts
-        added_contacts_serializer = ContactSerializer(deserialized_contacts, many=True)
+        added_contacts_serializer = ContactSerializer(
+            deserialized_contacts, many=True)
 
         return JsonResponse(added_contacts_serializer.data, status=200, safe=False)
 
@@ -192,6 +193,64 @@ class ContactDetailView(APIView):
             return JsonResponse({"error": "Calendar not found"}, status=404)
 
 
+class InviteeResponseView(APIView):
+    """
+    page where invitee with invite-id  gets to respond
+
+    GET: gets the page and the times that the user is available, and shows the user ID that is inviting
+    POST: responds with availability (in similar format to calendars/<id>/meetings/create/)
+
+    """
+
+    def get(self, request, id, invite_id):
+        """
+        Handles GET requests to retrieve invitee responses.
+        """
+        try:
+            calendar = Calendar.objects.get(id=id)
+            availabilities = Availability.objects.filter(calendar_id=id)
+            availability_list = []
+            for availability in availabilities:
+                availability_list.append(f"{availability.date}: {
+                                         availability.start_time}-{availability.end_time}")
+
+            invitee_response = {
+                "inviter": calendar.owner.id,
+                "availability_set": availability_list,
+            }
+            return JsonResponse(invitee_response, status=200, safe=False)
+        except Calendar.DoesNotExist:
+            return JsonResponse({"error": "Calendar not found"}, status=404)
+
+    def post(self, request, id, invite_id):
+        """
+        Handles POST requests to respond to an invite.
+        """
+        user = request.user
+        request_data = request.data
+        if id is None:
+            return JsonResponse({"error": "calendar_id is required"}, status=400)
+        if "availability_set" not in request_data:
+            return JsonResponse({"error": "availability_set is required"}, status=400)
+        availability_data = request_data["availability_set"]
+        try:
+            calendar = Calendar.objects.get(id=id)
+        except Calendar.DoesNotExist:
+            return JsonResponse({"error": "Calendar not found"}, status=404)
+        availability_data_with_owner = []
+        for availability in availability_data:
+            availability["owner"] = user.id
+            availability_data_with_owner.append(availability)
+        availability_serializer = AvailabilitySerializer(
+            data=availability_data_with_owner, many=True
+        )
+        if availability_serializer.is_valid():
+            availability_serializer.save(calendar=calendar)
+            return JsonResponse(availability_serializer.data, status=200, safe=False)
+        else:
+            return JsonResponse(availability_serializer.errors, status=400)
+
+
 class SuggestMeetingView(APIView):
     """
     View for suggesting meeting.
@@ -207,7 +266,7 @@ class SuggestMeetingView(APIView):
         bounded_times_serializer = BoundedTimeSerializer(data=bounded_times_data)
         if not bounded_times_serializer.is_valid():
             return JsonResponse(bounded_times_serializer.errors, status=400)
-        
+
         bounded_times = bounded_times_serializer.save()
 
 
@@ -236,14 +295,17 @@ class SuggestMeetingView(APIView):
     @classmethod
     def split_availability_set(cls, calendar_id):
         # Query owner and invitee availabilities separately
-        owner_availabilities = Availability.objects.filter(calendar_id=calendar_id, owner__isnull=False)
-        invitee_availabilities = Availability.objects.filter(calendar_id=calendar_id, owner__isnull=True)
+        owner_availabilities = Availability.objects.filter(
+            calendar_id=calendar_id, owner__isnull=False)
+        invitee_availabilities = Availability.objects.filter(
+            calendar_id=calendar_id, owner__isnull=True)
 
         return owner_availabilities, invitee_availabilities
-    
+
     @classmethod
     def overlapping_invitee_availability(cls, owner_availabilities, invitee_availabilities, bounded_times):
-        intersection_intervals = {}  # Dictionary to store the intersection intervals for each owner's availability time slot
+        # Dictionary to store the intersection intervals for each owner's availability time slot
+        intersection_intervals = {}
 
         for owner_availability in owner_availabilities:
             invitee_overlapping_per_own_availability_time_slot = cls.find_invitee_overlapping_intervals(owner_availability, invitee_availabilities, bounded_times)
@@ -269,14 +331,20 @@ class SuggestMeetingView(APIView):
         # Dictionary to store overlapping intervals for this owner
         invitee_overlapping_intervals = {}
 
-        owner_start_datetime = datetime.combine(owner_availability.date, owner_availability.start_time)
-        owner_end_datetime = datetime.combine(owner_availability.date, owner_availability.end_time)
-        owner_availability_interval = DateTimeInterval(owner_start_datetime, owner_end_datetime)
+        owner_start_datetime = datetime.combine(
+            owner_availability.date, owner_availability.start_time)
+        owner_end_datetime = datetime.combine(
+            owner_availability.date, owner_availability.end_time)
+        owner_availability_interval = DateTimeInterval(
+            owner_start_datetime, owner_end_datetime)
 
         for invitee_availability in invitee_availabilities:
-            invitee_start_datetime = datetime.combine(invitee_availability.date, invitee_availability.start_time)
-            invitee_end_datetime = datetime.combine(invitee_availability.date, invitee_availability.end_time)
-            invitee_availability_interval = DateTimeInterval(invitee_start_datetime, invitee_end_datetime)
+            invitee_start_datetime = datetime.combine(
+                invitee_availability.date, invitee_availability.start_time)
+            invitee_end_datetime = datetime.combine(
+                invitee_availability.date, invitee_availability.end_time)
+            invitee_availability_interval = DateTimeInterval(
+                invitee_start_datetime, invitee_end_datetime)
 
             intersection_interval = owner_availability_interval & invitee_availability_interval
 
