@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 import time
 from django.db.models import Q
 from datetime import timedelta
+from django.utils import timezone
 
 
 class CalendarsView(View):
@@ -333,10 +334,25 @@ class SuggestMeetingView(APIView):
         ava = Availability.objects.filter(calendar_id=id)
         suggested_times = self.suggest_meeting_times(ava)
         suggested_times_json = []
+        min_duration = timedelta(minutes=60)
         if len(suggested_times) < 1:
-            return JsonResponse(
-                {"error": "No meeting times available"}, status=400
-            )
+            now = timezone.now()
+            default_time = now + timedelta(days=7)
+            default_time = default_time.replace(
+                hour=15, minute=0, second=0, microsecond=0)
+            default_date = default_time.date()
+            default_start_time = default_time.time()
+            default_end_time = (default_time + min_duration).time()
+
+            return JsonResponse({
+                'meeting_times': [{
+                    'date': default_date.strftime('%Y-%m-%d'),
+                    'start_time': default_start_time.strftime('%H:%M:%S'),
+                    'end_time': default_end_time.strftime('%H:%M:%S')
+                }],
+                "perfect_match": False
+            }, status=200)
+
         for meeting_time in suggested_times:
             date, start_time, end_time = meeting_time
             suggested_times_json.append({
@@ -345,7 +361,7 @@ class SuggestMeetingView(APIView):
                 'end_time': end_time.strftime('%H:%M:%S')
             })
 
-        return JsonResponse({'meeting_times': suggested_times_json}, status=200)
+        return JsonResponse({'meeting_times': suggested_times_json, "perfect_match": True}, status=200)
 
     def post(self, request, id):
         if id is None:
