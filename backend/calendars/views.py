@@ -3,7 +3,7 @@ from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from contacts.serializers.contact_serializer import ContactSerializer
-from .models import Calendar, Availability, SuggestedSchedule
+from .models import Calendar, Availability, SuggestedSchedule, Invitation, BoundedTime
 from .serializers import AvailabilitySerializer, CalendarSerializer, BoundedTimeSerializer
 from intervals import DateTimeInterval
 import datetime
@@ -250,48 +250,56 @@ class InviteeResponseView(APIView):
         else:
             return JsonResponse(availability_serializer.errors, status=400)
 
+
 class SuggestScheduleView(APIView):
     """
     View for suggesting schedules.
     """
 
-
     def get(self, request, id):
         if id is None:
             return JsonResponse({"error": "calendar_id is required"}, status=400)
 
-        owner_availabilities, invitee_availabilities = self.split_availability_set(id)
-        bounded_times_data = request.query_params.get('bounded_times')  # Assuming bounded_times is passed as query parameter
+        owner_availabilities, invitee_availabilities = self.split_availability_set(
+            id)
+        # Assuming bounded_times is passed as query parameter
+        bounded_times_data = request.query_params.get('bounded_times')
 
         # Assuming bounded_times is a single object, adjust as needed
-        bounded_times_serializer = BoundedTimeSerializer(data=bounded_times_data)
+        bounded_times_serializer = BoundedTimeSerializer(
+            data=bounded_times_data)
         if not bounded_times_serializer.is_valid():
             return JsonResponse(bounded_times_serializer.errors, status=400)
-        
+
         bounded_times = bounded_times_serializer.save()
 
-        sorted_intersection_intervals = self.overlapping_invitee_availability(owner_availabilities, invitee_availabilities, bounded_times)
+        sorted_intersection_intervals = self.overlapping_invitee_availability(
+            owner_availabilities, invitee_availabilities, bounded_times)
 
         return JsonResponse(sorted_intersection_intervals, status=200)
-    
-    
 
     @classmethod
     def split_availability_set(cls, calendar_id):
         # Query owner and invitee availabilities separately
-        owner_availabilities = Availability.objects.filter(calendar_id=calendar_id, owner__isnull=False)
-        invitee_availabilities = Availability.objects.filter(calendar_id=calendar_id, owner__isnull=True)
+        owner_availabilities = Availability.objects.filter(
+            calendar_id=calendar_id, owner__isnull=False)
+        invitee_availabilities = Availability.objects.filter(
+            calendar_id=calendar_id, owner__isnull=True)
 
         return owner_availabilities, invitee_availabilities
-    
+
     @classmethod
     def overlapping_invitee_availability(cls, owner_availabilities, invitee_availabilities, bounded_times):
-        intersection_intervals = {}  # Dictionary to store the intersection intervals for each owner's availability time slot
+        # Dictionary to store the intersection intervals for each owner's availability time slot
+        intersection_intervals = {}
 
         for owner_availability in owner_availabilities:
-            invitee_overlapping_per_own_availability_time_slot = cls.find_invitee_overlapping_intervals(owner_availability, invitee_availabilities, bounded_times)
-            overlapping_intervals = cls.find_overlapping_intervals(invitee_overlapping_per_own_availability_time_slot)
-            num_overlapping_invitees = cls.count_overlapping_invitees(overlapping_intervals, invitee_availabilities)
+            invitee_overlapping_per_own_availability_time_slot = cls.find_invitee_overlapping_intervals(
+                owner_availability, invitee_availabilities, bounded_times)
+            overlapping_intervals = cls.find_overlapping_intervals(
+                invitee_overlapping_per_own_availability_time_slot)
+            num_overlapping_invitees = cls.count_overlapping_invitees(
+                overlapping_intervals, invitee_availabilities)
 
             if num_overlapping_invitees > 0 and overlapping_intervals >= bounded_times.duration:
                 for interval in overlapping_intervals:
@@ -304,23 +312,30 @@ class SuggestScheduleView(APIView):
                     }
 
         # Sort the dictionary by preference and then by number of invitees
-        sorted_intersection_intervals = sorted(intersection_intervals.items(), key=lambda x: (x[1]['preference'], x[1]['num_invitees']), reverse=True)
+        sorted_intersection_intervals = sorted(intersection_intervals.items(
+        ), key=lambda x: (x[1]['preference'], x[1]['num_invitees']), reverse=True)
 
         return dict(sorted_intersection_intervals)
 
-
     @classmethod
     def find_invitee_overlapping_intervals(cls, owner_availability, invitee_availabilities, bounded_times):
-        invitee_overlapping_intervals = []  # List to store overlapping intervals for this owner
+        # List to store overlapping intervals for this owner
+        invitee_overlapping_intervals = []
 
-        owner_start_datetime = datetime.combine(owner_availability.date, owner_availability.start_time)
-        owner_end_datetime = datetime.combine(owner_availability.date, owner_availability.end_time)
-        owner_availability_interval = DateTimeInterval(owner_start_datetime, owner_end_datetime)
+        owner_start_datetime = datetime.combine(
+            owner_availability.date, owner_availability.start_time)
+        owner_end_datetime = datetime.combine(
+            owner_availability.date, owner_availability.end_time)
+        owner_availability_interval = DateTimeInterval(
+            owner_start_datetime, owner_end_datetime)
 
         for invitee_availability in invitee_availabilities:
-            invitee_start_datetime = datetime.combine(invitee_availability.date, invitee_availability.start_time)
-            invitee_end_datetime = datetime.combine(invitee_availability.date, invitee_availability.end_time)
-            invitee_availability_interval = DateTimeInterval(invitee_start_datetime, invitee_end_datetime)
+            invitee_start_datetime = datetime.combine(
+                invitee_availability.date, invitee_availability.start_time)
+            invitee_end_datetime = datetime.combine(
+                invitee_availability.date, invitee_availability.end_time)
+            invitee_availability_interval = DateTimeInterval(
+                invitee_start_datetime, invitee_end_datetime)
 
             intersection_interval = owner_availability_interval & invitee_availability_interval
 
@@ -334,7 +349,8 @@ class SuggestScheduleView(APIView):
                     meeting_duration = bounded_times.duration
                     intersection_duration = intersection_interval.end - intersection_interval.start
                     if intersection_duration >= meeting_duration:
-                        invitee_overlapping_intervals.append(intersection_interval)
+                        invitee_overlapping_intervals.append(
+                            intersection_interval)
 
         return invitee_overlapping_intervals
 
@@ -345,14 +361,66 @@ class SuggestScheduleView(APIView):
     @classmethod
     def count_overlapping_invitees(cls, overlapping_intervals, invitee_availabilities):
         num_overlapping_invitees = 0
-        
+
         for interval in overlapping_intervals:
             for invitee_availability in invitee_availabilities:
-                invitee_start_datetime = datetime.combine(invitee_availability.date, invitee_availability.start_time)
-                invitee_end_datetime = datetime.combine(invitee_availability.date, invitee_availability.end_time)
-                invitee_availability_interval = DateTimeInterval(invitee_start_datetime, invitee_end_datetime)
+                invitee_start_datetime = datetime.combine(
+                    invitee_availability.date, invitee_availability.start_time)
+                invitee_end_datetime = datetime.combine(
+                    invitee_availability.date, invitee_availability.end_time)
+                invitee_availability_interval = DateTimeInterval(
+                    invitee_start_datetime, invitee_end_datetime)
 
                 if interval in invitee_availability_interval:
                     num_overlapping_invitees += 1
 
         return num_overlapping_invitees
+
+
+class InvitesStatusView(APIView):
+    """
+    Describe: page where user gets to see who has responded and who hasn’t
+    GET
+    Methods: GET
+    Field/Payload: meeting_name
+
+    """
+
+    def get(self, request, id):
+        calendar = Calendar.objects.get(id=id)
+        if calendar is None:
+            return JsonResponse({"error": "calenar with id does not exist"}, status=400)
+        calendar_invitations = Invitation.objects.filter(calendar=calendar)
+        responsed = []
+        not_responsed = []
+        for invitation in calendar_invitations:
+            if invitation.confirmed:
+                responsed.append({"first_name": invitation.invitee.first_name,
+                                 "last_name": invitation.invitee.last_name})
+            else:
+                not_responsed.append(
+                    {"first_name": invitation.invitee.first_name, "last_name": invitation.invitee.last_name})
+        return JsonResponse({"responsed": responsed, "not_responsed": not_responsed}, status=200)
+
+
+class InviteeRemindView(APIView):
+    """
+    Describe: remind users who have not responded
+    Methods: POST
+    """
+
+    def post(self, request, id):
+        calendar = Calendar.objects.get(id=id)
+        if calendar is None:
+            return JsonResponse({"error": "calenar with id does not exist"}, status=400)
+        calendar_invitations = Invitation.objects.filter(calendar=calendar)
+        users_reminded = []
+        for invitation in calendar_invitations:
+            if invitation.confirmed:
+                pass
+            else:
+                # TODO: Send emails
+                users_reminded.append(
+                    {"first_name": invitation.invitee.first_name, "last_name": invitation.invitee.last_name})
+                pass
+        return JsonResponse({"users_reminded": users_reminded}, status=200)
