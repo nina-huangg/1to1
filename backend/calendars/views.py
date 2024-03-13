@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 
 from contacts.serializers.contact_serializer import ContactSerializer
 
-from .models import Calendar
+from .models import Calendar, Availability
 from .serializers import AvailabilitySerializer, CalendarSerializer
 
 
@@ -166,7 +166,8 @@ class AddContactView(APIView):
         calendar.contacts.add(*deserialized_contacts)
 
         # Serialize the added contacts
-        added_contacts_serializer = ContactSerializer(deserialized_contacts, many=True)
+        added_contacts_serializer = ContactSerializer(
+            deserialized_contacts, many=True)
 
         return JsonResponse(added_contacts_serializer.data, status=200, safe=False)
 
@@ -187,3 +188,61 @@ class ContactDetailView(APIView):
             return JsonResponse(contact_serializer.data, status=200, safe=False)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
+
+
+class InviteeResponseView(APIView):
+    """
+    page where invitee with invite-id  gets to respond
+
+    GET: gets the page and the times that the user is available, and shows the user ID that is inviting
+    POST: responds with availability (in similar format to calendars/<id>/meetings/create/)
+
+    """
+
+    def get(self, request, id, invite_id):
+        """
+        Handles GET requests to retrieve invitee responses.
+        """
+        try:
+            calendar = Calendar.objects.get(id=id)
+            availabilities = Availability.objects.filter(calendar_id=id)
+            availability_list = []
+            for availability in availabilities:
+                availability_list.append(f"{availability.date}: {
+                                         availability.start_time}-{availability.end_time}")
+
+            invitee_response = {
+                "inviter": calendar.owner.id,
+                "availability_set": availability_list,
+            }
+            return JsonResponse(invitee_response, status=200, safe=False)
+        except Calendar.DoesNotExist:
+            return JsonResponse({"error": "Calendar not found"}, status=404)
+
+    def post(self, request, id, invite_id):
+        """
+        Handles POST requests to respond to an invite.
+        """
+        user = request.user
+        request_data = request.data
+        if id is None:
+            return JsonResponse({"error": "calendar_id is required"}, status=400)
+        if "availability_set" not in request_data:
+            return JsonResponse({"error": "availability_set is required"}, status=400)
+        availability_data = request_data["availability_set"]
+        try:
+            calendar = Calendar.objects.get(id=id)
+        except Calendar.DoesNotExist:
+            return JsonResponse({"error": "Calendar not found"}, status=404)
+        availability_data_with_owner = []
+        for availability in availability_data:
+            availability["owner"] = user.id
+            availability_data_with_owner.append(availability)
+        availability_serializer = AvailabilitySerializer(
+            data=availability_data_with_owner, many=True
+        )
+        if availability_serializer.is_valid():
+            availability_serializer.save(calendar=calendar)
+            return JsonResponse(availability_serializer.data, status=200, safe=False)
+        else:
+            return JsonResponse(availability_serializer.errors, status=400)

@@ -6,6 +6,7 @@ from .views import (
     CalendarsView,
     CreateCalendarView,
     CreateMeetingView,
+    InviteeResponseView,
 )
 
 app_name = "calendars"
@@ -18,4 +19,9 @@ urlpatterns = [
         "<int:id>/meetings/create/", CreateMeetingView.as_view(), name="create_meeting"
     ),
     path("<int:id>/contacts/add/", AddContactView.as_view(), name="add_contact"),
+    path(
+        "<int:id>/meetings/invite/<int:invite_id>/",
+        InviteeResponseView.as_view(),
+        name="add_invitee",
+    ),
 ]

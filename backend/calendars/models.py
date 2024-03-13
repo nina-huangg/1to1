@@ -20,12 +20,11 @@ class Availability(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     calendar = models.ForeignKey("Calendar", on_delete=models.CASCADE)
 
-
-# class Invitation(models.Model):
-#     number = models.IntegerField()
+    def __str__(self):
+        return f"{self.date} {self.start_time} - {self.end_time}"
 
 
 class Calendar(models.Model):
@@ -35,10 +34,9 @@ class Calendar(models.Model):
     contacts = models.ManyToManyField(Contact, related_name="calendars", blank=True)
 
 
-    
 class BoundedTime(models.Model):
-    DEFAULT_START_TIME = '09:00:00'
-    DEFAULT_END_TIME = '17:00:00'
+    DEFAULT_START_TIME = "09:00:00"
+    DEFAULT_END_TIME = "17:00:00"
 
     start_time = models.TimeField(default=DEFAULT_START_TIME)
     end_time = models.TimeField(default=DEFAULT_END_TIME)
@@ -47,4 +45,5 @@ class BoundedTime(models.Model):
 
 class SuggestedSchedule(models.Model):
     bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)
-
+    bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)
+    bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)
