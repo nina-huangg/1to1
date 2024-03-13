@@ -5,7 +5,6 @@ from contacts.models import Contact
 
 # Create your models here.
 
-
 class Availability(models.Model):
     HIGH_PREFERENCE = "high"
     MEDIUM_PREFERENCE = "medium"
@@ -20,9 +19,14 @@ class Availability(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_availabilities', null=True)
+    invitee = models.ForeignKey("Invitation", on_delete=models.CASCADE, related_name='invited_availabilities', null=True)
     calendar = models.ForeignKey("Calendar", on_delete=models.CASCADE)
+    
 
+class Invitation(models.Model):
+    invitee = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    meeting = models.ForeignKey("Meeting", on_delete=models.CASCADE)
     def __str__(self):
         return f"{self.date} {self.start_time} - {self.end_time}"
 
@@ -65,5 +69,16 @@ class BoundedTime(models.Model):
     end_date = models.DateField()
 
 
+class SuggestedMeeting(models.Model):
+    owner_availability_id = models.IntegerField()
+    invitee_availability_id = models.IntegerField()
+    invitee = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    date = models.DateField()
+    owner_preference = models.CharField(max_length=10)
+        
+
 class SuggestedSchedule(models.Model):
     bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)
+    suggested_meeting = models.ForeignKey(SuggestedMeeting, on_delete=models.CASCADE)
