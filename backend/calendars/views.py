@@ -9,6 +9,7 @@ from .serializers import (
     CalendarSerializer,
     BoundedTimeSerializer,
     SuggestedMeetingSerializer,
+    AddContactSerializer,
 )
 from intervals import DateTimeInterval
 import datetime
