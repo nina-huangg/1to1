@@ -33,3 +33,18 @@ class Calendar(models.Model):
     description = models.CharField(max_length=200, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     contacts = models.ManyToManyField(Contact, related_name="calendars", blank=True)
+
+
+    
+class BoundedTime(models.Model):
+    DEFAULT_START_TIME = '09:00:00'
+    DEFAULT_END_TIME = '17:00:00'
+
+    start_time = models.TimeField(default=DEFAULT_START_TIME)
+    end_time = models.TimeField(default=DEFAULT_END_TIME)
+    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
+
+
+class SuggestedSchedule(models.Model):
+    bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)
+
