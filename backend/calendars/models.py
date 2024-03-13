@@ -5,6 +5,7 @@ from contacts.models import Contact
 
 # Create your models here.
 
+
 class Availability(models.Model):
     HIGH_PREFERENCE = "high"
     MEDIUM_PREFERENCE = "medium"
@@ -70,8 +71,9 @@ class SuggestedMeeting(models.Model):
     end_time = models.TimeField()
     date = models.DateField()
     owner_preference = models.CharField(max_length=10)
-        
+
 
 class SuggestedSchedule(models.Model):
     bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)
-    suggested_meeting = models.ForeignKey(SuggestedMeeting, on_delete=models.CASCADE)
+    suggested_meeting = models.ForeignKey(
+        SuggestedMeeting, on_delete=models.CASCADE)
