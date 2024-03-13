@@ -211,7 +211,8 @@ class InviteeResponseView(APIView):
             availabilities = Availability.objects.filter(calendar_id=id)
             availability_list = []
             for availability in availabilities:
-                availability_list.append(f"{availability.date}: {availability.start_time}-{availability.end_time}")
+                availability_list.append(f"{availability.date}: {
+                                         availability.start_time}-{availability.end_time}")
 
             invitee_response = {
                 "inviter": calendar.owner.id,
@@ -249,6 +250,54 @@ class InviteeResponseView(APIView):
         else:
             return JsonResponse(availability_serializer.errors, status=400)
 
+
+class InvitesStatusView(APIView):
+    """
+    Describe: page where user gets to see who has responded and who hasn’t
+    GET
+    Methods: GET
+    Field/Payload: meeting_name
+
+    """
+
+    def get(self, request, id):
+        calendar = Calendar.objects.get(id=id)
+        if calendar is None:
+            return JsonResponse({"error": "calenar with id does not exist"}, status=400)
+        calendar_invitations = Invitation.objects.filter(calendar=calendar)
+        responsed = []
+        not_responsed = []
+        for invitation in calendar_invitations:
+            if invitation.confirmed:
+                responsed.append({"first_name": invitation.invitee.first_name,
+                                 "last_name": invitation.invitee.last_name})
+            else:
+                not_responsed.append(
+                    {"first_name": invitation.invitee.first_name, "last_name": invitation.invitee.last_name})
+        return JsonResponse({"responsed": responsed, "not_responsed": not_responsed}, status=200)
+
+
+class InviteeRemindView(APIView):
+    """
+    Describe: remind users who have not responded
+    Methods: POST
+    """
+
+    def post(self, request, id):
+        calendar = Calendar.objects.get(id=id)
+        if calendar is None:
+            return JsonResponse({"error": "calenar with id does not exist"}, status=400)
+        calendar_invitations = Invitation.objects.filter(calendar=calendar)
+        users_reminded = []
+        for invitation in calendar_invitations:
+            if invitation.confirmed:
+                pass
+            else:
+                # TODO: Send emails
+                users_reminded.append(
+                    {"first_name": invitation.invitee.first_name, "last_name": invitation.invitee.last_name})
+                pass
+        return JsonResponse({"users_reminded": users_reminded}, status=200)
 
 class SuggestMeetingView(APIView):
     """
@@ -362,3 +411,4 @@ class SuggestMeetingView(APIView):
                         invitee_overlapping_intervals[invitee_availability.id].append((intersection_interval, invitee_availability.invitee))
 
         return invitee_overlapping_intervals
+
