@@ -16,15 +16,14 @@ class CalendarsView(View):
         """
         Handles GET requests to retrieve details of all calendars.
         """
-        calendars = Calendar.objects.all()
+        calendars = Calendar.objects.all().values('name', 'description')
 
         if not calendars:
             return JsonResponse({}, status=200)
 
-        calendar_serializer = CalendarSerializer(calendars, many=True)
+        return JsonResponse(list(calendars), status=200, safe=False)
 
-        return JsonResponse(calendar_serializer.data, status=200, safe=False)
-    
+
 class CreateCalendarView(APIView):
     """
     View for creating a new calendar.
@@ -75,26 +74,22 @@ class CreateMeetingView(APIView):
 
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request, id=None):
         """
         Handles POST requests to create a meeting.
         """
         request_data = request.data
 
-        if 'calendar_name' not in request_data:
-            return JsonResponse({'error': 'calendar_name is required'}, status=400)
+        if id is None:
+            return JsonResponse({'error': 'calendar_id is required'}, status=400)
 
         if 'availability_set' not in request_data:
             return JsonResponse({'error': 'availability_set is required'}, status=400)
 
-        calendar_name = request_data['calendar_name']
         availability_data = request_data['availability_set']
 
-        if not calendar_name:
-            return JsonResponse({'error': 'calendar_name cannot be empty'}, status=400)
-
         try:
-            calendar = Calendar.objects.get(name=calendar_name)
+            calendar = Calendar.objects.get(id=id)
         except Calendar.DoesNotExist:
             return JsonResponse({'error': 'Calendar not found'}, status=404)
 
@@ -106,8 +101,11 @@ class CreateMeetingView(APIView):
             availability['owner'] = user.id
             availability_data_with_owner.append(availability)
 
+  
         availability_serializer = AvailabilitySerializer(data=availability_data_with_owner, many=True)
 
+        availability_serializer["calendar_id"] = id
+        
         if availability_serializer.is_valid():
             # Save the availability slots associated with the calendar
             availability_serializer.save(calendar=calendar)
