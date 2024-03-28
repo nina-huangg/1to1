@@ -5,7 +5,7 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import LandingPage from "./pages/LandingPage"
-import ProtectedRoute from "./utils/ProtectedRoute"
+import ProtectedRoute from "./components/ProtectedRoute"
 import './App.css'
 
 function Logout() {
