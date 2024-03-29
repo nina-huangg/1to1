@@ -5,3 +5,7 @@ venv
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
+**/.env
+.vscode
+.dist
+.DS_Store
