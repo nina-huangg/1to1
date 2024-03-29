@@ -24,5 +24,5 @@ urlpatterns = [
     path('calendars/', include('calendars.urls', namespace='calendars')),
     path('profile/', include('profile_info.urls', namespace='profile')),
     path('contacts/', include(('contacts.urls', 'contacts'), namespace='contacts')),
-	path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

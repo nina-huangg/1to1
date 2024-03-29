@@ -21,7 +21,6 @@ from django.utils import timezone
 from contacts.models import Contact
 
 
-
 class CalendarsView(View):
     """
     View for retrieving details of all calendars.
@@ -32,9 +31,6 @@ class CalendarsView(View):
         Handles GET requests to retrieve details of all calendars.
         """
         calendars = Calendar.objects.all().values("name", "description")
-
-        if not calendars:
-            return JsonResponse({}, status=200)
 
         return JsonResponse(list(calendars), status=200, safe=False)
 
@@ -77,7 +73,7 @@ class CalendarDetailsView(View):
     """
     View for retrieving details of a calendar.
     """
-    
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
@@ -176,14 +172,15 @@ class AddContactView(APIView):
             serializer = AddContactSerializer(data=data)
             if serializer.is_valid():
                 instance_with_attributes = serializer.validated_data
- 
+
                 id_value = instance_with_attributes['id']
                 user_value = instance_with_attributes['user']
                 contact = Contact.objects.get(id=id_value, user=user_value)
                 deserialized_contacts.append(contact)
 
                 if not Invitation.objects.filter(invitee=contact, inviter=user_value, calendar=calendar).exists():
-                    invitation = Invitation.objects.create(invitee=contact,inviter=user_value, calendar=calendar)
+                    invitation = Invitation.objects.create(
+                        invitee=contact, inviter=user_value, calendar=calendar)
                 else:
                     return JsonResponse({'error': 'Contact already added to calendar'}, status=400)
 
@@ -261,15 +258,14 @@ class InviteeResponseView(APIView):
             return JsonResponse({"error": "calendar_id is required"}, status=400)
         if "availability_set" not in request_data:
             return JsonResponse({"error": "availability_set is required"}, status=400)
-        
+
         availability_data = request_data["availability_set"]
         try:
             calendar = Calendar.objects.get(id=id)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
-        
-        invitation = Invitation.objects.get(id=invite_id)
 
+        invitation = Invitation.objects.get(id=invite_id)
 
         availability_data_with_owner = []
         for availability in availability_data:
@@ -285,7 +281,8 @@ class InviteeResponseView(APIView):
             # inviter = User.objects.get(id=user.id)
             # invitee = Contact.objects.get(id=invite_id)
             # invitation = Invitation.objects.filter(invitee=invitee, inviter=inviter)
-            Invitation.objects.filter(invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
+            Invitation.objects.filter(
+                invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
 
             return JsonResponse(availability_serializer.data, status=200, safe=False)
         else:
@@ -302,12 +299,11 @@ class InvitesStatusView(APIView):
     """
     permission_classes = [IsAuthenticated]
 
-
     def get(self, request, id):
         calendar = Calendar.objects.get(id=id)
         if calendar is None:
             return JsonResponse({"error": "calendar with id does not exist"}, status=400)
-        
+
         calendar_invitations = Invitation.objects.filter(calendar=calendar)
         responsed = []
         not_responsed = []
