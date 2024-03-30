@@ -5,6 +5,7 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import LandingPage from "./pages/LandingPage"
+import CalendarDetail from "./pages/CalendarDetail"
 import ProtectedRoute from "./components/ProtectedRoute"
 import './App.css'
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
+        <Route path="/calendars/calendar/:id" element={<CalendarDetail />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
