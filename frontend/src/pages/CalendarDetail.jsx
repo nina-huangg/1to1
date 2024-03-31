@@ -2,13 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../api'; // Assuming you have an API setup similar to the Home component
+import api from '../api';
 import Calendar from '../components/Calendar';
+import AvailabilityEntry from '../components/AvailabilityEntry';
+import InvitationManagementModal from '../components/InvitationManagementModel';
+import AvailabilityPreferenceDropdown from '../components/AvailabilityPreferenceDropdown';
 
 const CalendarDetail = () => {
     const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
     const [calendarDetails, setCalendarDetails] = useState({});
-    const [fetchedTimeSlots, setFetchedTimeSlots] = useState([]);
+    const [slotPreference, setSlotPreference] = useState('');
+    const [availabilityData, setAvailabilityData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const toggleModal = () => setIsModalOpen(!isModalOpen);
     const { id: calendarId } = useParams();
     // const navigate = useNavigate();
 
@@ -21,6 +27,17 @@ const CalendarDetail = () => {
         const dateComparison = a.day.localeCompare(b.day);
         if (dateComparison !== 0) return dateComparison;
         return a.time.localeCompare(b.time);
+    };
+
+    const groupAvailabilityByDate = (availabilityData) => {
+        const grouped = {};
+        availabilityData.forEach((entry) => {
+            if (!grouped[entry.date]) {
+                grouped[entry.date] = [];
+            }
+            grouped[entry.date].push(entry);
+        });
+        return grouped;
     };
 
     // Function to prepare the payload
@@ -51,7 +68,7 @@ const CalendarDetail = () => {
                     start_time: slot.time + ':00',
                     end_time:
                         slotEndTime.toTimeString().substring(0, 5) + ':00',
-                    preference: 'high', // Assuming 'high' for all for simplicity
+                    preference: slot.preference, // Assuming 'high' for all for simplicity
                 });
             } else {
                 // If continuous, update the end time of the last group
@@ -64,6 +81,8 @@ const CalendarDetail = () => {
         return { availability_set: availabilitySet };
     };
 
+    const groupedAvailability = groupAvailabilityByDate(availabilityData);
+    
     const handleSubmit = async () => {
         const payload = preparePayloadForBackend(selectedTimeSlots);
         console.log('Prepared Payload:', JSON.stringify(payload, null, 2)); // For debugging
@@ -79,7 +98,6 @@ const CalendarDetail = () => {
                 }
             })
             .catch((err) => alert('Error:', err));
-        // Place your POST request logic here...
     };
 
     const fetchCalendarDetails = () => {
@@ -87,39 +105,80 @@ const CalendarDetail = () => {
             .then((res) => {
                 if (res.status === 200) {
                     setCalendarDetails(res.data);
-                    // Assuming the fetched data includes availability slots
-                    setFetchedTimeSlots(res.data.availability || []);
+                    setAvailabilityData(res.data.availability_set);
+                    console.log('Fetched Calendar Details:', res.data); // Print the fetched data
                 } else {
                     console.log('Error fetching calendar details:', res.status);
                 }
             })
-            .catch((err) => console.error('Error:', err));
+            .catch((err) => alert('Error:', err));
     };
 
     return (
         <div className="flex flex-col md:flex-row w-full">
-            {/* Left Column for Calendar Details */}
             <div className="w-full md:w-1/3 p-5">
                 <h2 className="text-4xl font-bold mb-4">
                     {calendarDetails.name}
                 </h2>
                 <p>{calendarDetails.description}</p>
+                <button onClick={toggleModal} className="p-2">
+                    <span>👤</span> {/* Placeholder for your icon */}
+                </button>
+                <hr className="my-4 border-t-2 border-gray-300" />
 
+
+                {/* Using the InvitationManagementModal component */}
+                <InvitationManagementModal isOpen={isModalOpen} toggleModal={toggleModal} />
+
+
+                <div className="font-bold text-xl mb-2">
+                    Submitted Time Slots
+                </div>
+                <div className="max-h-[500px] overflow-y-auto">
+                    {Object.entries(groupedAvailability).map(
+                        ([date, entries], index) => (
+                            <div key={index} className="mb-6">
+                                <div className="font-bold text-m mb-2">
+                                    {date}
+                                </div>
+                                <div className="flex flex-wrap">
+                                    {entries.map((entry, entryIndex) => (
+                                        <AvailabilityEntry
+                                            key={entryIndex}
+                                            entry={entry}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        )
+                    )}
+                </div>
             </div>
 
             {/* Right Column for Calendar */}
             <div className="w-full md:w-2/3">
+                <div className="flex items-center justify-center mb-4 space-x-4">
+                    <div>
+                        <AvailabilityPreferenceDropdown
+                            onSelect={(preference) =>
+                                setSlotPreference(preference)
+                            }
+                            value={slotPreference}
+                        />
+                    </div>
+                    <button
+                        onClick={handleSubmit}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out"
+                    >
+                        Submit Availability
+                    </button>
+                </div>
+
                 <Calendar
                     selectedTimeSlots={selectedTimeSlots}
                     setSelectedTimeSlots={setSelectedTimeSlots}
-                    fetchedTimeSlots={fetchedTimeSlots}
+                    slotPreference={slotPreference} // Pass slotPreference to Calendar
                 />
-                <button
-                    onClick={handleSubmit}
-                    className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                >
-                    Submit Availability
-                </button>
             </div>
         </div>
     );

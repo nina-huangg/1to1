@@ -3,15 +3,30 @@
 import React, { useState } from 'react';
 
 // Cell component for time slots
-const TimeSlotCell = ({ time, day, onClick, isSelected }) => {
+const TimeSlotCell = ({ time, day, onClick, isSelected, preference }) => {
     const handleClick = () => {
         onClick(time, day);
     };
 
+    let backgroundColor;
+    switch (preference) {
+        case 'high':
+            backgroundColor = '#6EB3AF';
+            break;
+        case 'medium':
+            backgroundColor = '#7ab3ef';
+            break;
+        case 'low':
+            backgroundColor = '#FBB5A5';
+            break;
+        default:
+            backgroundColor = 'white';
+    }
+
     return (
         <div
             className={`grid grid-cols-1 bg-white border cursor-pointer`}
-            style={{ backgroundColor: isSelected ? 'lightblue' : 'white' }}
+            style={{ backgroundColor: isSelected ? backgroundColor : 'white' }}
             onClick={handleClick}
         >
             <div className="w-full h-full flex items-center justify-center">
@@ -21,11 +36,13 @@ const TimeSlotCell = ({ time, day, onClick, isSelected }) => {
     );
 };
 
-const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, fetchedTimeSlots }) => {
+
+const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, slotPreference }) => {
     const [currentWeekStart, setCurrentWeekStart] = useState(new Date());
 
     const changeWeek = (increment) => {
         const newDate = new Date(currentWeekStart);
+
         newDate.setDate(newDate.getDate() + increment * 7);
         setCurrentWeekStart(newDate);
     };
@@ -66,8 +83,7 @@ const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, fetchedTimeSlots })
 
         // Find the date of the current week's Sunday
         const startOfWeek = new Date(currentWeekStart);
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Adjust to the start of the week (Sunday)
-
+        startOfWeek.setDate(startOfWeek.getDate() - 1); // Set to Sunday
         // 30-minute blocks for each hour
         for (let hour = 8; hour <= 17; hour++) {
             for (let min = 0; min < 60; min += 30) {
@@ -81,27 +97,16 @@ const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, fetchedTimeSlots })
 
                     // Format the date to "YYYY-MM-DD"
                     const slotDate = dateOfSlot.toISOString().split('T')[0];
-                    // const isSelected = isSelectedTimeSlot(time, slotDate);
-                    // // Determine if slot is disabled based on fetchedTimeSlots
-                    // const isDisabled = fetchedTimeSlots.some(slot => slot.date === slotDate && slot.time === time);
-    
-                    // return (
-                    //     <TimeSlotCell
-                    //         key={`${day}-${time}`}
-                    //         time={time}
-                    //         day={slotDate}
-                    //         isSelected={isSelected}
-                    //         isDisabled={isDisabled}
-                    //     />
-                    // );
 
+                    const isSelectedAndPreference = isSelectedTimeSlot(time, slotDate);
                     return (
                         <TimeSlotCell
                             key={`${day}-${time}`}
                             time={time}
-                            day={slotDate} // Use the actual date instead of day name
-                            onClick={handleTimeSlotClick}
-                            isSelected={isSelectedTimeSlot(time, slotDate)} // Adjust isSelected check
+                            day={slotDate}
+                            onClick={() => handleTimeSlotClick(time, slotDate, slotPreference)} // Assuming `slotPreference` is available
+                            isSelected={isSelectedAndPreference.isSelected}
+                            preference={isSelectedAndPreference.preference}
                         />
                     );
                 });
@@ -119,27 +124,28 @@ const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, fetchedTimeSlots })
         return timeSlots;
     };
 
-    const handleTimeSlotClick = (time, specificDate) => {
+    const handleTimeSlotClick = (time, specificDate, preference) => {
         const slotIndex = selectedTimeSlots.findIndex(
             (slot) => slot.time === time && slot.day === specificDate
         );
-
+    
         if (slotIndex === -1) {
-            setSelectedTimeSlots([
-                ...selectedTimeSlots,
-                { time, day: specificDate },
-            ]);
+            setSelectedTimeSlots([...selectedTimeSlots, { time, day: specificDate, preference }]);
         } else {
-            setSelectedTimeSlots(
-                selectedTimeSlots.filter((_, index) => index !== slotIndex)
-            );
+            // If clicked again, remove the slot.
+            setSelectedTimeSlots(selectedTimeSlots.filter((_, index) => index !== slotIndex));
         }
     };
+    
 
     const isSelectedTimeSlot = (time, specificDate) => {
-        return selectedTimeSlots.some(
+        const found = selectedTimeSlots.find(
             (slot) => slot.time === time && slot.day === specificDate
         );
+        if (found) {
+            return { isSelected: true, preference: found.preference };
+        }
+        return { isSelected: false };
     };
 
     return (
@@ -149,11 +155,14 @@ const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, fetchedTimeSlots })
                 <button className="arrow-button" onClick={() => changeWeek(-1)}>
                     {'<'}
                 </button>
-                <h2 bg-gray-400>{`Week of ${currentWeekStart.toLocaleDateString(
+                <h2>{`Week of ${currentWeekStart.toLocaleDateString(
                     'en-US',
                     { month: 'long', day: 'numeric', year: 'numeric' }
                 )}`}</h2>
-                <button className="arrow-button justify-between" onClick={() => changeWeek(1)}>
+                <button
+                    className="arrow-button justify-between"
+                    onClick={() => changeWeek(1)}
+                >
                     {'>'}
                 </button>
             </div>

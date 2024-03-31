@@ -11,6 +11,7 @@ from .serializers import (
     SuggestedMeetingSerializer,
     AddContactSerializer,
 )
+from django.db import transaction
 from intervals import DateTimeInterval
 import datetime
 from django.contrib.auth.models import User
@@ -115,24 +116,41 @@ class ChooseAvailabilityView(APIView):
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
 
-        user = request.user
+        valid_slots = []
+        errors = []
 
-        availability_data_with_owner = []
         for availability in availability_data:
-            # Ensure availability's owner is set to the authenticated user's ID
-            availability["owner"] = user.id
-            availability_data_with_owner.append(availability)
+            # Check for duplicates directly here
+            if Availability.objects.filter(
+                date=availability['date'],
+                start_time=availability['start_time'],
+                end_time=availability['end_time'],
+                preference=availability['preference'],
+                owner=request.user  # Assuming you want to check against the owner as well
+            ).exists():
+                errors.append(
+                    f"Duplicate availability slot found for {availability}.")
+                continue  # Skip this iteration, effectively ignoring this slot
 
-        availability_serializer = AvailabilitySerializer(
-            data=availability_data_with_owner, many=True
-        )
+            availability["owner"] = request.user.id
+            valid_slots.append(availability)
 
-        if availability_serializer.is_valid():
-            # Save the availability slots associated with the calendar
-            availability_serializer.save(calendar=calendar)
-            return JsonResponse(availability_serializer.data, status=200, safe=False)
-        else:
-            return JsonResponse(availability_serializer.errors, status=400)
+            # Now, proceed with serialization for only the valid slots
+            if valid_slots:
+                with transaction.atomic():
+                    availability_serializer = AvailabilitySerializer(
+                        data=valid_slots, many=True)
+                    if availability_serializer.is_valid():
+                        availability_serializer.save(calendar=calendar)
+                    else:
+                        # Handle unexpected serialization errors (should be few, if any, at this point)
+                        errors.extend(availability_serializer.errors)
+
+            if errors:
+                # Optionally, return the errors in the response or log them
+                return JsonResponse({"errors": errors, "success": len(valid_slots)}, status=200)
+            else:
+                return JsonResponse({"message": "All slots processed successfully", "success": len(valid_slots)}, status=200)
 
 
 class AddContactView(APIView):

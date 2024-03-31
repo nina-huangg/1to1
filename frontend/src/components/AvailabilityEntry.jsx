@@ -9,20 +9,15 @@ function getRandomColor() {
     return colors[randomIndex];
 }
 
-const AvailabilityEntry = ({ date, meetingName, meetingTime }) => {
-    const randomColor = getRandomColor();
+import React from 'react';
+
+const AvailabilityEntry = ({ entry }) => {
+    const { start_time, end_time } = entry;
 
     return (
-        <div className="grid grid-cols-3 md:grid-cols-8 gap-2 mb-6 flex flex-wrap">
-            <div className="col-span-3 md:col-start-3 md:col-span-5 ml-10">
-                <div className="font-bold text-lg">{date}</div>
-                <div className="py-2 px-2 flex flex-row text-sm shadow-xl rounded-md md:w-full"
-                     style={{ backgroundColor: randomColor, maxWidth: 'calc(100% - 2rem)' }}>
-                    <div className="ml-2 m-2 pr-13 flex flex-col">
-                        <p className="text-base">{meetingName}</p>
-                        <p className="text-xs">Time: {meetingTime}</p>
-                    </div>
-                </div>
+        <div className="flex items-center mb-2 mr-2">
+            <div className="py-2 px-4 text-sm shadow-xl rounded-md" style={{ backgroundColor: getRandomColor() }}>
+                <p className="text-xs">{start_time.slice(0, -3)} - {end_time.slice(0, -3)}</p>
             </div>
         </div>
     );
