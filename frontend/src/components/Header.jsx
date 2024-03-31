@@ -28,11 +28,18 @@ function Header(){
                 </a>
                 <Link className="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
                     xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
+                    xl:mr-5 lg:mr-5 md:mr-4 sm:mr-3 mr-2 my-5 
+                    xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+                    shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white" to="/profile">
+                My Profile
+                </Link>
+                <Link className="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+                    xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
                     xl:mr-8 lg:mr-8 md:mr-6 sm:mr-4 mr-2 my-5 
                     xl:inline lg:inline md:inline sm:inline hidden
                     xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
-                    shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white" to="/profile">
-                Profile
+                    shadow-lg shadow-gray-400 border-solid border-0 border-gray-500 bg-orange hover:bg-orange-hover text-white">
+                Log out
                 </Link>
             </div>
         </div>
