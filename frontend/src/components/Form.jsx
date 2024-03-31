@@ -13,6 +13,10 @@ function Form({ route, method }) {
     const [lastName, setLastName] = useState("");
     const [password2, setPassword2] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const [error, setError] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const navigate = useNavigate();
 
     const name = method === "login" ? "Login" : "Register";
@@ -22,6 +26,9 @@ function Form({ route, method }) {
         e.preventDefault();
 
         try {
+            setError('');
+            setUsernameError('');
+            setPasswordError('');
             let userData = { username, password };
 
             if (method === "register") {
@@ -43,7 +50,19 @@ function Form({ route, method }) {
                 navigate("/login");
             }
         } catch (error) {
-            alert(error);
+            console.log(error.response.data)
+            for (const field in error.response.data){
+                if (field=='detail'){
+                    setError(error.response.data['detail'])
+                }
+                else if (field=='username'){
+                    setUsernameError(error.response.data['username'][0])
+                }
+                else if (field=='password'){
+                    setPasswordError(error.response.data['password'][0])
+                }
+            }
+            
         } finally {
             setLoading(false);
         }
@@ -54,6 +73,9 @@ function Form({ route, method }) {
         <p className="xl:text-3xl lg:text-3xl md:text-3xl sm:text-3xl text-xl mt-20 font-bold text-center mb-6">Login to your 1on1 account</p>
         
         <form onSubmit={handleSubmit} className="shadow-xl border-solid border-2 border-gray-200 rounded px-8 pt-6 pb-8 w-full max-w-sm">
+            {error && (
+            <p className="mt-2 block text-red-700 text-sm font-bold mb-2">{error}</p>
+            )}
             <div className="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
             Username *
@@ -65,6 +87,9 @@ function Form({ route, method }) {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
             />
+            {usernameError && (
+            <p className="mt-2 block text-red-700 text-sm font-bold mb-2">{usernameError}</p>
+            )}
             </div>
             <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
@@ -77,6 +102,9 @@ function Form({ route, method }) {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
+            {passwordError && (
+            <p className="mt-2 block text-red-700 text-sm font-bold mb-2">{passwordError}</p>
+            )}
             </div>
             {method === "register" && (
                 <>

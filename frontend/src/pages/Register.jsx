@@ -19,6 +19,12 @@ function Register({ route, method }) {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    const [usernameError, setUsernameError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [password2Error, setPassword2Error] = useState("");
+    const [emailError, setEmailError] = useState("");
+
+
     const name = method = "register";
 
     const handleSubmit = async (e) => {
@@ -26,8 +32,13 @@ function Register({ route, method }) {
         e.preventDefault();
 
         try {
-            let userData = { username, password };
+            setUsernameError('');
+            setPasswordError('');
+            setPassword2Error('');
+            setEmailError('');
 
+            let userData = { username, password };
+            console.log('send api');
             if (method === "register") {
                 userData = {
                     ...userData,
@@ -38,9 +49,26 @@ function Register({ route, method }) {
                 };
             }
             const res = await api.post("/accounts/register/", userData);
+            navigate('/login/');
 
         } catch (error) {
-            alert(error);
+            console.log(error.response.data);
+            for (const field in error.response.data){
+                if (field=='username'){
+                    setUsernameError(error.response.data['username'])
+                }
+                else if (field=='password'){
+                    setPasswordError(error.response.data['password'][0])
+                }
+                if (field=='password2'){
+                    setPassword2Error(error.response.data['password2'])
+                }
+                if (field=='email'){
+                    setEmailError(error.response.data['email'])
+                }
+            };
+
+            //alert(error);
         } finally {
             setLoading(false);
         }
@@ -49,11 +77,11 @@ function Register({ route, method }) {
     return (
         <>
         <LoginHeader/>
-        <div class="flex flex-col justify-center items-center">
-        <p class="xl:text-3xl lg:text-3xl md:text-3xl sm:text-3xl text-xl mt-20 font-bold text-center mb-6">Create an 1on1 account</p>
+        <div className="flex flex-col justify-center items-center">
+        <p className="xl:text-3xl lg:text-3xl md:text-3xl sm:text-3xl text-xl mt-20 font-bold text-center mb-6">Create an 1on1 account</p>
         <form onSubmit={handleSubmit} className="shadow-xl border-solid border-2 border-gray-200 rounded px-8 pt-6 pb-8 w-full max-w-sm">
-            <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+            <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
             Username *
             </label>
             <input
@@ -63,9 +91,13 @@ function Register({ route, method }) {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
             />
+            {usernameError && (
+            <p className="mt-2 block text-red-700 text-sm font-bold mb-2">{usernameError}</p>
+            )}
+            
             </div>
-            <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+            <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
             Password *
             </label>
             <input
@@ -75,11 +107,14 @@ function Register({ route, method }) {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
+            {passwordError && (
+            <p className="mt-2 block text-red-700 text-sm font-bold mb-2">{passwordError}</p>
+            )}
             </div>
             {method === "register" && (
                 <>
-                    <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password2">
+                    <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password2">
                     Repeat password *
                     </label>
                     <input
@@ -89,9 +124,12 @@ function Register({ route, method }) {
                         onChange={(e) => setPassword2(e.target.value)}
                         placeholder="Repeat Password"
                     />
+                    {password2Error && (
+                        <p className="mt-2 block text-red-700 text-sm font-bold mb-2">{password2Error}</p>
+                    )}
                     </div>
-                    <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+                    <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
                     Email
                     </label>
                     <input
@@ -101,9 +139,12 @@ function Register({ route, method }) {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email"
                     />
+                    {emailError && (
+                        <p className="mt-2 block text-red-700 text-sm font-bold mb-2">{emailError}</p>
+                    )}
                     </div>
-                    <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="first_name">
+                    <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="first_name">
                     First name
                     </label>
                     <input
@@ -114,8 +155,8 @@ function Register({ route, method }) {
                         placeholder="First Name"
                     />
                     </div>
-                    <div class="mb-4">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="last_name">
+                    <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="last_name">
                     Last name
                     </label>
                     <input
@@ -129,7 +170,7 @@ function Register({ route, method }) {
                 </>
             )}
             {loading && <LoadingIndicator />}
-            <div class="text-center">
+            <div className="text-center">
             <button type="submit" className="w-30 h-10 px-8 py-2 mx-10 my-1 text-l shadow-gray-400 rounded-full text-center shadow-lg bg-orange text-white hover:bg-orange-hover" href="../Profile/profile.html">
                 Sign up
             </button>
