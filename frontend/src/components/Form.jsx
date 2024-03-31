@@ -50,22 +50,34 @@ function Form({ route, method }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>{name}</h1>
+        <div className="flex flex-col justify-center items-center">
+        <p className="xl:text-3xl lg:text-3xl md:text-3xl sm:text-3xl text-xl mt-20 font-bold text-center mb-6">Login to your 1on1 account</p>
+        
+        <form onSubmit={handleSubmit} className="shadow-xl border-solid border-2 border-gray-200 rounded px-8 pt-6 pb-8 w-full max-w-sm">
+            <div className="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+            Username *
+            </label>
             <input
-                className="form-input"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Username"
             />
+            </div>
+            <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+            Password *
+            </label>
             <input
-                className="form-input"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
+            </div>
             {method === "register" && (
                 <>
                     <input
@@ -99,10 +111,13 @@ function Form({ route, method }) {
                 </>
             )}
             {loading && <LoadingIndicator />}
-            <button className="form-button" type="submit">
-                {name}
+            <div class="text-center">
+            <button type="submit" className="w-30 h-10 px-8 py-2 mx-10 my-1 text-l shadow-gray-400 rounded-full text-center shadow-lg bg-orange text-white hover:bg-orange-hover" href="../Profile/profile.html">
+                Log in
             </button>
+            </div>
         </form>
+        </div>
     );
 }
 
