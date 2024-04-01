@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import LandingPage from './pages/LandingPage';
 import CalendarDetail from './pages/CalendarDetail';
+import Profile from './pages/Profile'
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
@@ -22,33 +23,36 @@ function RegisterAndLogout() {
 }
 
 function App() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route
-                    path="/home"
-                    element={
-                        <ProtectedRoute>
-                            <Home />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/calendars/calendar/:id"
-                    element={
-                        <ProtectedRoute>
-                            <CalendarDetail />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/register" element={<RegisterAndLogout />} />
-                <Route path="*" element={<NotFound />}></Route>
-            </Routes>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+            path="/calendars/calendar/:id"
+            element={
+                <ProtectedRoute>
+                    <CalendarDetail />
+                </ProtectedRoute>
+            }
+        />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/register" element={<RegisterAndLogout />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="*" element={<NotFound />}></Route>
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App;
+
