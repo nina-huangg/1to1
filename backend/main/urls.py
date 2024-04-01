@@ -14,15 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls', namespace='accounts')),
-    path('calendars/', include('calendars.urls', namespace='calendars')),
-    path('profile/', include('profile_info.urls', namespace='profile')),
-    path('contacts/', include(('contacts.urls', 'contacts'), namespace='contacts')),
-	path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # make sure "admin/doc" is before "admin/"
+    path("admin/doc/", include("django.contrib.admindocs.urls")),
+    path("admin/", admin.site.urls),
+    path("", include("accounts.urls", namespace="accounts")),
+    path("calendars/", include("calendars.urls", namespace="calendars")),
+    path("contacts/", include(("contacts.urls", "contacts"), namespace="contacts")),
 ]

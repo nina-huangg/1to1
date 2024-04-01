@@ -15,8 +15,7 @@ class Calendar(models.Model):
 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
-    owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="owner")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
 
 
 class Availability(models.Model):
@@ -46,14 +45,13 @@ class Availability(models.Model):
         null=True,
     )
     calendar = models.ForeignKey(
-        "Calendar", on_delete=models.CASCADE, related_name="all_availabilities"
+        Calendar, on_delete=models.CASCADE, related_name="all_availabilities"
     )
 
     def clean(self):
         super().clean()
         if self.owner is None and self.invitee is None:
-            raise ValidationError(
-                "Availability must either belong to owner or invitee")
+            raise ValidationError("Availability must either belong to owner or invitee")
 
 
 class Meeting(models.Model):
@@ -66,8 +64,7 @@ class Meeting(models.Model):
     calendar = models.ForeignKey(
         Calendar, on_delete=models.CASCADE, related_name="meetings"
     )
-    contacts = models.ManyToManyField(
-        Contact, related_name="meetings", blank=True)
+    contacts = models.ManyToManyField(Contact, related_name="meetings", blank=True)
     start_time = models.TimeField()
     end_time = models.TimeField()
     duration = models.DurationField(null=True)
@@ -95,18 +92,6 @@ class Invitation(models.Model):
     confirmed = models.BooleanField(default=False)
 
 
-"""
-class BoundedTime(models.Model):
-    DEFAULT_START_TIME = "09:00:00"
-    DEFAULT_END_TIME = "17:00:00"
-    duration = models.DurationField()
-    start_time = models.TimeField(default=DEFAULT_START_TIME)
-    end_time = models.TimeField(default=DEFAULT_END_TIME)
-    start_date = models.DateField()
-    end_date = models.DateField()
-"""
-
-
 class SuggestedMeeting(models.Model):
     """
     Represents a suggested meeting time for a meeting.
@@ -115,14 +100,6 @@ class SuggestedMeeting(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     duration = models.DurationField(null=True)
-    meeting = models.ForeignKey(
+    meeting = models.OneToOneField(
         Meeting, on_delete=models.CASCADE, related_name="suggested_meeting"
     )
-
-
-"""
-class SuggestedSchedule(models.Model):
-    bounded_time = models.ForeignKey(BoundedTime, on_delete=models.CASCADE)
-    suggested_meeting = models.ForeignKey(
-        SuggestedMeeting, on_delete=models.CASCADE)
-"""

@@ -1,42 +1,37 @@
-from django.http import JsonResponse
-from django.views import View
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-from contacts.serializers.contact_serializer import ContactSerializer
-from .models import Calendar, Availability, SuggestedSchedule, Invitation, BoundedTime
-from .serializers import (
-    AvailabilitySerializer,
-    CalendarSerializer,
-    BoundedTimeSerializer,
-    SuggestedMeetingSerializer,
-    AddContactSerializer,
-)
-from intervals import DateTimeInterval
-import datetime
-from django.contrib.auth.models import User
-import time
-from django.db.models import Q
 from datetime import timedelta
-from django.utils import timezone
-from contacts.models import Contact
 
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.utils import timezone
+from django.views import View
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from contacts.models import Contact
+from contacts.serializers import ContactSerializer
+
+from .models import Availability, Calendar, Invitation
+from .serializers import AvailabilitySerializer, CalendarSerializer
 
 
 class CalendarsView(View):
     """
-    View for retrieving details of all calendars.
+    View for retrieving details of available calendars.
     """
+    premission_classes = [IsAuthenticated]
 
     def get(self, request):
         """
-        Handles GET requests to retrieve details of all calendars.
+        Handles GET requests to retrieve details of all calendars belonging to logged in user.
         """
-        calendars = Calendar.objects.all().values("name", "description")
-
+        calendars = Calendar.objects.all().filter(owner=request.user)
         if not calendars:
-            return JsonResponse({}, status=200)
+            return Response({}, status=status.HTTP_200_OK)
 
-        return JsonResponse(list(calendars), status=200, safe=False)
+        serializer = CalendarSerializer(calendars, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class CreateCalendarView(APIView):
@@ -50,57 +45,41 @@ class CreateCalendarView(APIView):
         """
         Handles POST requests to create a new calendar.
         """
-        name = request.data.get("name")
-        description = request.data.get("description")
-        user = request.user
+        serializer = CalendarSerializer(data=request.data)
 
-        try:
-            if not name:
-                return JsonResponse({"error": "Name is required"}, status=400)
-            calendar = Calendar.objects.create(
-                name=name, description=description, owner=user
-            )
-            return JsonResponse(
-                {
-                    "id": calendar.id,
-                    "name": calendar.name,
-                    "description": calendar.description,
-                },
-                status=200,
-            )
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CalendarDetailsView(View):
     """
-    View for retrieving details of a calendar.
+    View details of a single calendar specified by id.
     """
-    
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         """
         Handles GET requests to retrieve details of a specific calendar.
         """
+
         try:
             calendar = Calendar.objects.get(id=id)
-
-            calendar_serializer = CalendarSerializer(calendar)
-            return JsonResponse(calendar_serializer.data, status=200, safe=False)
+            serializer = CalendarSerializer(calendar)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Calendar.DoesNotExist:
-            return JsonResponse({"error": "Calendar not found"}, status=404)
+            return Response({"error": "Calendar not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class ChooseAvailabilityView(APIView):
     """
-    View for creating a meeting.
+    View for choosing availability for users who have been emailed.
     """
 
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, id=None):
+    def post(self, request, id):
         """
         Handles POST requests to create a meeting.
         """
@@ -153,15 +132,15 @@ class AddContactView(APIView):
         request_data = request.data
 
         if id is None:
-            return JsonResponse({"error": "calendar_id is required"}, status=400)
+            return Response({"error": "calendar_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         if "contacts" not in request_data:
-            return JsonResponse({"error": "contacts is required"}, status=400)
+            return Response({"error": "contacts is required"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             calendar = Calendar.objects.get(id=id)
         except Calendar.DoesNotExist:
-            return JsonResponse({"error": "Calendar not found"}, status=404)
+            return Response({"error": "Calendar not found"}, status=status.HTTP_404_NOT_FOUND)
 
         contacts_data = request_data["contacts"]
         user = request.user
@@ -169,26 +148,30 @@ class AddContactView(APIView):
         deserialized_contacts = []
 
         for contact_data in contacts_data:
-
             data = contact_data
             data["user"] = user.id
 
             serializer = AddContactSerializer(data=data)
             if serializer.is_valid():
                 instance_with_attributes = serializer.validated_data
- 
+
                 id_value = instance_with_attributes['id']
                 user_value = instance_with_attributes['user']
-                contact = Contact.objects.get(id=id_value, user=user_value)
+                try:
+                    contact = Contact.objects.get(id=id_value, user=user_value)
+                except Contact.DoesNotExist:
+                    return Response({"error": "Contact not found"}, status=status.HTTP_404_NOT_FOUND)
+
                 deserialized_contacts.append(contact)
 
                 if not Invitation.objects.filter(invitee=contact, inviter=user_value, calendar=calendar).exists():
-                    invitation = Invitation.objects.create(invitee=contact,inviter=user_value, calendar=calendar)
+                    invitation = Invitation.objects.create(
+                        invitee=contact, inviter=user_value, calendar=calendar)
                 else:
-                    return JsonResponse({'error': 'Contact already added to calendar'}, status=400)
+                    return Response({'error': 'Contact already added to calendar'}, status=status.HTTP_400_BAD_REQUEST)
 
             else:
-                return JsonResponse(serializer.errors, status=400)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         calendar.contacts.add(*deserialized_contacts)
 
@@ -196,7 +179,7 @@ class AddContactView(APIView):
         added_contacts_serializer = ContactSerializer(
             deserialized_contacts, many=True)
 
-        return JsonResponse(added_contacts_serializer.data, status=200, safe=False)
+        return Response(added_contacts_serializer.data, status=status.HTTP_200_OK)
 
 
 class ContactDetailView(APIView):
@@ -212,9 +195,9 @@ class ContactDetailView(APIView):
             calendar = Calendar.objects.get(id=id)
             contact_list = calendar.contacts.all()
             contact_serializer = ContactSerializer(contact_list, many=True)
-            return JsonResponse(contact_serializer.data, status=200, safe=False)
+            return Response(contact_serializer.data, status=status.HTTP_200_OK)
         except Calendar.DoesNotExist:
-            return JsonResponse({"error": "Calendar not found"}, status=404)
+            return Response({"error": "Calendar not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class InviteeResponseView(APIView):
@@ -230,24 +213,26 @@ class InviteeResponseView(APIView):
         """
         Handles GET requests to retrieve invitee responses.
         """
-        if not Invitation.objects.filter(id=invite_id).exists():
-            return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
             calendar = Calendar.objects.get(id=id)
+            if not Invitation.objects.filter(id=invite_id).exists():
+                return Response({"error": "invite does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
             availabilities = Availability.objects.filter(calendar_id=id)
             availability_list = []
             for availability in availabilities:
                 availability_list.append(
-                    f"{availability.date}: {availability.start_time}-{availability.end_time}"
+                    f"{availability.date}: {
+                        availability.start_time}-{availability.end_time}"
                 )
 
             invitee_response = {
                 "inviter": f'{calendar.owner.first_name} {calendar.owner.last_name}',
                 "availability_set": availability_list,
             }
-            return JsonResponse(invitee_response, status=200, safe=False)
+            return Response(invitee_response, status=status.HTTP_200_OK)
         except Calendar.DoesNotExist:
-            return JsonResponse({"error": "Calendar not found"}, status=404)
+            return Response({"error": "Calendar not found"}, status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request, id, invite_id):
         """
@@ -255,41 +240,42 @@ class InviteeResponseView(APIView):
         """
         user = request.user
         request_data = request.data
+
         if not Invitation.objects.filter(id=invite_id).exists():
-            return JsonResponse({"error": "invite does not exist"}, status=400)
+            return Response({"error": "invite does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
         if id is None:
-            return JsonResponse({"error": "calendar_id is required"}, status=400)
+            return Response({"error": "calendar_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
         if "availability_set" not in request_data:
-            return JsonResponse({"error": "availability_set is required"}, status=400)
-        
+            return Response({"error": "availability_set is required"}, status=status.HTTP_400_BAD_REQUEST)
+
         availability_data = request_data["availability_set"]
+
         try:
             calendar = Calendar.objects.get(id=id)
+            invitation = Invitation.objects.get(id=invite_id)
         except Calendar.DoesNotExist:
-            return JsonResponse({"error": "Calendar not found"}, status=404)
-        
-        invitation = Invitation.objects.get(id=invite_id)
-
+            return Response({"error": "Calendar not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Invitation.DoesNotExist:
+            return Response({"error": "Invitation not found"}, status=status.HTTP_404_NOT_FOUND)
 
         availability_data_with_owner = []
         for availability in availability_data:
             availability["owner"] = invitation.inviter.id
-            print(user.id)
             availability_data_with_owner.append(availability)
+
         availability_serializer = AvailabilitySerializer(
-            data=availability_data_with_owner, many=True
-        )
+            data=availability_data_with_owner, many=True)
         if availability_serializer.is_valid():
             availability_serializer.save(calendar=calendar)
 
-            # inviter = User.objects.get(id=user.id)
-            # invitee = Contact.objects.get(id=invite_id)
-            # invitation = Invitation.objects.filter(invitee=invitee, inviter=inviter)
-            Invitation.objects.filter(invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
+            Invitation.objects.filter(
+                invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
 
-            return JsonResponse(availability_serializer.data, status=200, safe=False)
+            return Response(availability_serializer.data, status=status.HTTP_200_OK)
         else:
-            return JsonResponse(availability_serializer.errors, status=400, safe=False)
+            return Response(availability_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class InvitesStatusView(APIView):
@@ -302,33 +288,29 @@ class InvitesStatusView(APIView):
     """
     permission_classes = [IsAuthenticated]
 
-
     def get(self, request, id):
-        calendar = Calendar.objects.get(id=id)
-        if calendar is None:
-            return JsonResponse({"error": "calendar with id does not exist"}, status=400)
-        
+        try:
+            calendar = Calendar.objects.get(id=id)
+        except Calendar.DoesNotExist:
+            return Response({"error": "Calendar with id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
         calendar_invitations = Invitation.objects.filter(calendar=calendar)
         responsed = []
         not_responsed = []
+
         for invitation in calendar_invitations:
+            invitee_data = {
+                "first_name": invitation.invitee.first_name,
+                "last_name": invitation.invitee.last_name,
+            }
             if invitation.confirmed:
-                responsed.append(
-                    {
-                        "first_name": invitation.invitee.first_name,
-                        "last_name": invitation.invitee.last_name,
-                    }
-                )
+                responsed.append(invitee_data)
             else:
-                not_responsed.append(
-                    {
-                        "first_name": invitation.invitee.first_name,
-                        "last_name": invitation.invitee.last_name,
-                    }
-                )
-        return JsonResponse(
-            {"responsed": responsed, "not_responsed": not_responsed}, status=200
-        )
+                not_responsed.append(invitee_data)
+
+        response_data = {"responsed": responsed,
+                         "not_responsed": not_responsed}
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class InviteeRemindView(APIView):
@@ -338,24 +320,31 @@ class InviteeRemindView(APIView):
     """
 
     def post(self, request, id):
-        calendar = Calendar.objects.get(id=id)
-        if calendar is None:
-            return JsonResponse({"error": "calenar with id does not exist"}, status=400)
+        try:
+            calendar = Calendar.objects.get(id=id)
+        except Calendar.DoesNotExist:
+            return Response({"error": "Calendar with id does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
         calendar_invitations = Invitation.objects.filter(calendar=calendar)
         users_reminded = []
+
         for invitation in calendar_invitations:
-            if invitation.confirmed:
-                pass
-            else:
+            if not invitation.confirmed:
                 # TODO: Send emails
-                users_reminded.append(
-                    {
-                        "first_name": invitation.invitee.first_name,
-                        "last_name": invitation.invitee.last_name,
-                    }
+                send_mail(
+                    'Reminder: Invitation to Calendar Event',
+                    'You have an outstanding invitation to an event on the calendar.',
+                    'from@example.com',
+                    # Assuming there's an 'email' field in the User model
+                    [invitation.invitee.email],
+                    fail_silently=False,
                 )
-                pass
-        return JsonResponse({"users_reminded": users_reminded}, status=200)
+                users_reminded.append({
+                    "first_name": invitation.invitee.first_name,
+                    "last_name": invitation.invitee.last_name,
+                })
+
+        return Response({"users_reminded": users_reminded}, status=status.HTTP_200_OK)
 
 
 class SuggestMeetingView(APIView):
@@ -397,194 +386,3 @@ class SuggestMeetingView(APIView):
             })
 
         return JsonResponse({'meeting_times': suggested_times_json, "perfect_match": True}, status=200)
-
-    def post(self, request, id):
-        if id is None:
-            return JsonResponse({"error": "calendar_id is required"}, status=400)
-
-        owner_availabilities, invitee_availabilities = self.split_availability_set(
-            id)
-        bounded_times_data = request.data.get("bounded_times")
-
-        bounded_times_serializer = BoundedTimeSerializer(
-            data=bounded_times_data)
-        if not bounded_times_serializer.is_valid():
-            return JsonResponse(bounded_times_serializer.errors, status=400)
-
-        bounded_times = bounded_times_serializer.save()
-
-        sorted_intersection_intervals = self.overlapping_invitee_availability(
-            owner_availabilities, invitee_availabilities, bounded_times
-        )
-
-        suggested_meeting_data = []
-        for (
-            owner_availability_id,
-            intervals_with_invitee,
-        ) in sorted_intersection_intervals.items():
-            for (
-                invitee_availability_id,
-                interval_data,
-            ) in intervals_with_invitee.items():
-                suggested_meeting_data.append(
-                    {
-                        "owner_availability_id": owner_availability_id,
-                        "invitee_availability_id": invitee_availability_id,
-                        "invitee": interval_data["invitee"],
-                        "start_time": interval_data["start_time"],
-                        "end_time": interval_data["end_time"],
-                        "date": interval_data["date"],
-                        "owner_preference": interval_data["owner_preference"],
-                    }
-                )
-
-        suggested_meeting_serializer = SuggestedMeetingSerializer(
-            data=suggested_meeting_data, many=True
-        )
-        if not suggested_meeting_serializer.is_valid():
-            return JsonResponse(suggested_meeting_serializer.errors, status=400)
-
-        return JsonResponse(suggested_meeting_serializer.data, status=200)
-
-    @classmethod
-    def suggest_meeting_times(cls, availabilities, num_slots=5, min_duration=timedelta(hours=1)):
-        # Step 1: Collect all available time slots
-        available_slots = {}
-        for availability in availabilities:
-            date = availability.date
-            start_time = availability.start_time
-            end_time = availability.end_time
-
-            if date not in available_slots:
-                available_slots[date] = []
-
-            available_slots[date].append((start_time, end_time))
-
-        # Step 2: Group by date and sort available slots by start time
-        for date in available_slots:
-            available_slots[date] = sorted(available_slots[date])
-
-        # Step 3: Find gaps for meeting
-        meeting_times = []
-        for date, slots in available_slots.items():
-            for i in range(len(slots) - 1):
-                current_end = slots[i][1]
-                next_start = slots[i + 1][0]
-                gap_duration = next_start - current_end
-                if gap_duration >= min_duration:
-                    meeting_times.append((date, current_end, next_start))
-
-        # Step 4: Sort meeting times by start time
-        meeting_times = sorted(meeting_times, key=lambda x: x[1])
-
-        # Step 5: Recommend meeting times
-        suggested_times = meeting_times[:num_slots]
-
-        return suggested_times
-
-    @classmethod
-    def split_availability_set(cls, calendar_id):
-        # Query owner and invitee availabilities separately
-        owner_availabilities = Availability.objects.filter(
-            calendar_id=calendar_id, owner__isnull=False
-        )
-        invitee_availabilities = Availability.objects.filter(
-            calendar_id=calendar_id, owner__isnull=True
-        )
-
-        return owner_availabilities, invitee_availabilities
-
-    @classmethod
-    def overlapping_invitee_availability(
-        cls, owner_availabilities, invitee_availabilities, bounded_times
-    ):
-        # Dictionary to store the intersection intervals for each owner's availability time slot
-        intersection_intervals = {}
-
-        for owner_availability in owner_availabilities:
-            invitee_overlapping_per_own_availability_time_slot = (
-                cls.find_invitee_overlapping_intervals(
-                    owner_availability, invitee_availabilities, bounded_times
-                )
-            )
-
-            for (
-                invitee_availability_id,
-                intervals_with_invitee,
-            ) in invitee_overlapping_per_own_availability_time_slot.items():
-                for interval, invitee in intervals_with_invitee:
-                    if owner_availability.id not in intersection_intervals:
-                        intersection_intervals[owner_availability.id] = {}
-                    intersection_intervals[owner_availability.id][
-                        invitee_availability_id
-                    ] = {
-                        "invitee": invitee,
-                        "start_time": interval.start,
-                        "end_time": interval.end,
-                        "date": interval.start.date(),
-                        "owner_preference": owner_availability.preference,
-                    }
-
-        intersection_intervals[owner_availability.id] = dict(
-            sorted(
-                intersection_intervals[owner_availability.id].items(),
-                key=lambda x: x[1]["owner_preference"],
-            )
-        )
-
-        return intersection_intervals
-
-    @classmethod
-    def find_invitee_overlapping_intervals(
-        cls, owner_availability, invitee_availabilities, bounded_times
-    ):
-        # Dictionary to store overlapping intervals for this owner
-        invitee_overlapping_intervals = {}
-
-        owner_start_datetime = datetime.combine(
-            owner_availability.date, owner_availability.start_time
-        )
-        owner_end_datetime = datetime.combine(
-            owner_availability.date, owner_availability.end_time
-        )
-        owner_availability_interval = DateTimeInterval(
-            owner_start_datetime, owner_end_datetime
-        )
-
-        for invitee_availability in invitee_availabilities:
-            invitee_start_datetime = datetime.combine(
-                invitee_availability.date, invitee_availability.start_time
-            )
-            invitee_end_datetime = datetime.combine(
-                invitee_availability.date, invitee_availability.end_time
-            )
-            invitee_availability_interval = DateTimeInterval(
-                invitee_start_datetime, invitee_end_datetime
-            )
-
-            intersection_interval = (
-                owner_availability_interval & invitee_availability_interval
-            )
-
-            if intersection_interval:
-                bounded_query = Q(
-                    start_time__gte=invitee_availability.start_time,
-                    end_time__lte=invitee_availability.end_time,
-                    start_date__gte=invitee_availability.date,
-                    end_date__lte=invitee_availability.date,
-                )
-                if bounded_times.filter(bounded_query).exists():
-                    # Check if intersection interval duration meets meeting duration
-                    meeting_duration = bounded_times.duration
-                    intersection_duration = (
-                        intersection_interval.end - intersection_interval.start
-                    )
-                    if intersection_duration >= meeting_duration:
-                        if invitee_availability.id not in invitee_overlapping_intervals:
-                            invitee_overlapping_intervals[invitee_availability.id] = [
-                            ]
-                        invitee_overlapping_intervals[invitee_availability.id].append(
-                            (intersection_interval, invitee_availability.invitee)
-                        )
-
-        return invitee_overlapping_intervals
