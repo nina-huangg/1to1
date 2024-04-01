@@ -36,3 +36,27 @@ class SuggestedMeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SuggestedMeeting
         fields = "__all__"
+
+
+class AddContactToMeetingSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=True, write_only=True)
+
+    class Meta:
+        model = Contact
+        fields = ("user", "id")
+
+    def validate(self, attrs):
+        err = {}
+        id_value = attrs.get("id")
+        user_value = attrs.get("user")
+
+        if not id_value:
+            err["id"] = ["Provide contact."]
+
+        if not Contact.objects.filter(id=id_value, user=user_value).exists():
+            err["id"] = ["This contact does not exist."]
+
+        if err:
+            raise serializers.ValidationError(err)
+
+        return attrs

@@ -61,7 +61,7 @@ class Meeting(models.Model):
 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=120)
-    calendar = models.ForeignKey(
+    calendar = models.OneToOneField(
         Calendar, on_delete=models.CASCADE, related_name="meetings"
     )
     contacts = models.ManyToManyField(Contact, related_name="meetings", blank=True)
@@ -80,14 +80,12 @@ class Invitation(models.Model):
     Represents an invitation from a user to contact to a certain meeting.
     """
 
-    inviter = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="sent_invitations"
-    )
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="inviter")
     invitee = models.ForeignKey(
-        Contact, on_delete=models.CASCADE, related_name="invitations"
+        Contact, on_delete=models.CASCADE, related_name="invitee"
     )
     meeting = models.ForeignKey(
-        Meeting, on_delete=models.CASCADE, related_name="invitations"
+        Meeting, on_delete=models.CASCADE, related_name="meeting"
     )
     confirmed = models.BooleanField(default=False)
 
