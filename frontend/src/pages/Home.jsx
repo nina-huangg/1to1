@@ -62,7 +62,7 @@ function Home() {
         <div className="flex flex-col items-start justify-center min-h-screen p-6 relative">
             <div className="w-full md:w-3/4 flex items-center">
                 <h2 className="text-3xl font-bold mb-8">Calendars</h2>
-                <button onClick={handleAddCalendar} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded py-1 px-1 ml-6 mb-8">+ Add Calendar</button>
+                <button onClick={handleAddCalendar} className="bg-primary-blue hover:bg-turquoise text-white font-semibold rounded py-1 px-1 ml-6 mb-8">+ Add Calendar</button>
             </div>
             <div className="w-full md:w-3/4">
                 <div className="flex flex-wrap">
@@ -97,7 +97,7 @@ function Home() {
                                 className="border rounded p-2 mb-4 w-full"
                             />
                             <div className="flex justify-center">
-                                <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">Create</button>
+                                <button type="submit" className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-2 px-4 rounded">Create</button>
                             </div>
                         </form>
                     </div>

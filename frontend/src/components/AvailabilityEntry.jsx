@@ -1,12 +1,21 @@
-function getRandomColor() {
-    // Array of predefined colors
-    const colors = ['#52B7B1', '#EE6A4C', '#6EB3AF', '#F4F3ED', '#FBB5A5'];
+function getColor(preference) {
 
-    // Get a random index from the colors array
-    const randomIndex = Math.floor(Math.random() * colors.length);
+    let backgroundColor;
+    switch (preference) {
+        case 'high':
+            backgroundColor = '#6EB3AF';
+            break;
+        case 'medium':
+            backgroundColor = '#7ab3ef';
+            break;
+        case 'low':
+            backgroundColor = '#FBB5A5';
+            break;
+        default:
+            backgroundColor = 'white';
+    }
 
-    // Return the random color
-    return colors[randomIndex];
+    return backgroundColor;
 }
 
 import React from 'react';
@@ -16,7 +25,7 @@ const AvailabilityEntry = ({ entry }) => {
 
     return (
         <div className="flex items-center mb-2 mr-2">
-            <div className="py-2 px-4 text-sm shadow-xl rounded-md" style={{ backgroundColor: getRandomColor() }}>
+            <div className="py-2 px-4 text-sm shadow-xl rounded-md" style={{ backgroundColor: getColor(entry.preference) }}>
                 <p className="text-xs">{start_time.slice(0, -3)} - {end_time.slice(0, -3)}</p>
             </div>
         </div>

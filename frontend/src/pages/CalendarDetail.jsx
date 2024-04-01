@@ -1,7 +1,7 @@
 /** @format */
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import api from '../api';
 import Calendar from '../components/Calendar';
 import AvailabilityEntry from '../components/AvailabilityEntry';
@@ -16,7 +16,6 @@ const CalendarDetail = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const toggleModal = () => setIsModalOpen(!isModalOpen);
     const { id: calendarId } = useParams();
-    // const navigate = useNavigate();
 
     useEffect(() => {
         fetchCalendarDetails();
@@ -49,7 +48,7 @@ const CalendarDetail = () => {
         sortedSlots.forEach((slot, index) => {
             // Convert slot start time to a Date object
             const slotStartTime = new Date(`${slot.day} ${slot.time}`);
-            const slotEndTime = new Date(slotStartTime.getTime() + 30 * 60000); // Add 30 mins
+            const slotEndTime = new Date(slotStartTime.getTime());
 
             // For the first slot or when there's a day change or non-continuous time slot, start a new group
             if (
@@ -68,10 +67,9 @@ const CalendarDetail = () => {
                     start_time: slot.time + ':00',
                     end_time:
                         slotEndTime.toTimeString().substring(0, 5) + ':00',
-                    preference: slot.preference, // Assuming 'high' for all for simplicity
+                    preference: slot.preference,
                 });
             } else {
-                // If continuous, update the end time of the last group
                 const lastGroup = availabilitySet[availabilitySet.length - 1];
                 lastGroup.end_time =
                     slotEndTime.toTimeString().substring(0, 5) + ':00';
@@ -82,7 +80,7 @@ const CalendarDetail = () => {
     };
 
     const groupedAvailability = groupAvailabilityByDate(availabilityData);
-    
+
     const handleSubmit = async () => {
         const payload = preparePayloadForBackend(selectedTimeSlots);
         console.log('Prepared Payload:', JSON.stringify(payload, null, 2)); // For debugging
@@ -106,7 +104,7 @@ const CalendarDetail = () => {
                 if (res.status === 200) {
                     setCalendarDetails(res.data);
                     setAvailabilityData(res.data.availability_set);
-                    console.log('Fetched Calendar Details:', res.data); // Print the fetched data
+                    console.log('Fetched Calendar Details:', res.data);
                 } else {
                     console.log('Error fetching calendar details:', res.status);
                 }
@@ -121,15 +119,32 @@ const CalendarDetail = () => {
                     {calendarDetails.name}
                 </h2>
                 <p>{calendarDetails.description}</p>
-                <button onClick={toggleModal} className="p-2">
-                    <span>👤</span> {/* Placeholder for your icon */}
-                </button>
+                <div className="relative flex items-center space-x-4">
+                    <button
+                        onClick={toggleModal}
+                        className="relative p-2 group"
+                    >
+                        <span>👤</span>
+                        <div className="absolute top-full left-0 mt-2 hidden group-hover:block p-2 text-sm text-white bg-black rounded shadow-lg w-auto min-w-max">
+                            Manage Invitation
+                        </div>
+                    </button>
+                    <button className="relative p-2 group">
+                        <span>🗓️</span>
+                        <div className="absolute top-full left-0 mt-2 hidden group-hover:block p-2 text-sm text-white bg-black rounded shadow-lg w-auto min-w-max">
+                            Book and View Suggested Meetings
+                        </div>
+                    </button>
+                </div>
+
+
                 <hr className="my-4 border-t-2 border-gray-300" />
 
-
                 {/* Using the InvitationManagementModal component */}
-                <InvitationManagementModal isOpen={isModalOpen} toggleModal={toggleModal} />
-
+                <InvitationManagementModal
+                    isOpen={isModalOpen}
+                    toggleModal={toggleModal}
+                />
 
                 <div className="font-bold text-xl mb-2">
                     Submitted Time Slots
@@ -168,7 +183,7 @@ const CalendarDetail = () => {
                     </div>
                     <button
                         onClick={handleSubmit}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out"
+                        className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out"
                     >
                         Submit Availability
                     </button>
@@ -177,7 +192,7 @@ const CalendarDetail = () => {
                 <Calendar
                     selectedTimeSlots={selectedTimeSlots}
                     setSelectedTimeSlots={setSelectedTimeSlots}
-                    slotPreference={slotPreference} // Pass slotPreference to Calendar
+                    slotPreference={slotPreference}
                 />
             </div>
         </div>

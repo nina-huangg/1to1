@@ -56,7 +56,7 @@ const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, slotPreference }) =
             dates.push(
                 <div
                     key={i}
-                    className="p-1 py-1 text-sm flex-grow text-center bg-primary-blue"
+                    className="p-1 py-1 text-sm flex-grow text-center text-white bg-gray-500"
                 >
                     {date.toLocaleDateString('en-US', {
                         weekday: 'short',

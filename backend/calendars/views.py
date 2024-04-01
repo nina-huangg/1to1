@@ -31,7 +31,7 @@ class CalendarsView(View):
         """
         Handles GET requests to retrieve details of all calendars.
         """
-        calendars = Calendar.objects.all().values("name", "description")
+        calendars = Calendar.objects.all().values("id", "name", "description")
 
         return JsonResponse(list(calendars), status=200, safe=False)
 
@@ -135,22 +135,22 @@ class ChooseAvailabilityView(APIView):
             availability["owner"] = request.user.id
             valid_slots.append(availability)
 
-            # Now, proceed with serialization for only the valid slots
-            if valid_slots:
-                with transaction.atomic():
-                    availability_serializer = AvailabilitySerializer(
-                        data=valid_slots, many=True)
-                    if availability_serializer.is_valid():
-                        availability_serializer.save(calendar=calendar)
-                    else:
-                        # Handle unexpected serialization errors (should be few, if any, at this point)
-                        errors.extend(availability_serializer.errors)
+        # Now, proceed with serialization for only the valid slots
+        if valid_slots:
+            with transaction.atomic():
+                availability_serializer = AvailabilitySerializer(
+                    data=valid_slots, many=True)
+                if availability_serializer.is_valid():
+                    availability_serializer.save(calendar=calendar)
+                else:
+                    # Handle unexpected serialization errors (should be few, if any, at this point)
+                    errors.extend(availability_serializer.errors)
 
-            if errors:
-                # Optionally, return the errors in the response or log them
-                return JsonResponse({"errors": errors, "success": len(valid_slots)}, status=200)
-            else:
-                return JsonResponse({"message": "All slots processed successfully", "success": len(valid_slots)}, status=200)
+        if errors:
+            # Optionally, return the errors in the response or log them
+            return JsonResponse({"errors": errors, "success": len(valid_slots)}, status=200)
+        else:
+            return JsonResponse({"message": "All slots processed successfully", "success": len(valid_slots)}, status=200)
 
 
 class AddContactView(APIView):
