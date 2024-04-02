@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound"
 import LandingPage from "./pages/LandingPage"
 import Profile from './pages/Profile'
 import ProtectedRoute from "./components/ProtectedRoute"
+import AccountSettings from './pages/AccountSettings'
 import './App.css'
 
 function Logout() {
@@ -32,6 +33,7 @@ function App() {
           }
         />
         <Route path="/" element={<LandingPage />} />
+        <Route path="/account" element={<AccountSettings />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
