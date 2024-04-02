@@ -7,6 +7,8 @@ import Calendar from '../components/Calendar';
 import AvailabilityEntry from '../components/AvailabilityEntry';
 import InvitationManagementModal from '../components/InvitationManagementModel';
 import AvailabilityPreferenceDropdown from '../components/AvailabilityPreferenceDropdown';
+import Header from '../components/Header.jsx';
+
 
 const CalendarDetail = () => {
     const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
@@ -113,6 +115,7 @@ const CalendarDetail = () => {
     };
 
     return (
+        
         <div className="flex flex-col md:flex-row w-full">
             <div className="w-full md:w-1/3 p-5">
                 <h2 className="text-4xl font-bold mb-4">

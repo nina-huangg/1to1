@@ -97,9 +97,10 @@ function Home() {
 
 
     return (
-        <div className="flex flex-col items-start justify-center min-h-screen p-6 relative">
-            <Header/>
-            <TimezoneDropdown/>
+        <>
+        <Header/>
+        <TimezoneDropdown/>
+        <div className="flex flex-col items-start min-h-screen p-6 relative">
             <div className="w-full md:w-3/4 flex items-center">
                 <h2 className="text-3xl font-bold mb-8">Calendars</h2>
                 <button onClick={handleAddCalendar} className="bg-primary-blue hover:bg-turquoise text-white font-semibold rounded py-1 px-1 ml-6 mb-8">+ Add Calendar</button>
@@ -144,6 +145,8 @@ function Home() {
                 </div>
             )}
         </div>
+        </>
+        
     );
 }
 
