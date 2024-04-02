@@ -9,8 +9,9 @@ import NotFound from './pages/NotFound';
 import LandingPage from './pages/LandingPage';
 import CalendarDetail from './pages/CalendarDetail';
 import Profile from './pages/Profile'
-import ProtectedRoute from './components/ProtectedRoute';
-import './App.css';
+import ProtectedRoute from "./components/ProtectedRoute"
+import AccountSettings from './pages/AccountSettings'
+import './App.css'
 
 function Logout() {
     localStorage.clear();
@@ -44,6 +45,7 @@ function App() {
             }
         />
         <Route path="/" element={<LandingPage />} />
+        <Route path="/account" element={<AccountSettings />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
