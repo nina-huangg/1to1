@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.views import View
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework import generics
 from contacts.serializers.contact_serializer import ContactSerializer
 from .models import Calendar, Availability, SuggestedSchedule, Invitation, BoundedTime
 from .serializers import (
@@ -22,18 +23,19 @@ from django.utils import timezone
 from contacts.models import Contact
 
 
-class CalendarsView(View):
+class CalendarsListView(generics.ListCreateAPIView):
     """
     View for retrieving details of all calendars.
     """
+    serializer_class = CalendarSerializer
+    permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get_queryset(self):
         """
         Handles GET requests to retrieve details of all calendars.
         """
-        calendars = Calendar.objects.all().values("id", "name", "description")
-
-        return JsonResponse(list(calendars), status=200, safe=False)
+        user = self.request.user
+        return Calendar.objects.filter(owner=user)
 
 
 class CreateCalendarView(APIView):

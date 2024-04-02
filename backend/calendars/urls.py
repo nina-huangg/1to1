@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (
     AddContactView,
     CalendarDetailsView,
-    CalendarsView,
+    CalendarsListView,
     CreateCalendarView,
     InviteeResponseView,
     ChooseAvailabilityView,
@@ -16,7 +16,7 @@ from .views import (
 app_name = "calendars"
 
 urlpatterns = [
-    path("details/", CalendarsView.as_view(), name="calendars"),
+    path("details/", CalendarsListView.as_view(), name="calendars"),
     path("create/", CreateCalendarView.as_view(), name="create_calendar"),
     path("calendar/<int:id>/", CalendarDetailsView.as_view(),
          name="calendar_details"),
