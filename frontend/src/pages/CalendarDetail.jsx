@@ -115,7 +115,8 @@ const CalendarDetail = () => {
     };
 
     return (
-        
+        <>
+        <Header/>
         <div className="flex flex-col md:flex-row w-full">
             <div className="w-full md:w-1/3 p-5">
                 <h2 className="text-4xl font-bold mb-4">
@@ -199,6 +200,7 @@ const CalendarDetail = () => {
                 />
             </div>
         </div>
+        </>
     );
 };
 
