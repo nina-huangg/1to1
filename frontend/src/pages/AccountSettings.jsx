@@ -2,6 +2,7 @@ import Header from '../components/Header'
 import React, {useState, useEffect, createContext, useContext} from 'react';
 import api from "../api";
 import LoadingIndicator from "../components/LoadingIndicator";
+import {Link, useNavigate} from 'react-router-dom';
 
 function AccountSettings(){
     const pass = '********';
@@ -89,8 +90,16 @@ function AccountSettings(){
                 </div>
                 
             <div className="text-left align-left ml-7 xl:ml-80 lg:ml-80 mb-10 md:ml-32 sm:ml-28 ">
+            <div class="flex flex-row justify-between items-center xl:w-96 lg:w-96 md:w-64 sm:w-64 w-60 ">
                 <p className="xl:text-lg lg:text-lg md:text-lg sm:text-sm text-sm font-bold">Advanced Settings</p>
-                
+                <Link className="xl:w-48 lg:w-40 md:w-32 sm:w-24 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
+                    xl:px-4 lg:px-4 md:px-6 sm:px-4 px-2 py-2 
+                    xl:mr-2 lg:mr-2 md:mr-2 sm:mr-2 mr-2 my-5 
+                    xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
+                    shadow-lg shadow-gray-400 bg-orange text-white hover:bg-orange-hover" to='/profile'>
+                Account
+                </Link>
+                </div>
                 <div className="xl:w-96 lg:w-96 md:w-64 sm:w-64 w-60">
                 <div className="pt-5 xl:w-full lg:w-96 md:w-96 sm:w-80 align-left">
                     <div className="mb-6 text-left">
