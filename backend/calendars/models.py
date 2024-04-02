@@ -15,7 +15,9 @@ class Calendar(models.Model):
 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner")
+    owner = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="owner", default=None
+    )
 
 
 class Availability(models.Model):
@@ -85,7 +87,7 @@ class Invitation(models.Model):
         Contact, on_delete=models.CASCADE, related_name="invitee"
     )
     meeting = models.ForeignKey(
-        Meeting, on_delete=models.CASCADE, related_name="meeting"
+        Meeting, on_delete=models.CASCADE, related_name="meeting", default=None
     )
     confirmed = models.BooleanField(default=False)
 
@@ -99,5 +101,8 @@ class SuggestedMeeting(models.Model):
     end_time = models.TimeField()
     duration = models.DurationField(null=True)
     meeting = models.OneToOneField(
-        Meeting, on_delete=models.CASCADE, related_name="suggested_meeting"
+        Meeting,
+        on_delete=models.CASCADE,
+        related_name="suggested_meeting",
+        default=None,
     )
