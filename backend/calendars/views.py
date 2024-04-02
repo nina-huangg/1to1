@@ -11,6 +11,7 @@ from .serializers import (
     SuggestedMeetingSerializer,
     AddContactSerializer,
 )
+from django.db import transaction
 from intervals import DateTimeInterval
 import datetime
 from django.contrib.auth.models import User
@@ -19,7 +20,6 @@ from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
 from contacts.models import Contact
-
 
 
 class CalendarsView(View):
@@ -31,10 +31,7 @@ class CalendarsView(View):
         """
         Handles GET requests to retrieve details of all calendars.
         """
-        calendars = Calendar.objects.all().values("name", "description")
-
-        if not calendars:
-            return JsonResponse({}, status=200)
+        calendars = Calendar.objects.all().values("id", "name", "description")
 
         return JsonResponse(list(calendars), status=200, safe=False)
 
@@ -77,7 +74,7 @@ class CalendarDetailsView(View):
     """
     View for retrieving details of a calendar.
     """
-    
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
@@ -119,24 +116,41 @@ class ChooseAvailabilityView(APIView):
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
 
-        user = request.user
+        valid_slots = []
+        errors = []
 
-        availability_data_with_owner = []
         for availability in availability_data:
-            # Ensure availability's owner is set to the authenticated user's ID
-            availability["owner"] = user.id
-            availability_data_with_owner.append(availability)
+            # Check for duplicates directly here
+            if Availability.objects.filter(
+                date=availability['date'],
+                start_time=availability['start_time'],
+                end_time=availability['end_time'],
+                preference=availability['preference'],
+                owner=request.user  # Assuming you want to check against the owner as well
+            ).exists():
+                errors.append(
+                    f"Duplicate availability slot found for {availability}.")
+                continue  # Skip this iteration, effectively ignoring this slot
 
-        availability_serializer = AvailabilitySerializer(
-            data=availability_data_with_owner, many=True
-        )
+            availability["owner"] = request.user.id
+            valid_slots.append(availability)
 
-        if availability_serializer.is_valid():
-            # Save the availability slots associated with the calendar
-            availability_serializer.save(calendar=calendar)
-            return JsonResponse(availability_serializer.data, status=200, safe=False)
+        # Now, proceed with serialization for only the valid slots
+        if valid_slots:
+            with transaction.atomic():
+                availability_serializer = AvailabilitySerializer(
+                    data=valid_slots, many=True)
+                if availability_serializer.is_valid():
+                    availability_serializer.save(calendar=calendar)
+                else:
+                    # Handle unexpected serialization errors (should be few, if any, at this point)
+                    errors.extend(availability_serializer.errors)
+
+        if errors:
+            # Optionally, return the errors in the response or log them
+            return JsonResponse({"errors": errors, "success": len(valid_slots)}, status=200)
         else:
-            return JsonResponse(availability_serializer.errors, status=400)
+            return JsonResponse({"message": "All slots processed successfully", "success": len(valid_slots)}, status=200)
 
 
 class AddContactView(APIView):
@@ -176,14 +190,15 @@ class AddContactView(APIView):
             serializer = AddContactSerializer(data=data)
             if serializer.is_valid():
                 instance_with_attributes = serializer.validated_data
- 
+
                 id_value = instance_with_attributes['id']
                 user_value = instance_with_attributes['user']
                 contact = Contact.objects.get(id=id_value, user=user_value)
                 deserialized_contacts.append(contact)
 
                 if not Invitation.objects.filter(invitee=contact, inviter=user_value, calendar=calendar).exists():
-                    invitation = Invitation.objects.create(invitee=contact,inviter=user_value, calendar=calendar)
+                    invitation = Invitation.objects.create(
+                        invitee=contact, inviter=user_value, calendar=calendar)
                 else:
                     return JsonResponse({'error': 'Contact already added to calendar'}, status=400)
 
@@ -261,15 +276,14 @@ class InviteeResponseView(APIView):
             return JsonResponse({"error": "calendar_id is required"}, status=400)
         if "availability_set" not in request_data:
             return JsonResponse({"error": "availability_set is required"}, status=400)
-        
+
         availability_data = request_data["availability_set"]
         try:
             calendar = Calendar.objects.get(id=id)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
-        
-        invitation = Invitation.objects.get(id=invite_id)
 
+        invitation = Invitation.objects.get(id=invite_id)
 
         availability_data_with_owner = []
         for availability in availability_data:
@@ -285,7 +299,8 @@ class InviteeResponseView(APIView):
             # inviter = User.objects.get(id=user.id)
             # invitee = Contact.objects.get(id=invite_id)
             # invitation = Invitation.objects.filter(invitee=invitee, inviter=inviter)
-            Invitation.objects.filter(invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
+            Invitation.objects.filter(
+                invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
 
             return JsonResponse(availability_serializer.data, status=200, safe=False)
         else:
@@ -302,12 +317,11 @@ class InvitesStatusView(APIView):
     """
     permission_classes = [IsAuthenticated]
 
-
     def get(self, request, id):
         calendar = Calendar.objects.get(id=id)
         if calendar is None:
             return JsonResponse({"error": "calendar with id does not exist"}, status=400)
-        
+
         calendar_invitations = Invitation.objects.filter(calendar=calendar)
         responsed = []
         not_responsed = []

@@ -4,6 +4,7 @@ from .models import Availability, Calendar, BoundedTime, Invitation, SuggestedMe
 from .models import SuggestedSchedule
 from contacts.models import Contact
 
+
 class AvailabilitySerializer(serializers.ModelSerializer):
 
     preference = serializers.ChoiceField(
@@ -12,7 +13,8 @@ class AvailabilitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Availability
-        fields = ("id", "date", "start_time", "end_time", "preference", "owner")
+        fields = ("id", "date", "start_time",
+                  "end_time", "preference", "owner")
 
 
 class CalendarSerializer(serializers.ModelSerializer):
@@ -21,15 +23,18 @@ class CalendarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Calendar
-        fields = ("id", "name", "description", "availability_set", "contact_list")
+        fields = ("id", "name", "description",
+                  "availability_set", "contact_list")
         depth = 1
 
 
 class BoundedTimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = BoundedTime
-        fields = ['id', 'duration', 'start_time', 'end_time', 'start_date', 'end_date']
-        
+        fields = ['id', 'duration', 'start_time',
+                  'end_time', 'start_date', 'end_date']
+
+
 class SuggestedScheduleSerializer(serializers.ModelSerializer):
     availability_set = AvailabilitySerializer(many=True, read_only=True)
 
@@ -37,22 +42,27 @@ class SuggestedScheduleSerializer(serializers.ModelSerializer):
         model = SuggestedSchedule
         fields = ['bounded_time', 'availability_set']
 
+
 class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = ('invitee', 'calendar')
-        
+
+
 class SuggestedMeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = SuggestedMeeting
-        fields = ('owner_availability_id', 'invitee_availability_id', 'invitee', 'start_time', 'end_time', 'date', 'owner_preference')
-        
+        fields = ('owner_availability_id', 'invitee_availability_id',
+                  'invitee', 'start_time', 'end_time', 'date', 'owner_preference')
+
+
 class AddContactSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=True, write_only=True)
+
     class Meta:
         model = Contact
-        fields = ('user','id')
-    
+        fields = ('user', 'id')
+
     def validate(self, attrs):
         err = {}
         id_value = attrs.get('id')
@@ -63,7 +73,7 @@ class AddContactSerializer(serializers.ModelSerializer):
 
         if not Contact.objects.filter(id=id_value, user=user_value).exists():
             err['id'] = ["This contact does not exist."]
-            
+
         if err:
             raise serializers.ValidationError(err)
 
