@@ -72,6 +72,18 @@ class CreateCalendarView(APIView):
             return JsonResponse({"error": str(e)}, status=500)
 
 
+class DeleteCalendarView(generics.DestroyAPIView):
+    """
+    View for delete a calendar.
+    """
+    serializer_class = CalendarSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Calendar.objects.filter(owner=user)
+
+
 class CalendarDetailsView(View):
     """
     View for retrieving details of a calendar.

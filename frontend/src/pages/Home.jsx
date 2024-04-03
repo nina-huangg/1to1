@@ -90,6 +90,24 @@ function Home() {
             .catch((err) => alert(err));
     };
 
+    const handleDeleteCalendar = (calendarId) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete the calendar?");
+        if (isConfirmed) {
+            api.delete(`/calendars/delete/${calendarId}/`)
+                .then((res) => {
+                    if (res.status === 204) {
+                        alert("Calendar deleted!");
+                        // Filter out the deleted calendar and update the state
+                        setCalendars(currentCalendars => currentCalendars.filter(calendar => calendar.id !== calendarId));
+                    } else {
+                        alert("Failed to delete calendar.");
+                    }
+                })
+                .catch((error) => alert(error));
+            return;
+        }
+    };
+
     const handleAddCalendar = () => {
         setShowPopup(true);
     };
@@ -108,7 +126,7 @@ function Home() {
             <div className="w-full md:w-3/4">
                 <div className="flex flex-wrap">
                     {calendars.map((calendar) => (
-                        <CalendarCard calendar={calendar}/>
+                        <CalendarCard calendar={calendar} onDelete={handleDeleteCalendar}/>
                     ))}
                 </div>
             </div>
