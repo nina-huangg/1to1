@@ -244,7 +244,7 @@ class InviteeResponseView(APIView):
     POST: responds with availability (in similar format to calendars/<id>/meetings/create/)
 
     """
-    permission_classes = [AllowAny]
+    permission_classes = (AllowAny,)
     def get(self, request, id, inviteId):
         """
         Handles GET requests to retrieve invitee responses.
@@ -303,7 +303,6 @@ class InviteeResponseView(APIView):
                 start_time=availability['start_time'],
                 end_time=availability['end_time'],
                 preference=availability['preference'],
-                owner=request.user,
                 invitee=inviteId 
             ).exists():
                 continue  # Skip this iteration, effectively ignoring this slot

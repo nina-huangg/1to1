@@ -26,24 +26,37 @@ function Invite(){
     const [success, setSuccess] = useState(false);
 
     useEffect(()=>{
-        const fetchData = async () =>{
-            try{
-                const response = await api.get(`/calendars/${id}/invite/${inviteId}/`);
-                console.log(response.data)
-                setInviter(response.data.inviter);
-                setAvailabilityData(response.data.availability_set);
+        // const fetchData = async () =>{
+        //     try{
+        //         const response = await api.get(`/calendars/${id}/invite/${inviteId}/`);
+        //         console.log(response.data)
+        //         setInviter(response.data.inviter);
+        //         setAvailabilityData(response.data.availability_set);
 
-                const calendarResponse = await api.get(`/calendars/calendar/${id}/`);
-                setCalendarDetails(calendarResponse.data);
-                console.log(calendarResponse.data)
+        //         const calendarResponse = await api.get(`/calendars/calendar/${id}/`);
+        //         setCalendarDetails(calendarResponse.data);
+        //         console.log(calendarResponse.data)
                 
-            }catch(error){
-                navigate('*');
-            }
-        };
+        //     }catch(error){
+        //         navigate('*');
+        //     }
+        // };
         fetchData();
-    }, [selectedTimeSlots, calendarDetails]);
+    }, [id]);
 
+    const fetchData = async () =>{
+        try{
+            const response = await api.get(`/calendars/${id}/invite/${inviteId}/`);
+            setInviter(response.data.inviter);
+            setAvailabilityData(response.data.availability_set);
+
+            const calendarResponse = await api.get(`/calendars/calendar/${id}/`);
+            setCalendarDetails(calendarResponse.data);
+            
+        }catch(error){
+            navigate('*');
+        }
+    };
     
     //This function sorts the time slots first by date, then by start time.
     const sortTimeSlots = (a, b) => {
@@ -107,8 +120,10 @@ function Invite(){
         const payload = preparePayloadForBackend(selectedTimeSlots);
         console.log('Prepared Payload:', JSON.stringify(payload, null, 2)); // For debugging
         try{
-            const res = api.post(`/calendars/${id}/invite/${inviteId}/`, payload)
+            const res = await api.post(`/calendars/${id}/invite/${inviteId}/`, payload)
+            fetchData();
             alert('Time slots successfully submitted!');
+            
             setSuccess(true);
         }catch(error){
                 console.log(error);

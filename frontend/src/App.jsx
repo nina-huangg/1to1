@@ -46,7 +46,7 @@ function App() {
             }
         />
         <Route path="/" element={<LandingPage />} />
-        <Route path='/calendars/:id/invite/:inviteId/' element={<Invite/>}></Route>
+        <Route path='/calendars/:id/invite/:inviteId/' element={<Invite/>}/>
         <Route path="/account" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<ProtectedRoute><Logout /></ProtectedRoute>} />
