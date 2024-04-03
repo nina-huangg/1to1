@@ -32,6 +32,9 @@ class Invitation(models.Model):
     confirmed = models.BooleanField(default=False)
     calendar = models.ForeignKey("Calendar", on_delete=models.CASCADE, null=True)
 
+    def __str__(self):
+        return f"{self.calendar}, invitee: {self.invitee.first_name}"
+
 
 class Calendar(models.Model):
     name = models.CharField(max_length=50)
@@ -40,6 +43,8 @@ class Calendar(models.Model):
     contacts = models.ManyToManyField(
         Contact, related_name="calendars", blank=True)
 
+    def __str__(self):
+        return f"{self.owner}'s calendar: {self.name}"
 
 class Meeting(models.Model):
     name = models.CharField(max_length=50)
