@@ -84,7 +84,7 @@ class DeleteCalendarView(generics.DestroyAPIView):
         return Calendar.objects.filter(owner=user)
 
 
-class CalendarDetailsView(View):
+class CalendarDetailsView(APIView):
     """
     View for retrieving details of a calendar.
     """
@@ -96,7 +96,7 @@ class CalendarDetailsView(View):
         Handles GET requests to retrieve details of a specific calendar.
         """
         try:
-            calendar = Calendar.objects.get(id=id)
+            calendar = Calendar.objects.get(id=id, owner_id=request.user.id)
 
             calendar_serializer = CalendarSerializer(calendar)
             return JsonResponse(calendar_serializer.data, status=200, safe=False)
