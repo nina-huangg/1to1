@@ -26,8 +26,9 @@ urlpatterns = [
          ChooseAvailabilityView.as_view(), name="choose_availability",),
     path("<int:id>/contacts/add/", AddContactView.as_view(), name="add_contact"),
 
-    path("<int:id>/meetings/invite/<int:invite_id>/",
-         InviteeResponseView.as_view(), name="add_invitee",),
+#     path("calendar/<int:calendarId>/invite/<int:inviteId>/",
+#          InviteeResponseView.as_view(), name="add_invitee",),
+
     path("<int:id>/contacts/", ContactDetailView.as_view(),
          name="view_contact_list"),
     path("<int:id>/meetings/invite/status/",
@@ -35,5 +36,7 @@ urlpatterns = [
     path("<int:id>/meetings/invite/remind/",
          InviteeRemindView.as_view(), name="view_invite_remind",),
     path("<int:id>/meetings/suggest_schedules/",
-         SuggestMeetingView.as_view(), name="suggest_meeting",)
+         SuggestMeetingView.as_view(), name="suggest_meeting",),
+     path("<int:id>/invite/<int:inviteId>/",
+          InviteeResponseView.as_view(), name='invites')
 ]

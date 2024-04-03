@@ -14,8 +14,21 @@ class AvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Availability
         fields = ("id", "date", "start_time",
-                  "end_time", "preference", "owner")
+                  "end_time", "preference", "owner",)
+        
+class InvitationAvailabilitySerializer(serializers.ModelSerializer):
 
+    preference = serializers.ChoiceField(
+        choices=Availability.PREFERENCE_CHOICES, default=Availability.HIGH_PREFERENCE
+    )
+
+    class Meta:
+        model = Availability
+        fields = ("id", "date", "start_time",
+                  "end_time", "preference", "owner", "invitee")
+        extra_kwargs = {
+            'invitee': {'allow_null': True, 'required': False}
+        }
 
 class CalendarSerializer(serializers.ModelSerializer):
     availability_set = AvailabilitySerializer(many=True, read_only=True)
