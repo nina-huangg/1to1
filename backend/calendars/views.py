@@ -88,7 +88,6 @@ class CalendarDetailsView(APIView):
     """
     View for retrieving details of a calendar.
     """
-
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
@@ -96,10 +95,23 @@ class CalendarDetailsView(APIView):
         Handles GET requests to retrieve details of a specific calendar.
         """
         try:
-            calendar = Calendar.objects.get(id=id, owner_id=request.user.id)
+            calendar = Calendar.objects.get(id=id, owner=request.user)
+            # Fetch all related availabilities
+            availability_set = calendar.availability_set.all()
+            # This filtering might be redundant given the query
+            filtered_availabilities = [
+                availability for availability in availability_set if availability.owner is not None]
 
+            # Serialize the calendar
             calendar_serializer = CalendarSerializer(calendar)
-            return JsonResponse(calendar_serializer.data, status=200, safe=False)
+            calendar_data = calendar_serializer.data
+
+            # Optionally modify the availability set in the serialized data if necessary
+            # Note: This step might require adjusting based on your actual requirements
+            calendar_data['availability_set'] = AvailabilitySerializer(
+                filtered_availabilities, many=True).data
+
+            return JsonResponse(calendar_data, status=200)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
 
@@ -263,9 +275,14 @@ class InviteeResponseView(APIView):
             return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
             calendar = Calendar.objects.get(id=id)
-            availabilities = Availability.objects.filter(calendar_id=id)
+            # availabilities = Availability.objects.filter(calendar_id=id)
+            availability_set = calendar.availability_set.all()
+            # This filtering might be redundant given the query
+            filtered_availabilities = [
+                availability for availability in availability_set if availability.owner is None]
+
             availability_list = []
-            for availability in availabilities:
+            for availability in filtered_availabilities:
                 availability_list.append(
                     f"{availability.date}: {availability.start_time}-{availability.end_time}"
                 )
@@ -301,7 +318,7 @@ class InviteeResponseView(APIView):
 
         availability_data_with_owner = []
         for availability in availability_data:
-            availability["owner"] = invitation.inviter.id
+            availability["invitee"] = invitation.inviter.id
             print(user.id)
             availability_data_with_owner.append(availability)
         availability_serializer = AvailabilitySerializer(
