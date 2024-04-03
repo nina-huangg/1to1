@@ -129,7 +129,7 @@ function AccountSettings(){
 
                     <div className="mb-6 text-left">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                        Password:
+                        Change Password:
                     </label>
                     <input value={password} onChange={(e)=>{setPassword(e.target.value)}} className="shadow appearance-none border rounded-xl w-full py-2 px-3 placeholder-black leading-tight focus:outline-none focus:shadow-outline" id="lastName" type="text"/>
                     {passwordError && (

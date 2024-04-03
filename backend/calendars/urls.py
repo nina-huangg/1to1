@@ -28,9 +28,9 @@ urlpatterns = [
          InviteeResponseView.as_view(), name="add_invitee",),
     path("<int:id>/contacts/", ContactDetailView.as_view(),
          name="view_contact_list"),
-    path("<int:id>/meetings/invite/status/",
+    path("<int:id>/invite/status/",
          InvitesStatusView.as_view(), name="view_invite_status",),
-    path("<int:id>/meetings/invite/remind/",
+    path("<int:id>/invite/remind/",
          InviteeRemindView.as_view(), name="view_invite_remind",),
     path("<int:id>/meetings/suggest_schedules/",
          SuggestMeetingView.as_view(), name="suggest_meeting",)
