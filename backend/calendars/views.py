@@ -352,7 +352,7 @@ class InviteeRemindView(APIView):
     Describe: remind users who have not responded
     Methods: POST
     """
-
+    permission_classes = [IsAuthenticated]
     def post(self, request, id):
         calendar = Calendar.objects.get(id=id)
         if calendar is None:
@@ -364,12 +364,7 @@ class InviteeRemindView(APIView):
                 pass
             else:
                 # TODO: Send emails
-                users_reminded.append(
-                    {
-                        "first_name": invitation.invitee.first_name,
-                        "last_name": invitation.invitee.last_name,
-                    }
-                )
+                users_reminded.append( invitation.invitee.first_name + ' ' + invitation.invitee.last_name)
                 pass
         return JsonResponse({"users_reminded": users_reminded}, status=200)
 

@@ -2,12 +2,27 @@
 import React, { useState } from 'react';
 import AddContactsModal from './AddContactsModal';
 import { useParams, useNavigate } from 'react-router-dom';
+import api from '../api.js'
 
 const InvitationManagementModal = ({ isOpen, toggleModal }) => {
     const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
     const toggleContactsModal = () => setIsContactsModalOpen(!isContactsModalOpen);
     const { id: calendarId } = useParams();
 
+    const sendReminder=async()=>{
+        try{
+            const response = await api.post(`/calendars/${calendarId}/invite/remind/`);
+            var remind = ''
+            for (let i=0; i<response.data.users_reminded.length; i++){
+                remind += (response.data.users_reminded[i])
+                remind += '\n'
+            };
+            alert('These users have been notified: \n'+remind)
+
+        }catch(error){
+            alert(error)
+        }
+    };
 
 
     if (!isOpen) return null;
@@ -20,7 +35,7 @@ const InvitationManagementModal = ({ isOpen, toggleModal }) => {
                     <div className="mt-2 px-7 py-3">
                         <button onClick={toggleContactsModal} className="text-blue-500 hover:text-blue-700 font-semibold block">Add Invitees</button>
                         <AddContactsModal isOpen={isContactsModalOpen} toggleModal={toggleContactsModal} calendarId={calendarId}/>
-                        <button className="text-blue-500 hover:text-blue-700 font-semibold block">Send Reminders</button>
+                        <button onClick={ sendReminder}className="text-blue-500 hover:text-blue-700 font-semibold block">Send Reminders</button>
                         <button className="text-blue-500 hover:text-blue-700 font-semibold block">View Availability Submission</button>
                     </div>
                     <div className="items-center px-4 py-3">
