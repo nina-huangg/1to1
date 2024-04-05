@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views import View
+from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -13,22 +14,27 @@ from rest_framework.views import APIView
 from contacts.models import Contact
 from contacts.serializers import ContactSerializer
 
+from accounts.models import Account
+
 from .models import Availability, Calendar, Invitation, Meeting
 from .serializers import AvailabilitySerializer, CalendarSerializer
 
 
-class CalendarsView(View):
+class CalendarsView(APIView):
     """
     View for retrieving details of available calendars.
     """
 
-    premission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         """
         Handles GET requests to retrieve details of all calendars belonging to logged in user.
         """
-        calendars = Calendar.objects.all().filter(owner=request.user)
+        print(request)
+        user = User.objects.get(username=request.user.username)
+        account = Account.objects.get(user=user)
+        calendars = Calendar.objects.all().filter(owner=account)
         if not calendars:
             return Response({}, status=status.HTTP_200_OK)
 
@@ -143,7 +149,8 @@ class InviteStatusView(APIView):
             else:
                 not_responsed.append(invitee_data)
 
-        response_data = {"responsed": responsed, "not_responsed": not_responsed}
+        response_data = {"responsed": responsed,
+                         "not_responsed": not_responsed}
         return Response(response_data, status=status.HTTP_200_OK)
 
 
@@ -153,7 +160,7 @@ class InviteRemindView(APIView):
     Methods: POST
     """
 
-    premission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, id):
         invitation_set = Invitation.objects.filter(calendar_id=id)
@@ -198,7 +205,8 @@ class InviteResponseView(APIView):
         availability_list = []
 
         for availability in availabilities:
-            availability_list.append([availability.start_time, availability.end_time])
+            availability_list.append(
+                [availability.start_time, availability.end_time])
 
         invitee_response = {
             "inviter": f"{calendar.owner.first_name} {calendar.owner.last_name}",

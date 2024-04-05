@@ -36,12 +36,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            username=validated_data["username"],
+            username=validated_data.get("username"),
             email=validated_data.get("email", ""),
             first_name=validated_data.get("first_name", ""),
             last_name=validated_data.get("last_name", ""),
         )
-        user.set_password(validated_data["password"])
+        user.set_password(validated_data.get("password"))
         user.save()
 
         account = Account(user=user)
@@ -92,7 +92,8 @@ class AccountEditSerializer(serializers.ModelSerializer):
 
         if attrs["pasword"] and attrs["password2"]:
             if len(attrs["password"]) < 8:
-                raise ValidationError("Password must be more than 8 characters")
+                raise ValidationError(
+                    "Password must be more than 8 characters")
             if attrs["password"] != attrs["password2"]:
                 raise ValidationError("Password fields do not match")
         return attrs
@@ -101,8 +102,10 @@ class AccountEditSerializer(serializers.ModelSerializer):
         if validated_data.get("password"):
             instance.set_password(validated_data.get("password"))
 
-        instance.first_name = validated_data.get("first_name", instance.first_name)
-        instance.last_name = validated_data.get("last_name", instance.last_name)
+        instance.first_name = validated_data.get(
+            "first_name", instance.first_name)
+        instance.last_name = validated_data.get(
+            "last_name", instance.last_name)
         instance.email = validated_data.get("email", instance.email)
         instance.save()
 

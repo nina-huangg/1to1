@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.admindocs",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "rest_framework_simplejwt",
     "accounts",
     "calendars",
     "contacts",
@@ -55,10 +56,10 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "ROTATE_REFRESH_TOKENS": True,
-    "BLACKLIST_AFTER_ROTATION": True,
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": settings.SECRET_KEY,

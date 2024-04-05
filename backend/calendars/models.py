@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ValidationError
 
 from contacts.models import Contact
+from accounts.models import Account
 
 # Create your models here.
 
@@ -16,8 +16,30 @@ class Calendar(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200, blank=True)
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="owner", default=None
+        Account, on_delete=models.CASCADE, related_name="owner", default=None
     )
+
+
+class Meeting(models.Model):
+    """
+    Represents a scheduled meeting on a certain user calendar.
+    """
+
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=120)
+    calendar = models.OneToOneField(
+        Calendar, on_delete=models.CASCADE, related_name="meetings"
+    )
+    contacts = models.ManyToManyField(
+        Contact, related_name="meetings", blank=True)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    duration = models.DurationField(null=True)
+    last_modified = models.DateTimeField(auto_now=True)
+    confirmed = models.BooleanField(default=False)
+
+    def clean(self):
+        self.duration = self.end_time - self.start_time
 
 
 class Availability(models.Model):
@@ -35,10 +57,13 @@ class Availability(models.Model):
     ]
     DEFAULT_PREFERENCE = MEDIUM_PREFERENCE
     preference = models.CharField(max_length=10, choices=PREFERENCE_CHOICES)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
     owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="owner_availabilities", null=True
+        Account,
+        on_delete=models.CASCADE,
+        related_name="owner_availabilities",
+        null=True,
     )
     invitee = models.ForeignKey(
         Contact,
@@ -46,35 +71,18 @@ class Availability(models.Model):
         related_name="invitee_availabilities",
         null=True,
     )
-    calendar = models.ForeignKey(
-        Calendar, on_delete=models.CASCADE, related_name="all_availabilities"
+    meeting = models.ForeignKey(
+        Meeting,
+        on_delete=models.CASCADE,
+        related_name="all_availabilities",
+        default=None,
     )
 
     def clean(self):
         super().clean()
         if self.owner is None and self.invitee is None:
-            raise ValidationError("Availability must either belong to owner or invitee")
-
-
-class Meeting(models.Model):
-    """
-    Represents a scheduled meeting on a certain user calendar.
-    """
-
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=120)
-    calendar = models.OneToOneField(
-        Calendar, on_delete=models.CASCADE, related_name="meetings"
-    )
-    contacts = models.ManyToManyField(Contact, related_name="meetings", blank=True)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    duration = models.DurationField(null=True)
-    last_modified = models.DateTimeField(auto_now=True)
-    confirmed = models.BooleanField(default=False)
-
-    def clean(self):
-        self.duration = self.end_time - self.start_time
+            raise ValidationError(
+                "Availability must either belong to owner or invitee")
 
 
 class Invitation(models.Model):
@@ -82,7 +90,6 @@ class Invitation(models.Model):
     Represents an invitation from a user to contact to a certain meeting.
     """
 
-    inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="inviter")
     invitee = models.ForeignKey(
         Contact, on_delete=models.CASCADE, related_name="invitee"
     )
@@ -90,19 +97,3 @@ class Invitation(models.Model):
         Meeting, on_delete=models.CASCADE, related_name="meeting", default=None
     )
     confirmed = models.BooleanField(default=False)
-
-
-class SuggestedMeeting(models.Model):
-    """
-    Represents a suggested meeting time for a meeting.
-    """
-
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    duration = models.DurationField(null=True)
-    meeting = models.OneToOneField(
-        Meeting,
-        on_delete=models.CASCADE,
-        related_name="suggested_meeting",
-        default=None,
-    )

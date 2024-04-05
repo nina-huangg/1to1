@@ -33,7 +33,8 @@ class LoginView(APIView):
 
         if user:
             refresh = RefreshToken.for_user(user)
-            tokens = {"access": str(refresh), "refresh": str(refresh.access_token)}
+            tokens = {"access": str(refresh.access_token),
+                      "refresh": str(refresh)}
             return Response(tokens, status=200)
         else:
             return Response({"error": "Invalid credentials"}, status=400)
@@ -44,7 +45,7 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            refresh_token = request.data["refresh_token"]
+            refresh_token = request.data.get("refresh_token")
             token = RefreshToken(refresh_token)
             token.blacklist()
 

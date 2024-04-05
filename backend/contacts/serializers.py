@@ -10,6 +10,7 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = ["id", "first_name", "last_name", "email", "phone_number"]
 
     def validate(self, attrs):
+        # TODO: make sure different accounts can add contacts with the same information
         existing_contact = Contact.objects.filter(
             first_name=attrs.get("first_name"),
             last_name=attrs.get("last_name"),
