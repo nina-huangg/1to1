@@ -29,6 +29,8 @@ function Home() {
                     console.log(res.data);
                 } else if (res.status === 404) {
                     console.log('No calendars found');
+                } else if (res.status === 401) {
+                    navigate('/login');
                 } else {
                     console.log('Error:', res.status);
                 }

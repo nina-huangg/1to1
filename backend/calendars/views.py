@@ -377,21 +377,16 @@ class InvitesStatusView(APIView):
         not_responsed = []
         for invitation in calendar_invitations:
             if invitation.confirmed:
-                responsed.append(
-                    {
-                        "first_name": invitation.invitee.first_name,
-                        "last_name": invitation.invitee.last_name,
-                    }
-                )
+                # responsed.append(invitation.invitee.first_name + ' ' + invitation.invitee.last_name)
+                responsed.append(invitation.invitee)
             else:
-                not_responsed.append(
-                    {
-                        "first_name": invitation.invitee.first_name,
-                        "last_name": invitation.invitee.last_name,
-                    }
-                )
+                # not_responsed.append(invitation.invitee.first_name + ' ' + invitation.invitee.last_name)
+                not_responsed.append(invitation.invitee)
+                
+        responsed_serializer = ContactSerializer(responsed, many=True)
+        notresponsed_serializer = ContactSerializer(not_responsed, many=True)
         return JsonResponse(
-            {"responsed": responsed, "not_responsed": not_responsed}, status=200
+            {"responded": responsed_serializer.data, "not_responded": notresponsed_serializer.data}, status=200
         )
 
 
@@ -400,7 +395,7 @@ class InviteeRemindView(APIView):
     Describe: remind users who have not responded
     Methods: POST
     """
-
+    permission_classes = [IsAuthenticated]
     def post(self, request, id):
         calendar = Calendar.objects.get(id=id)
         if calendar is None:
@@ -412,12 +407,7 @@ class InviteeRemindView(APIView):
                 pass
             else:
                 # TODO: Send emails
-                users_reminded.append(
-                    {
-                        "first_name": invitation.invitee.first_name,
-                        "last_name": invitation.invitee.last_name,
-                    }
-                )
+                users_reminded.append( invitation.invitee.first_name + ' ' + invitation.invitee.last_name)
                 pass
         return JsonResponse({"users_reminded": users_reminded}, status=200)
 
