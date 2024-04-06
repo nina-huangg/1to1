@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from .models import Contact
 from .serializers import ContactSerializer
 
+# TODO: make update and delete views for most of the endpoints
+
 
 class EditContactView(RetrieveUpdateAPIView):
     lookup_field = "id"

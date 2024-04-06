@@ -1,10 +1,11 @@
 from rest_framework import serializers
+
 from .models import (
     Calendar,
-    Availability,
-    Meeting,
     Invitation,
-    SuggestedMeeting,
+    InvitationAvailability,
+    Meeting,
+    OwnerAvailability,
 )
 
 
@@ -14,9 +15,15 @@ class CalendarSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class AvailabilitySerializer(serializers.ModelSerializer):
+class OwnerAvailabilitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Availability
+        model = OwnerAvailability
+        fields = "__all__"
+
+
+class InvitationAvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InvitationAvailability
         fields = "__all__"
 
 
@@ -29,10 +36,4 @@ class MeetingSerializer(serializers.ModelSerializer):
 class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
-        fields = "__all__"
-
-
-class SuggestedMeetingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SuggestedMeeting
         fields = "__all__"

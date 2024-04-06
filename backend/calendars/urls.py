@@ -1,49 +1,69 @@
 from django.urls import path
 
 from .views import (
-    CalendarsView,
+    CalendarListView,
     CalendarCreateView,
-    CalendarDetailsView,
+    CalendarDetailView,
     ContactAddView,
     MeetingContactsView,
+    MeetingCreateView,
+    MeetingListView,
     InviteStatusView,
     InviteRemindView,
     InviteResponseView,
     AvailabilitySelectView,
     SuggestMeetingView,
+    MeetingDetailView,
 )
 
 app_name = "calendars"
 
 urlpatterns = [
-    path("", CalendarsView.as_view(), name="calendar_list"),
+    path("", CalendarListView.as_view(), name="calendar_list"),
     path("create/", CalendarCreateView.as_view(), name="calendar_create"),
-    path("calendar/<int:id>/", CalendarDetailsView.as_view(), name="calendar_details"),
-    path("<int:id>/contacts/add/", ContactAddView.as_view(), name="contact_add"),
-    path("<int:id>/contacts/", MeetingContactsView.as_view(), name="contact_list"),
+    path("<int:calendar_id>/", CalendarDetailView.as_view(),
+         name="calendar_details"),
+    path("<int:calendar_id>/meetings/",
+         MeetingListView.as_view(), name="meeting_list"),
     path(
-        "<int:id>/meetings/invite/status/",
-        InviteStatusView.as_view(),
-        name="invite_status",
+        "<int:calendar_id>/meetings/create",
+        MeetingCreateView.as_view(),
+        name="meeting_create",
     ),
     path(
-        "<int:id>/meetings/invite/remind/",
+        "<int:calendar_id>/meetings/<int:meeting_id>/",
+        MeetingDetailView.as_view(),
+        name="meeting_detail",
+    ),
+    path(
+        "<int:calendar_id>/meetings/<int:meeting_id>/meeting_suggest/",
+        MeetingSuggestView.as_view(),
+        name="meeting_suggest",
+    ),
+    path(
+        "<int:calendar_id>/meetings/<int:meeting_id>/invites/",
+        InviteListView.as_view(),
+        name="contact_list",
+    ),
+    path(
+        "<int:calendar_id>/meetings/<int:meeting_id>/invites/add/",
+        InviteAddView.as_view(),
+        name="contact_add",
+    ),
+    # TODO: UUID for invitees
+    path(
+        "<int:calendar_id>/meetings/<int:meeting_id>/invites/<int:invite_id>/",
+        InviteDetailView.as_view(),
+        name="invite_detail",
+    ),
+    path(
+        "<int:calendar_id>/meetings/<int:meeting_id>/invites/<int:invite_id>/response/",
+        InviteResponseView.as_view(),
+        name="invite_response",
+    ),
+    path(
+        "<int:calendar_id>/meetings/<int:meeting_id>/invites/<int:invite_id>/remind/",
         InviteRemindView.as_view(),
         name="invite_remind",
-    ),
-    path(
-        "<int:id>/meetings/invite/<int:invite_id>/",
-        InviteResponseView.as_view(),
-        name="invitee_add",
-    ),
-    path(
-        "<int:id>/availability/select/",
-        AvailabilitySelectView.as_view(),
-        name="availability_select",
-    ),
-    path(
-        "<int:id>/meetings/suggest_meeting/",
-        SuggestMeetingView.as_view(),
-        name="suggest_meeting",
     ),
 ]

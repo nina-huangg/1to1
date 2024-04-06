@@ -1,8 +1,7 @@
 from django.db import models
-from django.core.exceptions import ValidationError
 
-from contacts.models import Contact
 from accounts.models import Account
+from contacts.models import Contact
 
 # Create your models here.
 
@@ -27,62 +26,14 @@ class Meeting(models.Model):
 
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=120)
-    calendar = models.OneToOneField(
+    calendar = models.ForeignKey(
         Calendar, on_delete=models.CASCADE, related_name="meetings"
     )
-    contacts = models.ManyToManyField(
-        Contact, related_name="meetings", blank=True)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    duration = models.DurationField(null=True)
+    start_time = models.DateTimeField(null=True)
+    end_time = models.DateTimeField(null=True)
+    duration = models.DurationField(null=False)
     last_modified = models.DateTimeField(auto_now=True)
     confirmed = models.BooleanField(default=False)
-
-    def clean(self):
-        self.duration = self.end_time - self.start_time
-
-
-class Availability(models.Model):
-    """
-    Represents a single availability interval for a user or a contact.
-    """
-
-    HIGH_PREFERENCE = "high"
-    MEDIUM_PREFERENCE = "medium"
-    LOW_PREFERENCE = "low"
-    PREFERENCE_CHOICES = [
-        (HIGH_PREFERENCE, "High"),
-        (MEDIUM_PREFERENCE, "Medium"),
-        (LOW_PREFERENCE, "Low"),
-    ]
-    DEFAULT_PREFERENCE = MEDIUM_PREFERENCE
-    preference = models.CharField(max_length=10, choices=PREFERENCE_CHOICES)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-    owner = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        related_name="owner_availabilities",
-        null=True,
-    )
-    invitee = models.ForeignKey(
-        Contact,
-        on_delete=models.CASCADE,
-        related_name="invitee_availabilities",
-        null=True,
-    )
-    meeting = models.ForeignKey(
-        Meeting,
-        on_delete=models.CASCADE,
-        related_name="all_availabilities",
-        default=None,
-    )
-
-    def clean(self):
-        super().clean()
-        if self.owner is None and self.invitee is None:
-            raise ValidationError(
-                "Availability must either belong to owner or invitee")
 
 
 class Invitation(models.Model):
@@ -97,3 +48,42 @@ class Invitation(models.Model):
         Meeting, on_delete=models.CASCADE, related_name="meeting", default=None
     )
     confirmed = models.BooleanField(default=False)
+
+    # TODO: add validation to check if the contact is a contact of the owner of the meeting
+
+
+class Availability(models.Model):
+    """
+    Abstract class for availability intervals.
+    """
+
+    class Preferences(models.TextChoices):
+        HIGH = "high"
+        MEDIUM = "mid"
+        LOW = "low"
+
+    preference = models.CharField(
+        max_length=5, choices=Preferences, default=Preferences.MEDIUM
+    )
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    class Meta:
+        abstract = True
+
+
+class InvitationAvailability(Availability):
+    """
+    Represents a single availability interval for a invited user.
+    """
+
+    invitation = models.ForeignKey(
+        Invitation, on_delete=models.CASCADE, null=True)
+
+
+class OwnerAvailability(Availability):
+    """
+    Represents a single availability interval of a owner of a meeting.
+    """
+
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, null=True)
