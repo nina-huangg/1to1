@@ -101,6 +101,8 @@ function Profile() {
     const [timezone, setTimezone] = useState('');
     const [isSaveClicked, setIsSaveClicked] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [name, setName] = useState('');
+    const [success, setSuccess] = useState(false);
    
     useEffect(()=>{
         const fetchData = async () =>{
@@ -111,6 +113,12 @@ function Profile() {
                 setLanguage(language);
                 setCountry(country);
                 setTimezone(timezone);
+
+                const nameResponse = await api.get('/profile/view/');
+                const {username, email, first_name, last_name} =nameResponse.data;
+                setName(first_name + ' '+last_name);
+
+
             }catch(error){
                 alert(error);
             }
@@ -133,7 +141,7 @@ function Profile() {
         try{
             let data = { message, language, country, timezone};
             const res = await api.put('/profile/dashboard/edit/',data);
-            
+            setSuccess(true);
         }catch (error){
             alert(error);
         }finally {
@@ -169,7 +177,7 @@ function Profile() {
                         Name:
                     </label>
                     
-                    <input className="shadow appearance-none border rounded-xl w-full py-2 px-3 placeholder-black leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="John Smith" />
+                    <input className="shadow appearance-none border rounded-xl w-full py-2 px-3 placeholder-black leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" value={name} readonly/>
                     </div>
                     <div className="mb-4 text-left">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="message">
@@ -197,6 +205,11 @@ function Profile() {
                     <TimezoneDropdown param={timezone} timezone={timezone} setTimezone={setTimezone}/>
                     </div>
                     {loading && <LoadingIndicator />}
+                    <div className="mb-6 text-left">
+                    {success && (
+                    <p className="mt-2 block text-red-700 text-sm font-bold mb-2">Settings successfully changed!</p>
+                    )}
+                    </div>
                     <button onClick={handleSubmit} className="w-28 h-10 mb-5 text-l shadow-gray-400 rounded-full text-center shadow-lg bg-orange text-white hover:bg-orange-hover">
                     Save
                     </button>

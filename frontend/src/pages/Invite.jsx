@@ -1,3 +1,4 @@
+
 /** @format */
 
 import React, { useState, useEffect } from 'react';
@@ -8,22 +9,56 @@ import AvailabilityEntry from '../components/AvailabilityEntry';
 import InvitationManagementModal from '../components/InvitationManagementModel';
 import AvailabilityPreferenceDropdown from '../components/AvailabilityPreferenceDropdown';
 import Header from '../components/Header.jsx';
+import {Link, useNavigate} from 'react-router-dom';
 
+function Invite(){
 
-const CalendarDetail = () => {
     const [selectedTimeSlots, setSelectedTimeSlots] = useState([]);
     const [calendarDetails, setCalendarDetails] = useState({});
     const [slotPreference, setSlotPreference] = useState('');
     const [availabilityData, setAvailabilityData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const toggleModal = () => setIsModalOpen(!isModalOpen);
-    const { id: calendarId } = useParams();
+    const navigate = useNavigate();
+    
+    const {id:id, inviteId:inviteId } = useParams();
+    const [inviter, setInviter] = useState('');
+    const [success, setSuccess] = useState(false);
 
-    useEffect(() => {
-        fetchCalendarDetails();
-    }, [calendarId]);
+    useEffect(()=>{
+        // const fetchData = async () =>{
+        //     try{
+        //         const response = await api.get(`/calendars/${id}/invite/${inviteId}/`);
+        //         console.log(response.data)
+        //         setInviter(response.data.inviter);
+        //         setAvailabilityData(response.data.availability_set);
 
-    // This function sorts the time slots first by date, then by start time.
+        //         const calendarResponse = await api.get(`/calendars/calendar/${id}/`);
+        //         setCalendarDetails(calendarResponse.data);
+        //         console.log(calendarResponse.data)
+                
+        //     }catch(error){
+        //         navigate('*');
+        //     }
+        // };
+        fetchData();
+    }, [id]);
+
+    const fetchData = async () =>{
+        try{
+            const response = await api.get(`/calendars/${id}/invite/${inviteId}/`);
+            setInviter(response.data.inviter);
+            setAvailabilityData(response.data.availability_set);
+
+            const calendarResponse = await api.get(`/calendars/calendar/${id}/`);
+            setCalendarDetails(calendarResponse.data);
+            
+        }catch(error){
+            navigate('*');
+        }
+    };
+    
+    //This function sorts the time slots first by date, then by start time.
     const sortTimeSlots = (a, b) => {
         const dateComparison = a.day.localeCompare(b.day);
         if (dateComparison !== 0) return dateComparison;
@@ -40,8 +75,6 @@ const CalendarDetail = () => {
         });
         return grouped;
     };
-
-    // Function to prepare the payload
     const preparePayloadForBackend = (selectedTimeSlots) => {
         // Sort the slots
         const sortedSlots = [...selectedTimeSlots].sort(sortTimeSlots);
@@ -77,7 +110,7 @@ const CalendarDetail = () => {
                     slotEndTime.toTimeString().substring(0, 5) + ':00';
             }
         });
-
+        console.log(availabilitySet);
         return { availability_set: availabilitySet };
     };
 
@@ -86,69 +119,38 @@ const CalendarDetail = () => {
     const handleSubmit = async () => {
         const payload = preparePayloadForBackend(selectedTimeSlots);
         console.log('Prepared Payload:', JSON.stringify(payload, null, 2)); // For debugging
-        api.post(`/calendars/${calendarId}/availability/select/`, payload)
-            .then((res) => {
-                if (res.status === 200 || res.status === 201) {
-                    // Check for success status codes
-                    alert('Time slots successfully submitted!');
-                    // Optionally, navigate or refresh details
-                    fetchCalendarDetails();
-                } else {
-                    alert('Failed to submit time slots.');
-                }
-            })
-            .catch((err) => alert('Error:', err));
+        try{
+            const res = await api.post(`/calendars/${id}/invite/${inviteId}/`, payload)
+            fetchData();
+            alert('Time slots successfully submitted!');
+            
+            setSuccess(true);
+        }catch(error){
+                console.log(error);
+                alert('Error:', error);
+        }
     };
 
-    const fetchCalendarDetails = () => {
-        api.get(`/calendars/calendar/${calendarId}/`)
-            .then((res) => {
-                if (res.status === 200) {
-                    setCalendarDetails(res.data);
-                    setAvailabilityData(res.data.availability_set);
-                    console.log('Fetched Calendar Details:', res.data);
-                } else {
-                    console.log('Error fetching calendar details:', res.status);
-                }
-            })
-            .catch((err) => alert('Error:', err));
-    };
-
-    return (
+    return(
         <>
-        <Header/>
+        <header className="h-30px xl:h-60px lg:h-60px md:h-40px sm:h-40px">
+        <div className="flex flex-row items-center justify-between">
+            <div className="xl:w-40 lg:w-40 md:w-32 sm:w-32 w-28 xl:h-12 lg:h-12 md:h-10 sm:h-10 h-8 
+            xl:px-8 lg:px-8 md:px-6 sm:px-6 px-4 xl:py-2.5 lg:py-2.5 md:py-1.5 sm:py-1.5 py-1.5 xl:mx-10 lg:mx-10 md:mx-7 sm:mx-7
+            mx-4 my-5 xl:text-xl lg:text-xl md:text-lg sm:text-lg text-sm rounded-full text-center align-middle shadow-lg
+              shadow-gray-400 bg-logo-color text-white" to='/home'>
+            1 ON 1
+            </div>
+        </div>
+        </header>
         <div className="flex flex-col md:flex-row w-full">
             <div className="w-full md:w-1/3 p-5">
                 <h2 className="text-4xl font-bold mb-4">
-                    {calendarDetails.name}
+                    {inviter}'s Calendar
                 </h2>
                 <p>{calendarDetails.description}</p>
-                <div className="relative flex items-center space-x-4">
-                    <button
-                        onClick={toggleModal}
-                        className="relative p-2 group"
-                    >
-                        <span>👤</span>
-                        <div className="absolute top-full left-0 mt-2 hidden group-hover:block p-2 text-sm text-white bg-black rounded shadow-lg w-auto min-w-max">
-                            Manage Invitation
-                        </div>
-                    </button>
-                    <button className="relative p-2 group">
-                        <span>🗓️</span>
-                        <div className="absolute top-full left-0 mt-2 hidden group-hover:block p-2 text-sm text-white bg-black rounded shadow-lg w-auto min-w-max">
-                            Book and View Suggested Meetings
-                        </div>
-                    </button>
-                </div>
-
-
+                 
                 <hr className="my-4 border-t-2 border-gray-300" />
-
-                {/* Using the InvitationManagementModal component */}
-                <InvitationManagementModal
-                    isOpen={isModalOpen}
-                    toggleModal={toggleModal}
-                />
 
                 <div className="font-bold text-xl mb-2">
                     Submitted Time Slots
@@ -204,4 +206,4 @@ const CalendarDetail = () => {
     );
 };
 
-export default CalendarDetail;
+    export default Invite;
