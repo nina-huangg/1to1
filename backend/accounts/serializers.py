@@ -47,7 +47,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         account = Account(user=user)
         account.save()
 
-        return user
+        return account
 
 
 class AccountSerializer(serializers.ModelSerializer):

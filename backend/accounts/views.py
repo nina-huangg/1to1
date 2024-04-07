@@ -8,21 +8,54 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Account
 from .serializers import AccountSerializer, RegisterSerializer
 
+from rest_framework_simplejwt.tokens import BlacklistedToken, OutstandingToken
+
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
+    """
+    Register a new user account with model 'Account'
+
+    POST: Register a new user account. The body of the request should be a JSON
+    object with the data to populate a django user account.
+
+    example of request body:
+    {
+        "username": "user1",
+        "password": "coolpassword",
+        "password2": "coolpassword",
+        "email": "user@mail.com",
+        "first_name": "Jon",
+        "last_name": "Snow",
+    }
+    """
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=200)
+            return Response(serializer.validated_data, status=200)
         else:
             return Response(serializer.errors, status=400)
 
 
 class LoginView(APIView):
+    """
+    Login a user account.
+
+    POST: Login into a new user account. The body of the request should be a JSON with
+    username and password. If the credentials are correct, the response will be status 200
+    with the access and refresh tokens. Otherwise the response will be status 400.
+
+
+    example of request body:
+    {
+        "username": "user1",
+        "password": "coolpassword",
+    }
+    """
+
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -41,17 +74,23 @@ class LoginView(APIView):
 
 
 class LogoutView(APIView):
+    """
+    Logout the current loged in user account. User must be authenticated to logout.
+    (For simplicity it also logouts the user from all devices)
+
+    POST: The body of the request should be empty. The user is found with the token
+    in the POST request header. All access and refresh tokens associated with the user
+    are then invalidated.
+    """
+
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        try:
-            refresh_token = request.data.get("refresh_token")
-            token = RefreshToken(refresh_token)
-            token.blacklist()
+        tokens = OutstandingToken.objects.filter(user_id=request.user.id)
+        for token in tokens:
+            BlacklistedToken.objects.get_or_create(token=token)
 
-            return Response({"message": "User logged out."}, status=200)
-        except Exception as exception:
-            return Response({"error": str(exception)}, status=400)
+        return Response(status=400)
 
 
 class AccountView(APIView):

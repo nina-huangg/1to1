@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 
 class Account(models.Model):
     """
-    An account of a registered user.
+    An account of a registered user. Any satillite data that is not
+    in the built in Django user model should be put here.
     """
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
