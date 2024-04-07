@@ -57,13 +57,13 @@ urlpatterns = [
         name="invite_detail",
     ),
     path(
+        "<int:calendar_id>/meetings/<int:meeting_id>/invites/remind/",
+        InviteRemindView.as_view(),
+        name="invite_remind",
+    ),
+    path(
         "<int:calendar_id>/meetings/<int:meeting_id>/invites/<int:invite_id>/response/",
         InviteResponseView.as_view(),
         name="invite_response",
-    ),
-    path(
-        "<int:calendar_id>/meetings/<int:meeting_id>/invites/<int:invite_id>/remind/",
-        InviteRemindView.as_view(),
-        name="invite_remind",
     ),
 ]
