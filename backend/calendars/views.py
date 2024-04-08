@@ -73,11 +73,22 @@ class CreateCalendarView(APIView):
             return JsonResponse({"error": str(e)}, status=500)
 
 
-class CalendarDetailsView(View):
+class DeleteCalendarView(generics.DestroyAPIView):
+    """
+    View for delete a calendar.
+    """
+    serializer_class = CalendarSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Calendar.objects.filter(owner=user)
+
+
+class CalendarDetailsView(APIView):
     """
     View for retrieving details of a calendar.
     """
-
     permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
@@ -85,10 +96,23 @@ class CalendarDetailsView(View):
         Handles GET requests to retrieve details of a specific calendar.
         """
         try:
-            calendar = Calendar.objects.get(id=id)
+            calendar = Calendar.objects.get(id=id, owner=request.user)
+            # Fetch all related availabilities
+            availability_set = calendar.availability_set.all()
+            # This filtering might be redundant given the query
+            filtered_availabilities = [
+                availability for availability in availability_set if availability.owner is not None]
 
+            # Serialize the calendar
             calendar_serializer = CalendarSerializer(calendar)
-            return JsonResponse(calendar_serializer.data, status=200, safe=False)
+            calendar_data = calendar_serializer.data
+
+            # Optionally modify the availability set in the serialized data if necessary
+            # Note: This step might require adjusting based on your actual requirements
+            calendar_data['availability_set'] = AvailabilitySerializer(
+                filtered_availabilities, many=True).data
+
+            return JsonResponse(calendar_data, status=200)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
 
@@ -244,31 +268,26 @@ class InviteeResponseView(APIView):
     POST: responds with availability (in similar format to calendars/<id>/meetings/create/)
 
     """
-    permission_classes = (AllowAny,)
-    def get(self, request, id, inviteId):
+
+    def get(self, request, id, invite_id):
         """
         Handles GET requests to retrieve invitee responses.
         """
-
-        if not Invitation.objects.filter(id=inviteId, calendar=id).exists():
-         
+        if not Invitation.objects.filter(id=invite_id).exists():
             return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
-      
             calendar = Calendar.objects.get(id=id)
-            availabilities = Availability.objects.filter(calendar_id=id, invitee=inviteId)
-            
+            availabilities = Availability.objects.filter(calendar_id=id)
             availability_list = []
             for availability in availabilities:
-                ser = InvitationAvailabilitySerializer(availability)
-                availability_list.append(ser.data)
+                availability_list.append(
+                    f"{availability.date}: {availability.start_time}-{availability.end_time}"
+                )
 
             invitee_response = {
                 "inviter": f'{calendar.owner.first_name} {calendar.owner.last_name}',
                 "availability_set": availability_list,
             }
-            
-            # invitee_serializer = InviteeCalendarSerializer(calendar)
             return JsonResponse(invitee_response, status=200, safe=False)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
@@ -297,21 +316,10 @@ class InviteeResponseView(APIView):
         availability_data_with_owner = []
 
         for availability in availability_data:
-            # Check for duplicates directly here
-            if Availability.objects.filter(
-                date=availability['date'],
-                start_time=availability['start_time'],
-                end_time=availability['end_time'],
-                preference=availability['preference'],
-                invitee=inviteId 
-            ).exists():
-                continue  # Skip this iteration, effectively ignoring this slot
-
             availability["owner"] = invitation.inviter.id
-            availability["invitee"] = inviteId
+            print(user.id)
             availability_data_with_owner.append(availability)
-         
-        availability_serializer = InvitationAvailabilitySerializer(
+        availability_serializer = AvailabilitySerializer(
             data=availability_data_with_owner, many=True
         )
         if availability_serializer.is_valid():
