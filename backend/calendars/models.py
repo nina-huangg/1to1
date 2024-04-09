@@ -33,7 +33,7 @@ class Invitation(models.Model):
     calendar = models.ForeignKey("Calendar", on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"{self.calendar}, invitee: {self.invitee.first_name}"
+        return f"{self.calendar}, invitee: {self.invitee.first_name}, id:{self.id}"
 
 
 class Calendar(models.Model):
@@ -44,7 +44,7 @@ class Calendar(models.Model):
         Contact, related_name="calendars", blank=True)
 
     def __str__(self):
-        return f"{self.owner}'s calendar: {self.name}"
+        return f"{self.owner}'s calendar: {self.id}"
 
 class Meeting(models.Model):
     name = models.CharField(max_length=50)

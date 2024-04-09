@@ -96,12 +96,12 @@ class CalendarDetailsView(APIView):
         Handles GET requests to retrieve details of a specific calendar.
         """
         try:
-            calendar = Calendar.objects.get(id=id, owner=request.user)
+            calendar = Calendar.objects.get(id=id)
             # Fetch all related availabilities
             availability_set = calendar.availability_set.all()
             # This filtering might be redundant given the query
             filtered_availabilities = [
-                availability for availability in availability_set if availability.owner is not None]
+                availability for availability in availability_set if availability.invitee == None]
 
             # Serialize the calendar
             calendar_serializer = CalendarSerializer(calendar)
@@ -192,6 +192,7 @@ class AddContactView(APIView):
         Handles POST requests to add contacts to a calendar.
         """
         request_data = request.data
+        
 
         if id is None:
             return JsonResponse({"error": "calendar_id is required"}, status=400)
@@ -273,21 +274,13 @@ class InviteeResponseView(APIView):
         """
         Handles GET requests to retrieve invitee responses.
         """
-
-        if not Invitation.objects.filter(id=inviteId, calendar=id).exists():
-
+        if not Invitation.objects.filter(id=inviteId).exists():
             return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
-
             calendar = Calendar.objects.get(id=id)
-            # availabilities = Availability.objects.filter(calendar_id=id)
-            availability_set = calendar.availability_set.all()
-            # This filtering might be redundant given the query
-            filtered_availabilities = [
-                availability for availability in availability_set if availability.owner is None]
-
+            availabilities = Availability.objects.filter(calendar_id=id)
             availability_list = []
-            for availability in filtered_availabilities:
+            for availability in availabilities:
                 ser = InvitationAvailabilitySerializer(availability)
                 availability_list.append(ser.data)
 
@@ -295,8 +288,6 @@ class InviteeResponseView(APIView):
                 "inviter": f'{calendar.owner.first_name} {calendar.owner.last_name}',
                 "availability_set": availability_list,
             }
-
-            # invitee_serializer = InviteeCalendarSerializer(calendar)
             return JsonResponse(invitee_response, status=200, safe=False)
         except Calendar.DoesNotExist:
             return JsonResponse({"error": "Calendar not found"}, status=404)
@@ -325,21 +316,20 @@ class InviteeResponseView(APIView):
         availability_data_with_owner = []
 
         for availability in availability_data:
-            # print(user.id)
             # Check for duplicates directly here
             if Availability.objects.filter(
                 date=availability['date'],
                 start_time=availability['start_time'],
                 end_time=availability['end_time'],
                 preference=availability['preference'],
-                invitee=inviteId
+                invitee=inviteId 
             ).exists():
                 continue  # Skip this iteration, effectively ignoring this slot
 
-            # availability["owner"] = invitation.inviter.id
+            availability["owner"] = invitation.inviter.id
             availability["invitee"] = inviteId
             availability_data_with_owner.append(availability)
-
+         
         availability_serializer = InvitationAvailabilitySerializer(
             data=availability_data_with_owner, many=True
         )
@@ -352,6 +342,7 @@ class InviteeResponseView(APIView):
             Invitation.objects.filter(
                 invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
 
+            
             return JsonResponse(availability_serializer.data, status=200, safe=False)
         else:
             return JsonResponse(availability_serializer.errors, status=400, safe=False)

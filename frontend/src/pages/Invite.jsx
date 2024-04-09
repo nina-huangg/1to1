@@ -10,6 +10,7 @@ import InvitationManagementModal from '../components/InvitationManagementModel';
 import AvailabilityPreferenceDropdown from '../components/AvailabilityPreferenceDropdown';
 import Header from '../components/Header.jsx';
 import {Link, useNavigate} from 'react-router-dom';
+import axios from 'axios';
 
 function Invite(){
 
@@ -45,6 +46,7 @@ function Invite(){
     }, [id]);
 
     const fetchData = async () =>{
+
         try{
             const response = await api.get(`/calendars/${id}/invite/${inviteId}/`);
             setInviter(response.data.inviter);
