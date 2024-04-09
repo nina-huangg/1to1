@@ -8,9 +8,10 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import LandingPage from './pages/LandingPage';
 import CalendarDetail from './pages/CalendarDetail';
-import Profile from './pages/Profile'
-import ProtectedRoute from "./components/ProtectedRoute"
-import AccountSettings from './pages/AccountSettings'
+import Profile from './pages/Profile';
+import ProtectedRoute from "./components/ProtectedRoute";
+import AccountSettings from './pages/AccountSettings';
+import Invite from './pages/Invite';
 import './App.css'
 
 function Logout() {
@@ -45,12 +46,14 @@ function App() {
             }
         />
         <Route path="/" element={<LandingPage />} />
-        <Route path="/account" element={<AccountSettings />} />
+        <Route path='/calendars/:id/invite/:inviteId/' element={<Invite/>}/>
+        <Route path="/account" element={<ProtectedRoute><AccountSettings /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
+        <Route path="/logout" element={<ProtectedRoute><Logout /></ProtectedRoute>} />
         <Route path="/register" element={<RegisterAndLogout />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />}></Route>
+        
       </Routes>
     </BrowserRouter>
   )

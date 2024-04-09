@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 
 
-const CalendarCard = ({ calendar }) => {
+const CalendarCard = ({ calendar, onDelete }) => {
     const navigate = useNavigate();
 
-    const getCalendar = () => {
+    const getCalendarView = () => {
         navigate(`/calendars/calendar/${calendar.id}`);
     };
     return (
@@ -15,9 +15,13 @@ const CalendarCard = ({ calendar }) => {
                     {calendar.description}
                 </p>
             )}
+    
             <div className="absolute bottom-4 right-4">
-                <button onClick={getCalendar} className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-1 px-2 rounded text-sm">
+                <button onClick={getCalendarView} className="bg-logo-color hover:bg-turquoise text-white font-semibold py-1 px-2 rounded text-sm">
                     View Details
+                </button>
+                <button  onClick={() => onDelete(calendar.id)} className="bg-orange hover:bg-turquoise text-white font-semibold py-1 px-2 ml-3 rounded text-sm">
+                    Delete Calendar
                 </button>
             </div>
         </div>
