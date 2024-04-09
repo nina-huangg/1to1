@@ -454,7 +454,25 @@ class AllMeetingsView(APIView):
         sorted_dict = (sorted(return_response, key=lambda x:x['date']))
         return JsonResponse({'meeting_times':sorted_dict}, status=200)
 
-            
+class CalendarMeetingView(APIView):
+    def get(self, request, id):
+        if id is None:
+            return JsonResponse({"error": "calendar_id is required"}, status=400)
+        return_response = []
+        meetings = []
+        meetings = Meeting.objects.filter(calendar=id)
+        for meet in meetings:
+            return_response.append({
+                'calendar': meet.calendar.name,
+                'invitee': meet.contact.first_name + ' '+ meet.contact.last_name,
+                'date': meet.date,
+                'start_time': meet.start_time.strftime('%H:%M'),
+                'end_time': meet.end_time.strftime('%H:%M'),
+            })
+        sorted_dict = (sorted(return_response, key=lambda x:x['date']))
+        return JsonResponse({'meeting_times':sorted_dict}, status=200)
+
+
 class SuggestMeetingView(APIView):
     """
     View for suggesting meeting.

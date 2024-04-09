@@ -13,7 +13,8 @@ from .views import (
     SuggestMeetingView,
     DeleteCalendarView,
     BookMeetingView,
-    AllMeetingsView
+    AllMeetingsView,
+    CalendarMeetingView
 )
 
 app_name = "calendars"
@@ -45,5 +46,7 @@ urlpatterns = [
           AllMeetingsView.as_view(), name='all_meeting'),
      path("<int:id>/book_meetings",
           BookMeetingView.as_view(), name='book_meeting'),
+     path("<int:id>/confirmed_meetings/",
+          CalendarMeetingView.as_view(), name='confirmed_meetings'),
      
 ]

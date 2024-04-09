@@ -22,8 +22,9 @@ const CalendarDetail = () => {
     const toggleInviteModal = () => {
         if (!finalized){setIsInviteModalOpen(!isInviteModalOpen)};}
     const toggleScheduleModal = () => {
-        if (!finalized){setIsInviteModalOpen(!isInviteModalOpen)};}
+        if (!finalized){setIsScheduleModalOpen(!isScheduleModalOpen)};}
     const { id: calendarId } = useParams();
+    const [meetings, setMeetings] = useState([]);
 
     useEffect(() => {
         fetchCalendarDetails();
@@ -106,20 +107,46 @@ const CalendarDetail = () => {
             .catch((err) => alert('Error:', err));
     };
 
-    const fetchCalendarDetails = () => {
-        api.get(`/calendars/calendar/${calendarId}/`)
-            .then((res) => {
-                if (res.status === 200) {
-                    setCalendarDetails(res.data);
-                    setAvailabilityData(res.data.availability_set);
-                    console.log('Fetched Calendar Details:', res.data);
-                    setFinalized(res.data.confirmed);
-                    
-                } else {
-                    console.log('Error fetching calendar details:', res.status);
+    const fetchCalendarDetails = async () => {
+        try{
+            const res = await api.get(`/calendars/calendar/${calendarId}/`)
+            setCalendarDetails(res.data);
+            setAvailabilityData(res.data.availability_set);
+            console.log('Fetched Calendar Details:', res.data);
+            setFinalized(res.data.confirmed);
+            if (res.data.confirmed){
+                try{
+                    const response =  await api.get(`/calendars/${calendarId}/confirmed_meetings/`);
+                    setMeetings(response.data.meeting_times);
+
+                }catch(error){
+                    alert({'Error': error});
                 }
-            })
-            .catch((err) => alert('Error:', err));
+            }
+
+        }catch(error){
+            alert({'Error': error});
+        }
+        // const response = await api.get(`/calendars/calendar/${calendarId}/`)
+        //     .then((res) => {
+        //         if (res.status === 200) {
+        //             setCalendarDetails(res.data);
+        //             setAvailabilityData(res.data.availability_set);
+        //             console.log('Fetched Calendar Details:', res.data);
+        //             setFinalized(res.data.confirmed);
+        //             if (finalized){
+        //                 api.get(`/calendars/${calendarId}/confirmed_meetings/`)
+        //                 .then((res) => {
+        //                     setMeetings(res.data.meeting_times);
+        //                     console.log(res.data.meeting_times);
+
+        //                 }).catch((err)=>alert({'Error':err}));
+        //             }
+                    
+        //         } else {
+        //             console.log('Error fetching calendar details:', res.status);
+        //         }
+        
     };
 
     return (
@@ -163,9 +190,9 @@ const CalendarDetail = () => {
                 />
 
                 <div className="font-bold text-xl mb-2">
-                    Submitted Time Slots
+                    {!finalized&&'Submitted Time Slots'}{finalized&&'Confirmed Meeting Times'}
                 </div>
-                <div className="max-h-[500px] overflow-y-auto">
+                {!finalized&&<div className="max-h-[500px] overflow-y-auto">
                     {Object.entries(groupedAvailability).map(
                         ([date, entries], index) => (
                             <div key={index} className="mb-6">
@@ -183,7 +210,17 @@ const CalendarDetail = () => {
                             </div>
                         )
                     )}
-                </div>
+                </div>}
+                {finalized&&<div>
+                        {meetings.map((time) => (
+                            <div key={time.id} className="bg-white shadow overflow-hidden rounded-md border border-gray-300 border-opacity-50 px-4 py-2 mb-2 text-left">
+                                <div className="font-medium text-gray-900">{time.date}</div>
+                                <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
+                                <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
+                            </div>
+                        ))}
+                    </div>}
+
             </div>
 
             {/* Right Column for Calendar */}
