@@ -33,7 +33,7 @@ function Header(){
                     xl:px-8 lg:px-8 md:px-6 sm:px-4 px-2 py-2 
                     xl:mr-5 lg:mr-5 md:mr-4 sm:mr-3 mr-2 my-5 
                     xl:text-l lg:text-l md:text-sm sm:text-sm text-xs rounded-full text-center align-middle 
-                    shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white" href="../MyContacts/Contacts_index.html">
+                    shadow-lg shadow-gray-400 hover:bg-primary-blue-hover bg-primary-blue text-white" href="../contacts/">
                 My Contacts
                 </a>
                 <Link className="xl:w-30 lg:w-30 md:w-24 sm:w-20 w-14 xl:h-9 lg:h-9 md:h-7 sm:h-7 h-5 
