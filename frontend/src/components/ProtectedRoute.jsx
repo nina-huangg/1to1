@@ -47,6 +47,24 @@ function ProtectedRoute({ children }) {
         }
     };
 
+    // Response interceptor
+    useEffect(() => {
+        const interceptor = api.interceptors.response.use(
+            response => response,
+            error => {
+                if (error.response.status === 401) {
+                    setIsAuthorized(false);
+                }
+                return Promise.reject(error);
+            }
+        );
+
+        return () => {
+            api.interceptors.response.eject(interceptor);
+        };
+    }, []);
+
+
     if (isAuthorized === null) {
         return <div>Loading...</div>;
     }
