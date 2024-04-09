@@ -20,11 +20,10 @@ const EmailModal = ({ isOpen, toggleModal, calendarId }) => {
         try{
             const res = await api.get(`calendars/${calendarId}/invitations/links`);
             setContacts(res.data.details);
-            if (contacts.length !==0){
-                setInviter(contacts[0].invited_by);
+            if (res.data.details.length!==0){
+                setInviter(res.data.details[0].invited_by);
             }
             
-
         }catch(error){
             alert(`Error fetching: ${error}`);
         }
@@ -78,7 +77,8 @@ const EmailModal = ({ isOpen, toggleModal, calendarId }) => {
                 <div className="overflow-y-auto h-full w-1/2 pr-2">
                     <h3 className="text-lg leading-6 font-medium text-gray-900 mb-3">Template</h3>
                     <span></span>
-                    <text>
+                    <div className="bg-white shadow overflow-hidden rounded-md border border-gray-300 border-opacity-50 px-4 py-2 mb-2 text-left">
+                        <text>
                         Hi! <br/><br/>I am inviting you to a meeting with me.<br/><br/>Please click on the following link to fill it out:
                     </text>
                     <br/>
@@ -86,8 +86,30 @@ const EmailModal = ({ isOpen, toggleModal, calendarId }) => {
                     <br/>
                     <br/>
                     <br/>
+                    <text>{inviter}</text>
+                    </div>
+                    <div className="bg-white shadow overflow-hidden rounded-md border border-gray-300 border-opacity-50 px-4 py-2 mb-2 text-left">
+                        <text>
+                        Hi. <br/><br/>There is a conflict in the time you inputed.<br/><br/>Please fill out the calendar again by clicking on the following link:
+                    </text>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
                     <br/>
                     <text>{inviter}</text>
+                    </div>
+                    <div className="bg-white shadow overflow-hidden rounded-md border border-gray-300 border-opacity-50 px-4 py-2 mb-2 text-left">
+                        <text>
+                        Hi. <br/><br/>Just a friendly reminder to please fill out the calendar by clicking on the following link:
+                    </text>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <text>{inviter}</text>
+                    </div>
                 </div>
                 <div className="border-l-2 border-gray-300"></div>
                 <div className="overflow-y-auto h-full w-1/2 pl-2">
