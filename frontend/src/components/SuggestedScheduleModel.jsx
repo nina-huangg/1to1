@@ -10,9 +10,6 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
     const [selectedContacts, setSelectedContacts] = useState([]);
     const [addedContacts, setAddedContacts] = useState([]); // Store the added contacts
     const [suggestedSchedule, setSuggestedSchedules] = useState([]);
-    const [schedule1, setSchedule1] = useState(null);
-    const [schedule2, setSchedule2] = useState(null);
-    const [schedule3, setSchedule3] = useState(null);
     const { id: calendarId } = useParams();
 
 
@@ -22,33 +19,6 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
         // }
         fetchSchedule();
     }, [isOpen, calendarId]);
-
-    useEffect(() => {
-        if (suggestedSchedule.length > 0){
-            setSchedule1(suggestedSchedule[0]);
-        }
-        
-        console.log(suggestedSchedule);
-    }, [suggestedSchedule]);
-
-
-    const fetchAddedContacts = () => {
-        return api.get(`calendars/${calendarId}/contacts/`)
-            .then(res => {
-                if (res.status === 200) {
-                    console.log('Fetched Contacts', res.data);
-                    setAddedContacts(res.data);
-                    return res.data;
-                } else {
-                    console.error('Failed to fetch added contacts: Status Code', res.status);
-                    return []; // Return an empty array in case of an error
-                }
-            })
-            .catch(err => {
-                alert(`Error fetching added contacts: ${err}`);
-                return [];
-            });
-    };
 
     const fetchSchedule = () => {
         return api.get(`calendars/${calendarId}/meetings/suggest_schedules/`)
@@ -68,34 +38,15 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
             });
     };
 
-    const addContactsToCalendar = (calendarId, selectedContacts) => {
-        const payload = { contacts: selectedContacts.map((id) => ({ id })) };
-        api.post(`calendars/${calendarId}/contacts/add/`, payload)
-            .then((res) => {
-                if (res.status === 200) {
-                    alert('Successfully added contacts to calendar');
-                    fetchAddedContacts();
-                    setSelectedContacts([]); // Optionally clear selection
-                } else {
-                    alert('Failed to add contacts to calendar');
-                }
-            })
-            .catch((err) => alert(`Error: ${err}`));
-    };
-
-    const handleContactSelectionChange = (contactId) => {
-        setSelectedContacts((current) => {
-            if (current.includes(contactId)) {
-                return current.filter((id) => id !== contactId);
-            } else {
-                return [...current, contactId];
-            }
-        });
-    };
-
     const handleSubmit = (num) => {
-        addContactsToCalendar(calendarId, selectedContacts);
-        fetchAddedContacts();
+        const payload ={'meeting_times': suggestedSchedule[num-1]}
+        api.post(`calendars/${calendarId}/book_meetings`, payload)
+        .then((res) => {
+            if (res.status === 200) {
+                alert('Meetings booked');
+            }
+        }).catch((err) => alert(`Error: ${err}`));
+        
     };
 
     if (!isOpen) return null;

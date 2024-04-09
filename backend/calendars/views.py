@@ -12,6 +12,7 @@ from .serializers import (
     SuggestedMeetingSerializer,
     AddContactSerializer,
     InvitationAvailabilitySerializer,
+    BookMeetingSerializer
 )
 from django.db import transaction
 from intervals import DateTimeInterval
@@ -404,6 +405,26 @@ class InviteeRemindView(APIView):
         return JsonResponse({"users_reminded": users_reminded}, status=200)
 
 
+class BookMeetingView(APIView):
+    def post(self, request, id):
+        if id is None:
+            return JsonResponse({"error": "calendar_id is required"}, status=400)
+        meeting_times_data = request.data.get("meeting_times")
+        for meet in meeting_times_data:
+            data = {}
+            data['calendar'] = id
+            data['start_time'] = meet.get('start_time')
+            data['end_time'] = meet.get('end_time')
+            data['date'] = meet.get('date')
+            data['contact'] = meet.get('invitation')
+            print(data)
+            meeting_serializer = BookMeetingSerializer(data=data)
+            if meeting_serializer.is_valid():
+                meeting_serializer.save()
+            else:
+                return JsonResponse(meeting_serializer.errors, status=400)
+        return JsonResponse({'meetings_created': meeting_times_data}, status=200)
+            
 class SuggestMeetingView(APIView):
     """
     View for suggesting meeting.
@@ -522,7 +543,7 @@ class SuggestMeetingView(APIView):
             invitee_aval = Availability.objects.filter(calendar=calendar_id,
                                                        invitee=invite)
             name = invite.invitee.first_name + ' '+invite.invitee.last_name
-            suggested[name] = cls.find_overlap_invitee(owner_availabilities, invitee_aval)
+            suggested[(name, invite.id)] = cls.find_overlap_invitee(owner_availabilities, invitee_aval)
         
         suggested_times_json = []
         print('suggested')
@@ -542,7 +563,8 @@ class SuggestMeetingView(APIView):
                         'date': default_date.strftime('%Y-%m-%d'),
                         'start_time': default_start_time.strftime('%H:%M'),
                         'end_time': default_end_time.strftime('%H:%M'),
-                        'invitee': person
+                        'invitee': person[0],
+                        'invitation': person[1]
                     })
                 else:
 
@@ -553,7 +575,8 @@ class SuggestMeetingView(APIView):
                     'date': date.strftime('%Y-%m-%d'),
                     'start_time': start_time.strftime('%H:%M'),
                     'end_time': end_time.strftime('%H:%M'),
-                    'invitee':person
+                    'invitee': person[0],
+                    'invitation': person[1]
                     })
             
             suggested_times_json.append(date_schedule)
