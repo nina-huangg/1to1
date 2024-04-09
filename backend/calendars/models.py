@@ -45,6 +45,8 @@ class Calendar(models.Model):
 
     def __str__(self):
         return f"{self.owner}'s calendar: {self.id}"
+    def get_contacts_count(self):
+        return self.contacts.count()
 
 class Meeting(models.Model):
     name = models.CharField(max_length=50)

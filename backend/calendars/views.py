@@ -22,6 +22,7 @@ from django.db.models import Q
 from datetime import timedelta
 from django.utils import timezone
 from contacts.models import Contact
+from datetime import datetime, time
 
 
 class CalendarsListView(generics.ListCreateAPIView):
@@ -278,7 +279,7 @@ class InviteeResponseView(APIView):
             return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
             calendar = Calendar.objects.get(id=id)
-            availabilities = Availability.objects.filter(calendar_id=id)
+            availabilities = Availability.objects.filter(calendar_id=id, invitee=inviteId)
             availability_list = []
             for availability in availabilities:
                 ser = InvitationAvailabilitySerializer(availability)
@@ -433,15 +434,30 @@ class SuggestMeetingView(APIView):
                 "perfect_match": False
             }, status=200)
 
+        cal = Calendar.objects.get(id=id)
+
         for meeting_time in suggested_times:
             date, start_time, end_time = meeting_time
             suggested_times_json.append({
                 'date': date.strftime('%Y-%m-%d'),
-                'start_time': start_time.strftime('%H:%M:%S'),
-                'end_time': end_time.strftime('%H:%M:%S')
+                'start_time': start_time.strftime('%H:%M'),
+                'end_time': end_time.strftime('%H:%M')
             })
+        
+        print(f'sug: {suggested_times_json}')
+        return_response = []
+        for i in range(3):
+            num = cal.get_contacts_count()
+            if (i+num)<=len(suggested_times_json):
+                return_response.append(suggested_times_json[i:i+num])
+            else:
+                first = suggested_times_json[i:]
+                first += (suggested_times_json[:(num-len(first))])
+                return_response.append(first)
+        
 
-        return JsonResponse({'meeting_times': suggested_times_json, "perfect_match": True}, status=200)
+
+        return JsonResponse({'meeting_times':return_response, "perfect_match": True}, status=200)
 
     def post(self, request, id):
         if id is None:
@@ -495,6 +511,7 @@ class SuggestMeetingView(APIView):
     def suggest_meeting_times(cls, availabilities, num_slots=5, min_duration=timedelta(hours=1)):
         # Step 1: Collect all available time slots
         available_slots = {}
+        
         for availability in availabilities:
             date = availability.date
             start_time = availability.start_time
@@ -510,17 +527,21 @@ class SuggestMeetingView(APIView):
             available_slots[date] = sorted(available_slots[date])
 
         # Step 3: Find gaps for meeting
+        print(available_slots)
         meeting_times = []
         for date, slots in available_slots.items():
             for i in range(len(slots) - 1):
                 current_end = slots[i][1]
                 next_start = slots[i + 1][0]
-                gap_duration = next_start - current_end
+                #gap_duration = next_start - current_end
+                d1 = datetime.combine(datetime.today(), next_start)
+                d2 = datetime.combine(datetime.today(), current_end)
+                gap_duration = d1-d2
                 if gap_duration >= min_duration:
                     meeting_times.append((date, current_end, next_start))
 
         # Step 4: Sort meeting times by start time
-        meeting_times = sorted(meeting_times, key=lambda x: x[1])
+        meeting_times = sorted(meeting_times, key=lambda x: x[0])
 
         # Step 5: Recommend meeting times
         suggested_times = meeting_times[:num_slots]

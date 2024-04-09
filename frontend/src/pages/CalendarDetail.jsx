@@ -6,6 +6,7 @@ import api from '../api';
 import Calendar from '../components/Calendar';
 import AvailabilityEntry from '../components/AvailabilityEntry';
 import InvitationManagementModal from '../components/InvitationManagementModel';
+import SuggestedScheduleModal from '../components/SuggestedScheduleModel';
 import AvailabilityPreferenceDropdown from '../components/AvailabilityPreferenceDropdown';
 import Header from '../components/Header.jsx';
 
@@ -15,8 +16,10 @@ const CalendarDetail = () => {
     const [calendarDetails, setCalendarDetails] = useState({});
     const [slotPreference, setSlotPreference] = useState('');
     const [availabilityData, setAvailabilityData] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const toggleModal = () => setIsModalOpen(!isModalOpen);
+    const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+    const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+    const toggleInviteModal = () => setIsInviteModalOpen(!isInviteModalOpen);
+    const toggleScheduleModal = () => setIsScheduleModalOpen(!isScheduleModalOpen);
     const { id: calendarId } = useParams();
 
     useEffect(() => {
@@ -125,7 +128,7 @@ const CalendarDetail = () => {
                 <p>{calendarDetails.description}</p>
                 <div className="relative flex items-center space-x-4">
                     <button
-                        onClick={toggleModal}
+                        onClick={toggleInviteModal}
                         className="relative p-2 group"
                     >
                         <span>👤</span>
@@ -133,7 +136,7 @@ const CalendarDetail = () => {
                             Manage Invitation
                         </div>
                     </button>
-                    <button className="relative p-2 group">
+                    <button onClick={toggleScheduleModal} className="relative p-2 group">
                         <span>🗓️</span>
                         <div className="absolute top-full left-0 mt-2 hidden group-hover:block p-2 text-sm text-white bg-black rounded shadow-lg w-auto min-w-max">
                             Book and View Suggested Meetings
@@ -146,8 +149,12 @@ const CalendarDetail = () => {
 
                 {/* Using the InvitationManagementModal component */}
                 <InvitationManagementModal
-                    isOpen={isModalOpen}
-                    toggleModal={toggleModal}
+                    isOpen={isInviteModalOpen}
+                    toggleModal={toggleInviteModal}
+                />
+                <SuggestedScheduleModal
+                    isOpen={isScheduleModalOpen}
+                    toggleModal={toggleScheduleModal}
                 />
 
                 <div className="font-bold text-xl mb-2">
