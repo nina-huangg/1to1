@@ -18,8 +18,11 @@ const CalendarDetail = () => {
     const [availabilityData, setAvailabilityData] = useState([]);
     const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
-    const toggleInviteModal = () => setIsInviteModalOpen(!isInviteModalOpen);
-    const toggleScheduleModal = () => setIsScheduleModalOpen(!isScheduleModalOpen);
+    const [finalized, setFinalized] = useState(false);
+    const toggleInviteModal = () => {
+        if (!finalized){setIsInviteModalOpen(!isInviteModalOpen)};}
+    const toggleScheduleModal = () => {
+        if (!finalized){setIsInviteModalOpen(!isInviteModalOpen)};}
     const { id: calendarId } = useParams();
 
     useEffect(() => {
@@ -110,6 +113,8 @@ const CalendarDetail = () => {
                     setCalendarDetails(res.data);
                     setAvailabilityData(res.data.availability_set);
                     console.log('Fetched Calendar Details:', res.data);
+                    setFinalized(res.data.confirmed);
+                    
                 } else {
                     console.log('Error fetching calendar details:', res.status);
                 }
@@ -123,7 +128,7 @@ const CalendarDetail = () => {
         <div className="flex flex-col md:flex-row w-full">
             <div className="w-full md:w-1/3 p-5">
                 <h2 className="text-4xl font-bold mb-4">
-                    {calendarDetails.name}
+                    {calendarDetails.name} {finalized&&'(finalized)'}
                 </h2>
                 <p>{calendarDetails.description}</p>
                 <div className="relative flex items-center space-x-4">
@@ -194,6 +199,7 @@ const CalendarDetail = () => {
                     </div>
                     <button
                         onClick={handleSubmit}
+                        disabled={finalized? true : false}
                         className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out"
                     >
                         Submit Availability

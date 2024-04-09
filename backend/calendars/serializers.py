@@ -36,7 +36,7 @@ class CalendarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Calendar
-        fields = ("id", "name", "description",
+        fields = ("id", "name", "description",'confirmed',
                   "availability_set", "contact_list")
         depth = 1
 

@@ -46,6 +46,7 @@ class Calendar(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     contacts = models.ManyToManyField(
         Contact, related_name="calendars", blank=True)
+    confirmed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.owner}'s calendar: {self.id}"

@@ -429,6 +429,9 @@ class BookMeetingView(APIView):
 
             if meeting_serializer.is_valid():
                 meeting_serializer.save()
+                cal = Calendar.objects.get(id=id)
+                cal.confirmed = True
+                cal.save()
             else:
                 return JsonResponse(meeting_serializer.errors, status=400)
         return JsonResponse({'meetings_created': meeting_times_data}, status=200)
