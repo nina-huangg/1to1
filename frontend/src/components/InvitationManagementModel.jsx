@@ -1,6 +1,7 @@
 // InvitationManagementModal.jsx
 import React, { useState } from 'react';
 import AddContactsModal from './AddContactsModal';
+import EmailModal from './EmailModal'
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api.js'
 import ViewAvailabilityModal from './AvailabilitySubmittionModal';
@@ -10,6 +11,8 @@ const InvitationManagementModal = ({ isOpen, toggleModal }) => {
     const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
     const toggleContactsModal = () => setIsContactsModalOpen(!isContactsModalOpen);
     const toggleAvailabilityModal = () => setIsAvailabilityModalOpen(!isAvailabilityModalOpen);
+    const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+    const toggleEmailModal = () => setIsEmailModalOpen(!isEmailModalOpen);
     const { id: calendarId } = useParams();
 
 
@@ -25,6 +28,8 @@ const InvitationManagementModal = ({ isOpen, toggleModal }) => {
                         <AddContactsModal isOpen={isContactsModalOpen} toggleModal={toggleContactsModal} calendarId={calendarId}/>
                         <button onClick={toggleAvailabilityModal}className="text-blue-500 hover:text-blue-700 font-semibold block">View Availability Submission</button>
                         <ViewAvailabilityModal isOpen={isAvailabilityModalOpen} toggleModal={toggleAvailabilityModal} calendarId={calendarId}/>
+                        <button onClick={toggleEmailModal}className="text-blue-500 hover:text-blue-700 font-semibold block">Invitation Links</button>
+                        <EmailModal isOpen={isEmailModalOpen} toggleModal={toggleEmailModal} calendarId={calendarId}/>
                     </div>
                     <div className="items-center px-4 py-3">
                         <button onClick={toggleModal} className="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">

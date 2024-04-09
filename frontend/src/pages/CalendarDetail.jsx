@@ -120,7 +120,6 @@ const CalendarDetail = () => {
                     setMeetings(response.data.meeting_times);
 
                 }catch(error){
-                    alert({'Error': error});
                 }
             }
 

@@ -91,7 +91,7 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
                                 <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
-                                {time.default && <div className="text-sm text-gray-500">No interval found - default used</div>}
+                                {time.default && <div className="text-sm text-gray-500">No ideal meeting time - default used</div>}
                             </div>
                         ))}
                     </div>
@@ -117,7 +117,7 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
                                 <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
-                                {time.default && <div className="text-sm text-gray-500">No interval found - default used</div>}
+                                {time.default && <div className="text-sm text-gray-500">No ideal meeting time - default used</div>}
                             </div>
                         ))}
                     </div>
@@ -137,7 +137,7 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
                                 <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
-                                {time.default && <div className="text-sm text-gray-500">No interval found - default used</div>}
+                                {time.default && <div className="text-sm text-gray-500">No ideal meeting time - default used</div>}
                             </div>
                         ))}
                     </div>

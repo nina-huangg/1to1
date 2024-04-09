@@ -276,7 +276,7 @@ class InviteeResponseView(APIView):
         """
         Handles GET requests to retrieve invitee responses.
         """
-        if not Invitation.objects.filter(id=inviteId).exists():
+        if not Invitation.objects.filter(id=inviteId, calendar=id).exists():
             return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
             calendar = Calendar.objects.get(id=id)
@@ -382,6 +382,25 @@ class InvitesStatusView(APIView):
             {"responded": responsed_serializer.data, "not_responded": notresponsed_serializer.data}, status=200
         )
 
+class InvitationView(APIView):
+
+    def get(self, request, id):
+        calendar = Calendar.objects.get(id=id)
+        if calendar is None:
+            return JsonResponse({"error": "calendar with id does not exist"}, status=400)
+        invitations = Invitation.objects.filter(calendar=id)
+        return_response = []
+        if not invitations:
+            return JsonResponse({'details': []}, status=200)
+
+        for i in invitations:
+            return_response.append({
+                'name': i.invitee.first_name + ' ' + i.invitee.last_name,
+                'calendar': id,
+                'invitation':i.id,
+                'invited_by':i.inviter.first_name + ' '+ i.inviter.last_name,
+            })
+        return JsonResponse({'details': return_response}, status=200)
 
 class InviteeRemindView(APIView):
     """
@@ -600,10 +619,12 @@ class SuggestMeetingView(APIView):
         print(suggested)
         for i in range(3):
             date_schedule = []
+            num_default = 0
             for person in suggested:
                 if len(suggested[person]) < 1:
+                    
                     now = timezone.now()
-                    default_time = now + timedelta(days=7)
+                    default_time = now + timedelta(days=(7+num_default))
                     default_time = default_time.replace(hour=15, minute=0, second=0, microsecond=0)
                     default_date = default_time.date()
                     default_start_time = default_time.time()
@@ -617,6 +638,7 @@ class SuggestMeetingView(APIView):
                         'invitation': person[1],
                         'default': True,
                     })
+                    num_default += 1
                     
                 else:
 
@@ -633,6 +655,7 @@ class SuggestMeetingView(APIView):
                     })
             date_schedule = sorted(date_schedule, key=lambda x: x['date'])
             suggested_times_json.append(date_schedule)
+            print(suggested_times_json)
         return suggested_times_json
     
     @classmethod
@@ -644,13 +667,15 @@ class SuggestMeetingView(APIView):
         print(invitee_aval)
         for o_aval in owner_aval:
             for i_aval in invitee_aval:
-                if (o_aval.start_time <= i_aval.start_time and o_aval.end_time >= i_aval.end_time and o_aval.date == i_aval.date):
+                if (o_aval.start_time <= i_aval.start_time and o_aval.end_time >= i_aval.end_time and o_aval.date == i_aval.date) or(o_aval.start_time >= i_aval.start_time and o_aval.end_time <= i_aval.end_time and o_aval.date == i_aval.date):
                         start = i_aval.start_time.strftime('%H:%M')
                         date_time_obj = datetime.strptime(start, '%H:%M')
                         end_time = (date_time_obj+ timedelta(minutes=30)).time()
                         available_slots.add((o_aval.date, i_aval.start_time, end_time))
         if not available_slots: return []
         avail_spots = sorted(list(available_slots), key=lambda x: x[0])
+        print('available')
+        print(avail_spots)
 
         return avail_spots
 

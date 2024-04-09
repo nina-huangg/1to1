@@ -93,7 +93,7 @@ const Calendar = ({ selectedTimeSlots, setSelectedTimeSlots, slotPreference }) =
                 const timeSlotCells = daysOfWeek.map((day, dayIndex) => {
                     // Calculate the actual date for each day of the week
                     const dateOfSlot = new Date(startOfWeek);
-                    dateOfSlot.setDate(startOfWeek.getDate() + dayIndex);
+                    dateOfSlot.setDate(startOfWeek.getDate() + (dayIndex+1));
 
                     // Format the date to "YYYY-MM-DD"
                     const slotDate = dateOfSlot.toISOString().split('T')[0];
