@@ -23,6 +23,8 @@ from .serializers import (
     MeetingSerializer,
 )
 
+from django.conf import settings
+
 # TODO: make update and delete views for most of the endpoints
 
 
@@ -126,7 +128,7 @@ class CalendarDetailView(APIView):
         return Response(calendar_serializer.data, status=200)
 
 
-class MeetingListVIew(APIView):
+class MeetingListView(APIView):
     """
     View for retrieving details of a meetings for a calendar.
     """
@@ -323,7 +325,7 @@ class InviteRemindView(APIView):
     Methods: POST
     """
 
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def post(self, request, calendar_id, meeting_id):
         user = request.user

@@ -4,16 +4,16 @@ from .views import (
     CalendarListView,
     CalendarCreateView,
     CalendarDetailView,
-    ContactAddView,
-    MeetingContactsView,
     MeetingCreateView,
     MeetingListView,
-    InviteStatusView,
+    MeetingSuggestView,
     InviteRemindView,
     InviteResponseView,
-    AvailabilitySelectView,
-    SuggestMeetingView,
+    InviteListView,
+    InviteAddView,
+    InviteDetailView,
     MeetingDetailView,
+    EmailTestView,
 )
 
 app_name = "calendars"
