@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['1.0.0.127.in-addr.arpa', '127.0.0.1', 'localhost', "*"]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 
@@ -54,7 +56,13 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser', 
+    ],
 }
+
 
 
 SIMPLE_JWT = {
@@ -107,6 +115,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5173',  
+]
+
 
 ROOT_URLCONF = 'main.urls'
 

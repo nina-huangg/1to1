@@ -14,6 +14,10 @@ import AccountSettings from './pages/AccountSettings';
 import Invite from './pages/Invite';
 import BookedMeetings from './pages/BookedMeetings';
 import './App.css'
+import ContactsPage from './pages/ContactsPage';
+import AddContactPage from './pages/AddContactPage';
+import EditContactPage from './pages/EditContactPage'; 
+
 
 function Logout() {
     localStorage.clear();
@@ -54,8 +58,10 @@ function App() {
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/booked_meetings" element={<ProtectedRoute><BookedMeetings /></ProtectedRoute>} />
+	<Route path="/contacts" element={<ContactsPage />} />
+        <Route path="/add-contact" element={<AddContactPage />} />
+        <Route path="/edit-contact/:id" element={<EditContactPage />} /> 
         <Route path="*" element={<NotFound />}></Route>
-        
       </Routes>
     </BrowserRouter>
   )
