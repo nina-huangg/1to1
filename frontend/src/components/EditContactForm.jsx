@@ -52,7 +52,7 @@ function EditContactPage() {
     try {
       const formDataWithImage = new FormData();
       
-      if (formData.image) {
+      if (formData.image instanceof File) {
         formDataWithImage.append('image', formData.image); 
       }
       
@@ -79,7 +79,7 @@ function EditContactPage() {
       });
 
       
-      window.location.href = '/contacts';
+      window.location.href = '/contacts/';
     } catch (error) {
       console.error('Error updating contact:', error);
       setError('Failed to update contact. Please try again.');
