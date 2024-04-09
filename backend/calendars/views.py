@@ -96,12 +96,12 @@ class CalendarDetailsView(APIView):
         Handles GET requests to retrieve details of a specific calendar.
         """
         try:
-            calendar = Calendar.objects.get(id=id, owner=request.user)
+            calendar = Calendar.objects.get(id=id)
             # Fetch all related availabilities
             availability_set = calendar.availability_set.all()
             # This filtering might be redundant given the query
             filtered_availabilities = [
-                availability for availability in availability_set if availability.owner is not None]
+                availability for availability in availability_set if availability.invitee == None]
 
             # Serialize the calendar
             calendar_serializer = CalendarSerializer(calendar)
@@ -268,21 +268,21 @@ class InviteeResponseView(APIView):
     POST: responds with availability (in similar format to calendars/<id>/meetings/create/)
 
     """
+    permission_classes = (AllowAny,)
 
-    def get(self, request, id, invite_id):
+    def get(self, request, id, inviteId):
         """
         Handles GET requests to retrieve invitee responses.
         """
-        if not Invitation.objects.filter(id=invite_id).exists():
+        if not Invitation.objects.filter(id=inviteId).exists():
             return JsonResponse({"error": "invite does not exist"}, status=400)
         try:
             calendar = Calendar.objects.get(id=id)
             availabilities = Availability.objects.filter(calendar_id=id)
             availability_list = []
             for availability in availabilities:
-                availability_list.append(
-                    f"{availability.date}: {availability.start_time}-{availability.end_time}"
-                )
+                ser = InvitationAvailabilitySerializer(availability)
+                availability_list.append(ser.data)
 
             invitee_response = {
                 "inviter": f'{calendar.owner.first_name} {calendar.owner.last_name}',
@@ -316,10 +316,21 @@ class InviteeResponseView(APIView):
         availability_data_with_owner = []
 
         for availability in availability_data:
+            # Check for duplicates directly here
+            if Availability.objects.filter(
+                date=availability['date'],
+                start_time=availability['start_time'],
+                end_time=availability['end_time'],
+                preference=availability['preference'],
+                invitee=inviteId 
+            ).exists():
+                continue  # Skip this iteration, effectively ignoring this slot
+
             availability["owner"] = invitation.inviter.id
-            print(user.id)
+            availability["invitee"] = inviteId
             availability_data_with_owner.append(availability)
-        availability_serializer = AvailabilitySerializer(
+         
+        availability_serializer = InvitationAvailabilitySerializer(
             data=availability_data_with_owner, many=True
         )
         if availability_serializer.is_valid():
@@ -331,6 +342,7 @@ class InviteeResponseView(APIView):
             Invitation.objects.filter(
                 invitee=invitation.invitee, inviter=invitation.inviter, calendar=calendar).update(confirmed=True)
 
+            
             return JsonResponse(availability_serializer.data, status=200, safe=False)
         else:
             return JsonResponse(availability_serializer.errors, status=400, safe=False)
