@@ -49,6 +49,29 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
         
     };
 
+    const promptConflict = () => {
+        // const payload ={'meeting_times': suggestedSchedule[num-1]}
+        // api.post(`calendars/${calendarId}/book_meetings`, payload)
+        // .then((res) => {
+        //     if (res.status === 200) {
+        //         alert('Meetings booked');
+        //     }
+        // }).catch((err) => alert(`Error: ${err}`));
+        var users = '\n'
+        for (var i=0; i<suggestedSchedule[0].length; i++){
+            if (suggestedSchedule[0][i].default){
+                users += (suggestedSchedule[0][i].invitee)
+                users += '\n'
+            }
+        }
+        if (users!== '\n'){
+            alert(`Prompted: ${users}`)
+        }else{
+            alert('No conflicts detected!')
+        }
+        
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -68,14 +91,21 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
                                 <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
+                                {time.default && <div className="text-sm text-gray-500">No interval found - default used</div>}
                             </div>
                         ))}
                     </div>
                     <button
-                    onClick={()=>handleSubmit(1)}
-                    className="absolute bottom-5 right-25 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={()=>handleSubmit(3)}
+                    className="absolute bottom-16 right-25 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
                     Select Schedule 1
+                    </button>
+                    <button
+                    onClick={()=>promptConflict()}
+                    className="absolute bottom-5 right-25 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                    Prompt conflicted users to resubmit
                     </button>
                 </div>
                 <div className="border-l-2 border-gray-300"></div>
@@ -87,6 +117,7 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
                                 <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
+                                {time.default && <div className="text-sm text-gray-500">No interval found - default used</div>}
                             </div>
                         ))}
                     </div>
@@ -106,9 +137,11 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
                                 <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
+                                {time.default && <div className="text-sm text-gray-500">No interval found - default used</div>}
                             </div>
                         ))}
                     </div>
+                    
                     <button
                     onClick={()=>handleSubmit(3)}
                     className="absolute bottom-5 right-25 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

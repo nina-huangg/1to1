@@ -28,7 +28,7 @@ const CalendarDetail = () => {
 
     useEffect(() => {
         fetchCalendarDetails();
-    }, [calendarId]);
+    }, [calendarId,isScheduleModalOpen]);
 
     // This function sorts the time slots first by date, then by start time.
     const sortTimeSlots = (a, b) => {
