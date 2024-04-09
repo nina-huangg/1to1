@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework import generics
 from contacts.serializers.contact_serializer import ContactSerializer
-from .models import Calendar, Availability, SuggestedSchedule, Invitation, BoundedTime
+from .models import Calendar, Availability, SuggestedSchedule, Invitation, Meeting
 from .serializers import (
     AvailabilitySerializer,
     CalendarSerializer,
@@ -424,6 +424,25 @@ class BookMeetingView(APIView):
             else:
                 return JsonResponse(meeting_serializer.errors, status=400)
         return JsonResponse({'meetings_created': meeting_times_data}, status=200)
+
+class AllMeetingsView(APIView):
+    def get(self, request):
+        calendars = Calendar.objects.filter(owner=request.user.id)
+        return_response = []
+        meetings = []
+        for cal in calendars:
+            meetings += Meeting.objects.filter(calendar=cal.id)
+        for meet in meetings:
+            return_response.append({
+                'calendar': meet.calendar.name,
+                'invitee': meet.contact.first_name + ' '+ meet.contact.last_name,
+                'date': meet.date,
+                'start_time': meet.start_time.strftime('%H:%M'),
+                'end_time': meet.end_time.strftime('%H:%M'),
+            })
+        sorted_dict = (sorted(return_response, key=lambda x:x['date']))
+        return JsonResponse({'meeting_times':sorted_dict}, status=200)
+
             
 class SuggestMeetingView(APIView):
     """
