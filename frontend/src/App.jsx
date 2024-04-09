@@ -12,6 +12,7 @@ import Profile from './pages/Profile';
 import ProtectedRoute from "./components/ProtectedRoute";
 import AccountSettings from './pages/AccountSettings';
 import Invite from './pages/Invite';
+import BookedMeetings from './pages/BookedMeetings';
 import './App.css'
 
 function Logout() {
@@ -52,6 +53,7 @@ function App() {
         <Route path="/logout" element={<ProtectedRoute><Logout /></ProtectedRoute>} />
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/booked_meetings" element={<ProtectedRoute><BookedMeetings /></ProtectedRoute>} />
         <Route path="*" element={<NotFound />}></Route>
         
       </Routes>
