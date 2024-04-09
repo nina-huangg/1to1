@@ -27,7 +27,8 @@ SECRET_KEY = 'django-insecure-u8axhe*m8ssz4+i*@_&bld3c(^9qxj9=^clody9v!9)g1wjvqv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['1.0.0.127.in-addr.arpa', '127.0.0.1', 'localhost', "*"]
+ALLOWED_HOSTS = ['1.0.0.127.in-addr.arpa',
+                 '127.0.0.1', 'localhost', "34.130.254.81"]
 
 
 # Application definition
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOW_ALL_ORIGINS = True
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -132,10 +133,21 @@ WSGI_APPLICATION = 'main.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db1to1',
+        'USER': 'admin1da906z',
+        'PASSWORD':  'yJn89VDHyf8YArlbsq2y',
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
@@ -175,6 +187,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

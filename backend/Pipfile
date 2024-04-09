@@ -9,6 +9,10 @@ djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 intervals = "*"
 django-cors-headers = "*"
+google-cloud-secret-manager = "*"
+gunicorn = "*"
+psycopg2-binary = "*"
+environ = "*"
 
 [dev-packages]
 
