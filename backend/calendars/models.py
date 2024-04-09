@@ -34,7 +34,10 @@ class Invitation(models.Model):
 
     def __str__(self):
         return f"{self.calendar}, invitee: {self.invitee.first_name}, id:{self.id}"
-
+    @staticmethod
+    def get_invites_by_calendar_id(calendar_id):
+        invites = Invitation.objects.filter(calendar_id=calendar_id)
+        return invites
 
 class Calendar(models.Model):
     name = models.CharField(max_length=50)
@@ -48,12 +51,12 @@ class Calendar(models.Model):
     def get_contacts_count(self):
         return self.contacts.count()
 
+
 class Meeting(models.Model):
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=120)
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
-    contacts = models.ManyToManyField(
-        Contact, related_name="meetings", blank=True)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     duration = models.DurationField()
     last_modified = models.DateTimeField(auto_now=True)
     confirmed = models.BooleanField(default=False)

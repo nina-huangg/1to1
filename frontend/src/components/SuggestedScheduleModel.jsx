@@ -116,6 +116,7 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                             <div key={time.id} className="bg-white shadow overflow-hidden rounded-md border border-gray-300 border-opacity-50 px-4 py-2 mb-2 text-left">
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
+                                <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
                             </div>
                         ))}
                     </div>
@@ -134,6 +135,7 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                             <div key={time.id} className="bg-white shadow overflow-hidden rounded-md border border-gray-300 border-opacity-50 px-4 py-2 mb-2 text-left">
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
+                                <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
                             </div>
                         ))}
                     </div>
@@ -152,6 +154,7 @@ const SuggestedScheduleModal = ({ isOpen, toggleModal }) => {
                             <div key={time.id} className="bg-white shadow overflow-hidden rounded-md border border-gray-300 border-opacity-50 px-4 py-2 mb-2 text-left">
                                 <div className="font-medium text-gray-900">{time.date}</div>
                                 <div className="text-sm text-gray-500">{time.start_time}-{time.end_time}</div>
+                                <div className="text-sm text-gray-500">Meet with: {time.invitee}</div>
                             </div>
                         ))}
                     </div>

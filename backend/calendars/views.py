@@ -413,47 +413,48 @@ class SuggestMeetingView(APIView):
         if id is None:
             return JsonResponse({"error": "calendar_id is required"}, status=400)
         ava = Availability.objects.filter(calendar_id=id)
-        suggested_times = self.suggest_meeting_times(ava)
-        suggested_times_json = []
-        min_duration = timedelta(minutes=60)
-        if len(suggested_times) < 1:
-            now = timezone.now()
-            default_time = now + timedelta(days=7)
-            default_time = default_time.replace(
-                hour=15, minute=0, second=0, microsecond=0)
-            default_date = default_time.date()
-            default_start_time = default_time.time()
-            default_end_time = (default_time + min_duration).time()
+        return_response = self.find_interval_invitees(id)
+        # suggested_times = self.suggest_meeting_times(ava)
+        # suggested_times_json = []
+        # min_duration = timedelta(minutes=60)
+        # if len(suggested_times) < 1:
+        #     now = timezone.now()
+        #     default_time = now + timedelta(days=7)
+        #     default_time = default_time.replace(
+        #         hour=15, minute=0, second=0, microsecond=0)
+        #     default_date = default_time.date()
+        #     default_start_time = default_time.time()
+        #     default_end_time = (default_time + min_duration).time()
 
-            return JsonResponse({
-                'meeting_times': [{
-                    'date': default_date.strftime('%Y-%m-%d'),
-                    'start_time': default_start_time.strftime('%H:%M:%S'),
-                    'end_time': default_end_time.strftime('%H:%M:%S')
-                }],
-                "perfect_match": False
-            }, status=200)
+        #     return JsonResponse({
+        #         'meeting_times': [{
+        #             'date': default_date.strftime('%Y-%m-%d'),
+        #             'start_time': default_start_time.strftime('%H:%M:%S'),
+        #             'end_time': default_end_time.strftime('%H:%M:%S')
+        #         }],
+        #         "perfect_match": False
+        #     }, status=200)
 
-        cal = Calendar.objects.get(id=id)
+        # cal = Calendar.objects.get(id=id)
 
-        for meeting_time in suggested_times:
-            date, start_time, end_time = meeting_time
-            suggested_times_json.append({
-                'date': date.strftime('%Y-%m-%d'),
-                'start_time': start_time.strftime('%H:%M'),
-                'end_time': end_time.strftime('%H:%M')
-            })
+        # for meeting_time in suggested_times:
+        #     date, start_time, end_time = meeting_time
+        #     suggested_times_json.append({
+        #         'date': date.strftime('%Y-%m-%d'),
+        #         'start_time': start_time.strftime('%H:%M'),
+        #         'end_time': end_time.strftime('%H:%M')
+        #     })
         
-        print(f'sug: {suggested_times_json}')
-        return_response = []
-        for i in range(3):
-            num = cal.get_contacts_count()
-            if (i+num)<=len(suggested_times_json):
-                return_response.append(suggested_times_json[i:i+num])
-            else:
-                first = suggested_times_json[i:]
-                first += (suggested_times_json[:(num-len(first))])
-                return_response.append(first)
+        # print(f'sug: {suggested_times_json}')
+        # return_response = []
+        # for i in range(3):
+        #     num = cal.get_contacts_count()
+        #     if (i+num)<=len(suggested_times_json):
+        #         return_response.append(suggested_times_json[i:i+num])
+        #     else:
+        #         first = suggested_times_json[i:]
+        #         first += (suggested_times_json[:(num-len(first))])
+        #         return_response.append(first)
         
 
 
@@ -506,6 +507,72 @@ class SuggestMeetingView(APIView):
             return JsonResponse(suggested_meeting_serializer.errors, status=400)
 
         return JsonResponse(suggested_meeting_serializer.data, status=200)
+
+    @classmethod
+    def find_interval_invitees(cls,calendar_id):
+        # Query owner and invitee availabilities separately
+        owner_availabilities = Availability.objects.filter(
+            calendar_id=calendar_id, owner__isnull=False
+        )
+        invitee_availabilities = Invitation.get_invites_by_calendar_id(calendar_id)
+
+        suggested = {}
+
+        for invite in invitee_availabilities:
+            invitee_aval = Availability.objects.filter(calendar=calendar_id,
+                                                       invitee=invite)
+            name = invite.invitee.first_name + ' '+invite.invitee.last_name
+            suggested[name] = cls.find_overlap_invitee(owner_availabilities, invitee_aval)
+        
+        suggested_times_json = []
+        print('suggested')
+        print(suggested)
+        for i in range(3):
+            date_schedule = []
+            for person in suggested:
+                if len(suggested[person]) < 1:
+                    now = timezone.now()
+                    default_time = now + timedelta(days=7)
+                    default_time = default_time.replace(hour=15, minute=0, second=0, microsecond=0)
+                    default_date = default_time.date()
+                    default_start_time = default_time.time()
+                    default_end_time = (default_time + timedelta(minutes=30)).time()
+
+                    date_schedule.append({
+                        'date': default_date.strftime('%Y-%m-%d'),
+                        'start_time': default_start_time.strftime('%H:%M'),
+                        'end_time': default_end_time.strftime('%H:%M'),
+                        'invitee': person
+                    })
+                else:
+
+                    if i < len(suggested[person]):
+                        date, start_time, end_time = suggested[person][i]
+                    else: date, start_time, end_time = suggested[person][0]
+                    date_schedule.append({
+                    'date': date.strftime('%Y-%m-%d'),
+                    'start_time': start_time.strftime('%H:%M'),
+                    'end_time': end_time.strftime('%H:%M'),
+                    'invitee':person
+                    })
+            
+            suggested_times_json.append(date_schedule)
+        return suggested_times_json
+    
+    @classmethod
+    def find_overlap_invitee(cls, owner_aval, invitee_aval):
+        available_slots = set()
+        for o_aval in owner_aval:
+            for i_aval in invitee_aval:
+                if (o_aval.start_time <= i_aval.start_time and o_aval.end_time >= i_aval.end_time and
+                    o_aval.date == i_aval.date):
+                        start = i_aval.start_time.strftime('%H:%M')
+                        date_time_obj = datetime.strptime(start, '%H:%M')
+                        end_time = (date_time_obj+ timedelta(minutes=30)).time()
+                        available_slots.add((o_aval.date, i_aval.start_time, end_time))
+        if not available_slots: return []
+        avail_spots = sorted(list(available_slots), key=lambda x: x[0])
+        return avail_spots
 
     @classmethod
     def suggest_meeting_times(cls, availabilities, num_slots=5, min_duration=timedelta(hours=1)):
@@ -636,8 +703,8 @@ class SuggestMeetingView(APIView):
                 bounded_query = Q(
                     start_time__gte=invitee_availability.start_time,
                     end_time__lte=invitee_availability.end_time,
-                    start_date__gte=invitee_availability.date,
-                    end_date__lte=invitee_availability.date,
+                    start_date__exact=invitee_availability.date,
+                    end_date__exact=invitee_availability.date,
                 )
                 if bounded_times.filter(bounded_query).exists():
                     # Check if intersection interval duration meets meeting duration
