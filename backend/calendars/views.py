@@ -417,8 +417,16 @@ class BookMeetingView(APIView):
             data['end_time'] = meet.get('end_time')
             data['date'] = meet.get('date')
             data['contact'] = meet.get('invitation')
-            print(data)
+
+            if Meeting.objects.filter(
+                calendar= id,
+                start_time= meet.get('start_time'),
+                end_time=meet.get('end_time'),
+                date = meet.get('date'),
+                contact=meet.get('invitation')
+            ).exists(): continue
             meeting_serializer = BookMeetingSerializer(data=data)
+
             if meeting_serializer.is_valid():
                 meeting_serializer.save()
             else:
@@ -597,7 +605,7 @@ class SuggestMeetingView(APIView):
                     'invitee': person[0],
                     'invitation': person[1]
                     })
-            
+            date_schedule = sorted(date_schedule, key=lambda x: x['date'])
             suggested_times_json.append(date_schedule)
         return suggested_times_json
     
