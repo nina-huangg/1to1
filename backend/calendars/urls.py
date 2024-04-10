@@ -11,7 +11,11 @@ from .views import (
     InvitesStatusView,
     InviteeRemindView,
     SuggestMeetingView,
-    DeleteCalendarView
+    DeleteCalendarView,
+    BookMeetingView,
+    AllMeetingsView,
+    CalendarMeetingView,
+    InvitationView
 )
 
 app_name = "calendars"
@@ -33,10 +37,19 @@ urlpatterns = [
          name="view_contact_list"),
     path("<int:id>/invite/status/",
          InvitesStatusView.as_view(), name="view_invite_status",),
+     path("<int:id>/invitations/links",
+         InvitationView.as_view(), name="invitation",),
     path("<int:id>/invite/remind/",
          InviteeRemindView.as_view(), name="view_invite_remind",),
     path("<int:id>/meetings/suggest_schedules/",
          SuggestMeetingView.as_view(), name="suggest_meeting",),
-    path("<int:id>/invite/<int:inviteId>/",
-         InviteeResponseView.as_view(), name='invites')
+     path("<int:id>/invite/<int:inviteId>/",
+          InviteeResponseView.as_view(), name='invites'),
+     path("meetings/",
+          AllMeetingsView.as_view(), name='all_meeting'),
+     path("<int:id>/book_meetings",
+          BookMeetingView.as_view(), name='book_meeting'),
+     path("<int:id>/confirmed_meetings/",
+          CalendarMeetingView.as_view(), name='confirmed_meetings'),
+     
 ]

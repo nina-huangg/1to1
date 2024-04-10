@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from contacts.serializers.contact_serializer import ContactSerializer
-from .models import Availability, Calendar, BoundedTime, Invitation, SuggestedMeeting
+from .models import Availability, Calendar, BoundedTime, Invitation, SuggestedMeeting, Meeting
 from .models import SuggestedSchedule
 from contacts.models import Contact
 
@@ -36,7 +36,7 @@ class CalendarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Calendar
-        fields = ("id", "name", "description",
+        fields = ("id", "name", "description",'confirmed',
                   "availability_set", "contact_list")
         depth = 1
 
@@ -91,3 +91,10 @@ class AddContactSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(err)
 
         return attrs
+
+class BookMeetingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meeting
+        fields = ('name', 'description', 'calendar', 'contact', 'duration', 'start_time',
+                  'end_time', 'date')
+        

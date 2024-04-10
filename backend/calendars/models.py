@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from datetime import timedelta
 
 from contacts.models import Contact
 
@@ -34,7 +35,10 @@ class Invitation(models.Model):
 
     def __str__(self):
         return f"{self.calendar}, invitee: {self.invitee.first_name}, id:{self.id}"
-
+    @staticmethod
+    def get_invites_by_calendar_id(calendar_id):
+        invites = Invitation.objects.filter(calendar_id=calendar_id)
+        return invites
 
 class Calendar(models.Model):
     name = models.CharField(max_length=50)
@@ -42,19 +46,20 @@ class Calendar(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     contacts = models.ManyToManyField(
         Contact, related_name="calendars", blank=True)
+    confirmed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.owner}'s calendar: {self.id}"
+    def get_contacts_count(self):
+        return self.contacts.count()
+
 
 class Meeting(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.CharField(max_length=120)
+    name = models.CharField(max_length=50, null=True)
+    description = models.CharField(max_length=120, null=True)
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
-    contacts = models.ManyToManyField(
-        Contact, related_name="meetings", blank=True)
-    duration = models.DurationField()
-    last_modified = models.DateTimeField(auto_now=True)
-    confirmed = models.BooleanField(default=False)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    duration = models.DurationField(default=timedelta(minutes=30))
     start_time = models.TimeField()
     end_time = models.TimeField()
     date = models.DateField()

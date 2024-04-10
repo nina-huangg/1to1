@@ -2,6 +2,7 @@
 
 import api from '../api';
 import CalendarCard from '../components/CalendarCard';
+import MeetingCard from '../components/MeetingCard';
 import { useNavigate } from 'react-router-dom';
 
 import Header from '../components/Header.jsx';
@@ -9,8 +10,9 @@ import React, {useState, useEffect } from 'react';
 
 
 
-function Home() {
+function BookedMeetings() {
     const [calendars, setCalendars] = useState([]);
+    const [meetings, setMeetings] = useState([]);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [showPopup, setShowPopup] = useState(false);
@@ -18,9 +20,21 @@ function Home() {
 
 
     useEffect(() => {
-        getCalendars();
+        getMeetings();
     }, []);
 
+    const getMeetings = async () => {
+        try{
+            const response = await api.get('calendars/meetings/')
+ 
+                setMeetings(response.data.meeting_times);
+                console.log(meetings);
+            
+        }catch (error){
+            alert(error);
+        }
+
+    };
     const getCalendars = () => {
         api.get('calendars/details/')
             .then((res) => {
@@ -78,9 +92,6 @@ function Home() {
     const handleAddCalendar = () => {
         setShowPopup(true);
     };
-    const closeModal = () => {
-        setShowPopup(false);
-    };
 
 
 
@@ -89,53 +100,19 @@ function Home() {
         <Header/>
         <div className="flex flex-col items-start min-h-screen p-6 relative">
             <div className="w-full md:w-3/4 flex items-center">
-                <h2 className="text-3xl font-bold mb-8">Calendars</h2>
-                <button onClick={handleAddCalendar} className="bg-primary-blue hover:bg-turquoise text-white font-semibold rounded py-1 px-1 ml-6 mb-8">+ Add Calendar</button>
-            </div>
+                <h2 className="text-3xl font-bold mb-8">Upcoming Meetings</h2>
+                </div>
             <div className="w-full md:w-3/4">
                 <div className="flex flex-wrap">
-                    {calendars.map((calendar) => (
-                        <CalendarCard calendar={calendar} onDelete={handleDeleteCalendar}/>
+                    {meetings.map((meet) => (
+                        <MeetingCard meet={meet}/>
                     ))}
                 </div>
             </div>
-            {showPopup && (
-                <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                    <div className="bg-white p-8 rounded shadow-md">
-                        <h2 className="text-lg font-semibold mb-4">Create a Calendar</h2>
-                        <form onSubmit={createCalendar}>
-                            <label htmlFor="name">Name:</label>
-                            <br />
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                required
-                                onChange={(e) => setName(e.target.value)}
-                                value={name}
-                                className="border rounded p-2 mb-4 w-full"
-                            />
-                            <label htmlFor="description">Description:</label>
-                            <br />
-                            <textarea
-                                id="description"
-                                name="description"
-                                onChange={(e) => setDescription(e.target.value)}
-                                value={description}
-                                className="border rounded p-2 mb-4 w-full"
-                            />
-                            <div className="flex justify-between">
-                                <button type="submit" className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-2 px-4 rounded">Create</button>
-                                <button onClick={closeModal} className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-2 px-4 rounded">Close</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
         </div>
         </>
         
     );
 }
 
-export default Home;
+export default BookedMeetings;
