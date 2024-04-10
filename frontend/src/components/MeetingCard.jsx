@@ -16,7 +16,7 @@ const MeetingCard = ({ meet }) => {
     
             {/* <div className="absolute bottom-4 right-4">
                 
-                <button  onClick={() => onDelete(calendar.id)} className="bg-orange hover:bg-turquoise text-white font-semibold py-1 px-1 ml-3 rounded text-xs">
+                <button  onClick={() => handleDelete(meet.id)} className="bg-orange hover:bg-turquoise text-white font-semibold py-1 px-1 ml-3 rounded text-xs">
                     Delete Meeting
                 </button>
             </div> */}
