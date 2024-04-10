@@ -90,6 +90,23 @@ const CalendarDetail = () => {
 
     const groupedAvailability = groupAvailabilityByDate(availabilityData);
 
+    const handleDeleteAvailability = (calendarId, availabilityId) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this availability slot?");
+        if (isConfirmed) {
+            api.delete(`/calendars/${calendarId}/availability/delete/${availabilityId}/`)
+                .then((res) => {
+                    if (res.status === 200) {
+                        alert("Availability slot deleted!");
+                        fetchCalendarDetails();                    
+                    } else {
+                        alert("Failed to delete availability slot.");
+                    }
+                })
+                .catch((error) => alert("An error occurred while deleting the availability slot: " + error));
+        }
+    };
+    
+
     const handleSubmit = async () => {
         const payload = preparePayloadForBackend(selectedTimeSlots);
         console.log('Prepared Payload:', JSON.stringify(payload, null, 2)); // For debugging
@@ -202,7 +219,9 @@ const CalendarDetail = () => {
                                     {entries.map((entry, entryIndex) => (
                                         <AvailabilityEntry
                                             key={entryIndex}
+                                            onDelete={handleDeleteAvailability}
                                             entry={entry}
+                                            calendarId={calendarId}
                                         />
                                     ))}
                                 </div>
