@@ -159,20 +159,20 @@ contact15 = Contact.objects.create(
     email="contact15@email.com",
 )
 contact16 = Contact.objects.create(
-    user=user6,
+    user=user7,
     first_name="Contact",
     last_name="Sixteen",
     email="contact16@email.com",
 )
 
-contact1.image.save("contact1.jpg", File(open("tests/static/profilepic1.jpg", "r")))
-contact2.image.save("contact2.jpg", File(open("tests/static/profilepic1.jpg", "r")))
-contact3.image.save("contact3.jpg", File(open("tests/static/profilepic1.jpg", "r")))
-contact4.image.save("contact4.jpg", File(open("tests/static/profilepic1.jpg", "r")))
-contact5.image.save("contact5.jpg", File(open("tests/static/profilepic1.jpg", "r")))
-contact6.image.save("contact6.jpg", File(open("tests/static/profilepic1.jpg", "r")))
-contact7.image.save("contact7.jpg", File(open("tests/static/profilepic1.jpg", "r")))
-contact8.image.save("contact8.jpg", File(open("tests/static/profilepic1.jpg", "r")))
+contact1.image.save("contact1.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
+contact2.image.save("contact2.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
+contact3.image.save("contact3.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
+contact4.image.save("contact4.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
+contact5.image.save("contact5.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
+contact6.image.save("contact6.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
+contact7.image.save("contact7.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
+contact8.image.save("contact8.jpg", File(open("tests/static/profilepic1.jpg", "rb")))
 
 
 # calendars app
@@ -181,11 +181,10 @@ calendar1 = Calendar.objects.create(
     name="Calendar 1",
     owner=user1,
     description="Calendar 1 description",
+    confirmed=True,
 )
 calendar2 = Calendar.objects.create(
-    name="Calendar 2",
-    owner=user2,
-    description="Calendar 2 description",
+    name="Calendar 2", owner=user2, description="Calendar 2 description", confirmed=True
 )
 calendar3 = Calendar.objects.create(
     name="Calendar 3",
@@ -211,100 +210,117 @@ meeting1 = Meeting.objects.create(
     name="Meeting 1",
     description="Meeting 1 description",
     calendar=calendar1,
-    duration=timedelta(hours=2),
-    confirmed=False,
+    contact=contact1,
+    start_time=time(9, 0),
+    end_time=time(11, 0),
+    date=date(2024, 1, 1),
 )
 meeting2 = Meeting.objects.create(
     name="Meeting 2",
     description="Meeting 2 description",
     calendar=calendar2,
+    contact=contact4,
     duration=timedelta(hours=3),
-    confirmed=False,
+    start_time=time(9, 0),
+    end_time=time(12, 0),
+    date=date(2024, 1, 1),
 )
 meeting3 = Meeting.objects.create(
     name="Meeting 3",
     description="Meeting 3 description",
     calendar=calendar3,
+    contact=contact4,
     duration=timedelta(hours=1),
-    confirmed=True,
+    start_time=time(12, 0),
+    end_time=time(17, 0),
+    date=date(2024, 1, 1),
 )
 meeting4 = Meeting.objects.create(
     name="Meeting 4",
     description="Meeting 4 description",
     calendar=calendar4,
+    contact=contact6,
     duration=timedelta(minutes=30),
-    confirmed=False,
+    start_time=time(12, 0),
+    end_time=time(13, 0),
+    date=date(2024, 4, 4),
 )
 meeting5 = Meeting.objects.create(
     name="Meeting 5",
     description="Meeting 5 description",
     calendar=calendar5,
+    contact=contact12,
     duration=timedelta(minutes=30),
-    confirmed=False,
+    start_time=time(16, 0),
+    end_time=time(18, 0),
+    date=date(2024, 1, 2),
 )
 meeting6 = Meeting.objects.create(
     name="Meeting 6",
     description="Meeting 6 description",
     calendar=calendar6,
+    contact=contact16,
     duration=timedelta(hours=1),
-    confirmed=False,
+    start_time=time(16, 0),
+    end_time=time(17, 0),
+    date=date(2024, 1, 2),
 )
 
 invitation1 = Invitation.objects.create(
-    inviteer=meeting1.calendar.owner,
+    inviter=meeting1.calendar.owner,
     invitee=contact1,
     meeting=meeting1,
     calendar=meeting1.calendar,
 )
 
 invitation2 = Invitation.objects.create(
-    inviteer=meeting1.calendar.owner,
+    inviter=meeting1.calendar.owner,
     invitee=contact2,
     meeting=meeting1,
     calendar=meeting1.calendar,
 )
 
 invitation3 = Invitation.objects.create(
-    inviteer=meeting2.calendar.owner,
+    inviter=meeting2.calendar.owner,
     invitee=contact4,
     meeting=meeting2,
     calendar=meeting2.calendar,
 )
 
 invitation4 = Invitation.objects.create(
-    inviteer=meeting4.calendar.owner,
+    inviter=meeting4.calendar.owner,
     invitee=contact6,
     meeting=meeting4,
     calendar=meeting4.calendar,
 )
 
 invitation5 = Invitation.objects.create(
-    inviteer=meeting5.calendar.owner,
+    inviter=meeting5.calendar.owner,
     invitee=contact7,
     meeting=meeting5,
     calendar=meeting5.calendar,
 )
 
 invitation6 = Invitation.objects.create(
-    inviteer=meeting5.calendar.owner,
+    inviter=meeting5.calendar.owner,
     invitee=contact8,
     meeting=meeting5,
     calendar=meeting5.calendar,
 )
 invitation7 = Invitation.objects.create(
-    inviteer=meeting6.calendar.owner,
+    inviter=meeting6.calendar.owner,
     invitee=contact12,
     meeting=meeting6,
     calendar=meeting6.calendar,
 )
 invitation8 = Invitation.objects.create(
-    inviteer=meeting6.calendar.owner,
+    inviter=meeting6.calendar.owner,
     invitee=contact13,
     meeting=meeting6,
     calendar=meeting6.calendar,
 )
 invitation9 = Invitation.objects.create(
-    inviteer=meeting6.calendar.owner,
+    inviter=meeting6.calendar.owner,
     invitee=contact14,
     meeting=meeting6,
     calendar=meeting6.calendar,
@@ -315,7 +331,7 @@ invitation_availablity1 = Availability.objects.create(
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation1,
+    invitee=invitation1,
     calendar=invitation1.calendar,
 )
 invitation_availablity2 = Availability.objects.create(
@@ -323,15 +339,15 @@ invitation_availablity2 = Availability.objects.create(
     date=date(2024, 1, 1),
     start_time=time(11, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation2,
+    invitee=invitation2,
     calendar=invitation2.calendar,
 )
 invitation_availability3 = Availability.objects.create(
     preference="medium",
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
-    end_time=time(2024, 1, 1, 12, 0, 0, 0),
-    invitation=invitation3,
+    end_time=time(12, 0, 0, 0),
+    invitee=invitation3,
     calendar=invitation3.calendar,
 )
 invitation_availablity4 = Availability.objects.create(
@@ -339,7 +355,7 @@ invitation_availablity4 = Availability.objects.create(
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation4,
+    invitee=invitation4,
     calendar=invitation4.calendar,
 )
 invitation_availablity5 = Availability.objects.create(
@@ -347,7 +363,7 @@ invitation_availablity5 = Availability.objects.create(
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation6,
+    invitee=invitation6,
     calendar=invitation6.calendar,
 )
 invitation_availablity6 = Availability.objects.create(
@@ -355,15 +371,15 @@ invitation_availablity6 = Availability.objects.create(
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation6,
+    invitee=invitation6,
     calendar=invitation6.calendar,
 )
 invitation_availablity7 = Availability.objects.create(
     preference="low",
     date=date(2024, 1, 1),
-    start_time=time(2024, 1, 1, 9, 0, 0, 0),
-    end_time=time(2024, 1, 1, 17, 0, 0, 0),
-    invitation=invitation6,
+    start_time=time(9, 0, 0, 0),
+    end_time=time(17, 0, 0, 0),
+    invitee=invitation6,
     calendar=invitation6.calendar,
 )
 invitation_availablity8 = Availability.objects.create(
@@ -371,7 +387,7 @@ invitation_availablity8 = Availability.objects.create(
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation7,
+    invitee=invitation7,
     calendar=invitation7.calendar,
 )
 invitation_availablity9 = Availability.objects.create(
@@ -379,7 +395,7 @@ invitation_availablity9 = Availability.objects.create(
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation8,
+    invitee=invitation8,
     calendar=invitation8.calendar,
 )
 invitation_availablity10 = Availability.objects.create(
@@ -387,16 +403,16 @@ invitation_availablity10 = Availability.objects.create(
     date=date(2024, 1, 2),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    invitation=invitation8,
+    invitee=invitation8,
     calendar=invitation8.calendar,
 )
 
-owner_availablity1_1 = Avability.objects.create(
+owner_availablity1_1 = Availability.objects.create(
     preference="high",
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    meeting=meeting1,
+    calendar=calendar1,
 )
 owner_availablity1_2 = Availability.objects.create(
     preference="high",
@@ -404,33 +420,45 @@ owner_availablity1_2 = Availability.objects.create(
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
     owner=meeting1.calendar.owner,
-    meeting=meeting1,
+    calendar=calendar2,
 )
 owner_availablity2_1 = Availability.objects.create(
     preference="high",
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    meeting=meeting2.calendar.owner,
+    owner=meeting2.calendar.owner,
+    calendar=calendar2,
 )
 owner_availablity3_1 = Availability.objects.create(
     preference="medium",
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    meeting=meeting3.calendar.owner,
+    owner=meeting3.calendar.owner,
+    calendar=calendar3,
 )
 owner_availablity4_1 = Availability.objects.create(
     preference="medium",
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    meeting=meeting4.calendar.owner,
+    owner=meeting4.calendar.owner,
+    calendar=calendar4,
 )
 owner_availablity5_1 = Availability.objects.create(
     preference="low",
     date=date(2024, 1, 1),
     start_time=time(9, 0, 0, 0),
     end_time=time(17, 0, 0, 0),
-    meeting=meeting5.calendar.owner,
+    owner=meeting5.calendar.owner,
+    calendar=calendar5,
+)
+owner_availablity6_1 = Availability.objects.create(
+    preference="high",
+    date=date(2024, 1, 1),
+    start_time=time(9, 0, 0, 0),
+    end_time=time(17, 0, 0, 0),
+    owner=meeting6.calendar.owner,
+    calendar=calendar6,
 )

@@ -28,6 +28,10 @@ function Clean {
     # Remove __pycache__ directories
     Remove-ItemRecursively "**\__pycache__"
     Remove-ItemRecursively "*\__pycache__"
+
+    Remove-ItemRecursively ".DS_Store"
+
+    Remove-ItemRecursively "media\*"
 }
 
 # Call the clean target
