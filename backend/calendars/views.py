@@ -521,7 +521,7 @@ class InviteeRemindView(APIView):
                 subject = f"Reminder: Meeting Invite from {name}"
                 message = (
                     f"You have been invited to a meeting by {name}."
-                    f"Please respond to the invitation at"
+                    f"Please respond to the invitation at "
                     f"http://{settings.DOMAIN_NAME}/calendar/{id}/invite/{invitation.id}/"
                 )
                 email_from = settings.EMAIL_HOST_USER
