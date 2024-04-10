@@ -29,6 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["1.0.0.127.in-addr.arpa", "127.0.0.1", "localhost", "*"]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 
@@ -54,6 +56,11 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser', 
+    ],
 }
 
 EMAIL_HOST = "smtp.gmail.com"
@@ -63,6 +70,7 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = "1to1.app.ops@gmail.com"
 EMAIL_HOST_PASSWORD = "rftz joia srey gkzt"
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
@@ -110,6 +118,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "main.urls"
+
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5173',  
+]
 
 TEMPLATES = [
     {

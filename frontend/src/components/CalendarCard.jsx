@@ -10,6 +10,7 @@ const CalendarCard = ({ calendar, onDelete }) => {
     return (
         <div className="relative bg-white rounded-lg overflow-hidden shadow-md p-5 mr-6 mb-6 w-72">
             <div className="text-lg font-semibold text-gray-800 mb-1">{calendar.name}</div>
+            <div className="text-gray-600 mb-7 overflow-hidden overflow-ellipsis whitespace-nowrap"></div>
             {calendar.description && (
                 <p className="text-gray-600 mb-7 overflow-hidden overflow-ellipsis whitespace-nowrap">
                     {calendar.description}
