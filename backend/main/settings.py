@@ -57,17 +57,10 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-<<<<<<< HEAD
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
-=======
-    "DEFAULT_PARSER_CLASSES": [
-        "rest_framework.parsers.JSONParser",
-        "rest_framework.parsers.FormParser",
-        "rest_framework.parsers.MultiPartParser",
->>>>>>> main
     ],
 }
 
@@ -129,11 +122,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = "main.urls"
 
 CORS_ALLOWED_ORIGINS = [
-<<<<<<< HEAD
+    << << << < HEAD
     'http://127.0.0.1:5173',
-=======
+    == == == =
     "http://127.0.0.1:5173",
->>>>>>> main
+    >>>>>> > main
 ]
 
 TEMPLATES = [
