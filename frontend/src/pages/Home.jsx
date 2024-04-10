@@ -78,6 +78,9 @@ function Home() {
     const handleAddCalendar = () => {
         setShowPopup(true);
     };
+    const closeModal = () => {
+        setShowPopup(false);
+    };
 
 
 
@@ -121,8 +124,9 @@ function Home() {
                                 value={description}
                                 className="border rounded p-2 mb-4 w-full"
                             />
-                            <div className="flex justify-center">
+                            <div className="flex justify-between">
                                 <button type="submit" className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-2 px-4 rounded">Create</button>
+                                <button onClick={closeModal} className="bg-primary-blue hover:bg-turquoise text-white font-semibold py-2 px-4 rounded">Close</button>
                             </div>
                         </form>
                     </div>

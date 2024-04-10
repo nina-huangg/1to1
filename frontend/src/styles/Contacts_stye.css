@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Aleo', 'Arial', sans-serif;
 }
 
 .top-bar {
@@ -151,7 +151,7 @@ nav a {
 
 
 
-form {
+.edit_form {
     display: flex;
     flex-direction: column;
     max-width: 300px;
@@ -162,14 +162,14 @@ label {
     margin-bottom: 5px;
 }
 
-input, button {
+/* input, button {
     margin-bottom: 15px;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
-}
+} */
 
-button {
+.delete_button {
     background-color: #006400; 
     color: #fff;
     cursor: pointer;

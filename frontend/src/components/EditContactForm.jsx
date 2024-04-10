@@ -91,7 +91,7 @@ function EditContactPage() {
       <Link to="/contacts/" className="back-button">Go Back</Link>
       <div className="contact-container">
         <div className="large-pink-rectangle">
-          <form onSubmit={handleSubmit}>
+          <form className="edit_form"onSubmit={handleSubmit}>
             
             <label htmlFor="image">Profile Image:</label>
 
@@ -116,7 +116,7 @@ function EditContactPage() {
             
             {error && <p>{error}</p>} {/* Display error message if exists */}
             <button type="submit" className="submit-button">Save</button>
-            <button type="button" onClick={handleDelete}>Delete Contact</button>
+            <button type="button" className='delete_button' onClick={handleDelete}>Delete Contact</button>
           </form>
         </div>
       </div>
