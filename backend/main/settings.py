@@ -122,11 +122,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "main.urls"
 
 CORS_ALLOWED_ORIGINS = [
-    << << << < HEAD
     'http://127.0.0.1:5173',
-    == == == =
-    "http://127.0.0.1:5173",
-    >>>>>> > main
 ]
 
 TEMPLATES = [
