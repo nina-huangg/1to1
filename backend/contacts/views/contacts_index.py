@@ -10,3 +10,5 @@ class ContactsIndexView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Contact.objects.filter(user=user)
+
+    
