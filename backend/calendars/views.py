@@ -269,10 +269,6 @@ class AddContactView(APIView):
                     recipient_list = []
                     recipient_list.append(invitation.invitee.email)
                     send_mail(subject, message, email_from, recipient_list)
-                    users_reminded.append(
-                        invitation.invitee.first_name + " " + invitation.invitee.last_name
-                    )
-
                 else:
                     return JsonResponse(
                         {"error": "Contact already added to calendar"}, status=400
