@@ -25,7 +25,7 @@ from django.utils import timezone
 from contacts.models import Contact
 from datetime import datetime, time
 
-from django.confg import settings
+from django.config import settings
 from django.core.mail import send_mail
 
 DOMAIN_NAME = "1to1.com"
