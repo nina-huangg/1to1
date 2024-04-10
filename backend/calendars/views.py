@@ -291,16 +291,12 @@ class AddContactView(APIView):
                     message = (
                         f"You have been invited to a meeting by {name}."
                         f"Please respond to the invitation at"
-                        f"http://{settings.DOMAIN_NAME}/calendar/{id}/invite/{invitation.id}/"
+                        f"http://{settings.DOMAIN_NAME}/calendars/{id}/invite/{invitation.id}/"
                     )
                     email_from = settings.EMAIL_HOST_USER
                     recipient_list = []
                     recipient_list.append(invitation.invitee.email)
                     send_mail(subject, message, email_from, recipient_list)
-
-                    invitation = Invitation.objects.create(
-                        invitee=contact, inviter=user_value, calendar=calendar
-                    )
                 else:
                     return JsonResponse(
                         {"error": "Contact already added to calendar"}, status=400
