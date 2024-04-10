@@ -13,6 +13,7 @@ google-cloud-secret-manager = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 environ = "*"
+pillow = "*"
 
 [dev-packages]
 
