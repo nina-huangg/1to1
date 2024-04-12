@@ -98,8 +98,6 @@ class CalendarDetailsView(APIView):
     View for retrieving details of a calendar.
     """
 
-    permission_classes = [IsAuthenticated]
-
     def get(self, request, id):
         """
         Handles GET requests to retrieve details of a specific calendar.
