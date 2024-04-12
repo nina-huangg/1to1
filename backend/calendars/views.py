@@ -347,6 +347,7 @@ class InviteeResponseView(APIView):
     """
 
     permission_classes = (AllowAny,)
+    authentication_classes = ()
 
     def get(self, request, id, inviteId):
         """
@@ -479,7 +480,6 @@ class InvitesStatusView(APIView):
 
 
 class InvitationView(APIView):
-    authentication_classes = ()
 
     def get(self, request, id):
         calendar = Calendar.objects.get(id=id)
