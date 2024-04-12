@@ -479,6 +479,7 @@ class InvitesStatusView(APIView):
 
 
 class InvitationView(APIView):
+    authentication_classes = ()
 
     def get(self, request, id):
         calendar = Calendar.objects.get(id=id)
