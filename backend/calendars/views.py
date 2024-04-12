@@ -24,7 +24,6 @@ from datetime import timedelta
 from django.utils import timezone
 from contacts.models import Contact
 from datetime import datetime, time
-
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -289,11 +288,12 @@ class AddContactView(APIView):
 
                     subject = f"Meeting Invite from {name}"
                     message = (
-                        f"You have been invited to a meeting by {name}."
-                        f"Please respond to the invitation at"
+                        f"You have been invited to a meeting by {name}. "
+                        f"Please respond to the invitation at "
                         f"http://{settings.DOMAIN_NAME}/calendars/{id}/invite/{invitation.id}/"
                     )
-                    email_from = settings.EMAIL_HOST_USER
+                    email_from = settings.DEFAULT_FROM_EMAIL
+                    print(email_from)
                     recipient_list = []
                     recipient_list.append(invitation.invitee.email)
                     send_mail(subject, message, email_from, recipient_list)
@@ -524,11 +524,11 @@ class InviteeRemindView(APIView):
             if not invitation.confirmed:
                 subject = f"Reminder: Meeting Invite from {name}"
                 message = (
-                    f"You have been invited to a meeting by {name}."
+                    f"You have been invited to a meeting by {name}. "
                     f"Please respond to the invitation at "
                     f"http://{settings.DOMAIN_NAME}/calendar/{id}/invite/{invitation.id}/"
                 )
-                email_from = settings.EMAIL_HOST_USER
+                email_from = settings.DEFAULT_FROM_EMAIL
                 recipient_list = []
                 recipient_list.append(invitation.invitee.email)
                 send_mail(subject, message, email_from, recipient_list)
