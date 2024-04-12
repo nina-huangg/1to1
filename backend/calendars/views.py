@@ -14,6 +14,8 @@ from .serializers import (
     InvitationAvailabilitySerializer,
     BookMeetingSerializer,
 )
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from django.db import transaction
 from intervals import DateTimeInterval
 import datetime
@@ -234,6 +236,7 @@ class AddContactView(APIView):
     """
     View for adding contacts to a calendar.
     """
+    authentication_classes = [JWTAuthentication]
 
     permission_classes = [IsAuthenticated]
 
@@ -319,6 +322,7 @@ class ContactDetailView(APIView):
     View for retrieving contact list of a calendar.
     """
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
 
     def get(self, request, id):
         """
