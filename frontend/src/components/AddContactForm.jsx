@@ -52,7 +52,7 @@ function NewContactPage() {
 
 
       <section className="main-section">
-        <h1 className="my-contacts-title">Edit Contact</h1>
+        <h1 className="my-contacts-title">Add Contact</h1>
 
         <Link to="/contacts/" className="back-button">Go Back</Link>
 
