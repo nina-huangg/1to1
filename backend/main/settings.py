@@ -84,7 +84,10 @@ EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-DOMAIN_NAME = "slotspotter.tech"
+# DOMAIN_NAME = "slotspotter.tech"
+
+DOMAIN_NAME = "34.130.88.94"
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
