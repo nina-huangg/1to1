@@ -287,20 +287,17 @@ class AddContactView(APIView):
                         invitee=contact, inviter=user_value, calendar=calendar
                     )
 
-                    # subject = f"Meeting Invite from {name}"
-                    # message = (
-                    #     f"You have been invited to a meeting by {name}."
-                    #     f"Please respond to the invitation at"
-                    #     f"http://{settings.DOMAIN_NAME}/calendar/{id}/invite/{invitation.id}/"
-                    # )
-                    # email_from = settings.EMAIL_HOST_USER
-                    # recipient_list = []
-                    # recipient_list.append(invitation.invitee.email)
-                    # send_mail(subject, message, email_from, recipient_list)
+                    subject = f"Meeting Invite from {name}"
+                    message = (
+                        f"You have been invited to a meeting by {name}."
+                        f"Please respond to the invitation at"
+                        f"http://{settings.DOMAIN_NAME}/calendars/{id}/invite/{invitation.id}/"
+                    )
+                    email_from = settings.EMAIL_HOST_USER
+                    recipient_list = []
+                    recipient_list.append(invitation.invitee.email)
+                    send_mail(subject, message, email_from, recipient_list)
 
-                    # invitation = Invitation.objects.create(
-                    #     invitee=contact, inviter=user_value, calendar=calendar
-                    # )
                 else:
                     return JsonResponse(
                         {"error": "Contact already added to calendar"}, status=400
@@ -312,7 +309,8 @@ class AddContactView(APIView):
         calendar.contacts.add(*deserialized_contacts)
 
         # Serialize the added contacts
-        added_contacts_serializer = ContactSerializer(deserialized_contacts, many=True)
+        added_contacts_serializer = ContactSerializer(
+            deserialized_contacts, many=True)
 
         return JsonResponse(added_contacts_serializer.data, status=200, safe=False)
 
@@ -445,8 +443,15 @@ class InvitesStatusView(APIView):
             return JsonResponse(
                 {"error": "calendar with id does not exist"}, status=400
             )
+        calendar_invitations_multiset = Invitation.objects.filter(
+            calendar=calendar)
+        calendar_invitations = []
+        seen = []
+        for invite in calendar_invitations_multiset:
+            if invite.invitee.id not in seen:
+                seen.append(invite.invitee.id)
+                calendar_invitations.append(invite)
 
-        calendar_invitations = Invitation.objects.filter(calendar=calendar)
         responsed = []
         not_responsed = []
         for invitation in calendar_invitations:
@@ -459,6 +464,7 @@ class InvitesStatusView(APIView):
 
         responsed_serializer = ContactSerializer(responsed, many=True)
         notresponsed_serializer = ContactSerializer(not_responsed, many=True)
+
         return JsonResponse(
             {
                 "responded": responsed_serializer.data,
@@ -669,10 +675,12 @@ class SuggestMeetingView(APIView):
         if id is None:
             return JsonResponse({"error": "calendar_id is required"}, status=400)
 
-        owner_availabilities, invitee_availabilities = self.split_availability_set(id)
+        owner_availabilities, invitee_availabilities = self.split_availability_set(
+            id)
         bounded_times_data = request.data.get("bounded_times")
 
-        bounded_times_serializer = BoundedTimeSerializer(data=bounded_times_data)
+        bounded_times_serializer = BoundedTimeSerializer(
+            data=bounded_times_data)
         if not bounded_times_serializer.is_valid():
             return JsonResponse(bounded_times_serializer.errors, status=400)
 
@@ -719,7 +727,8 @@ class SuggestMeetingView(APIView):
             owner__isnull=False,
             invitee__isnull=True,
         )
-        invitee_availabilities = Invitation.get_invites_by_calendar_id(calendar_id)
+        invitee_availabilities = Invitation.get_invites_by_calendar_id(
+            calendar_id)
 
         suggested = {}
 
@@ -748,7 +757,8 @@ class SuggestMeetingView(APIView):
                     )
                     default_date = default_time.date()
                     default_start_time = default_time.time()
-                    default_end_time = (default_time + timedelta(minutes=30)).time()
+                    default_end_time = (
+                        default_time + timedelta(minutes=30)).time()
 
                     date_schedule.append(
                         {
@@ -804,7 +814,8 @@ class SuggestMeetingView(APIView):
                     start = i_aval.start_time.strftime("%H:%M")
                     date_time_obj = datetime.strptime(start, "%H:%M")
                     end_time = (date_time_obj + timedelta(minutes=30)).time()
-                    available_slots.add((o_aval.date, i_aval.start_time, end_time))
+                    available_slots.add(
+                        (o_aval.date, i_aval.start_time, end_time))
         if not available_slots:
             return []
         avail_spots = sorted(list(available_slots), key=lambda x: x[0])
@@ -955,7 +966,8 @@ class SuggestMeetingView(APIView):
                     )
                     if intersection_duration >= meeting_duration:
                         if invitee_availability.id not in invitee_overlapping_intervals:
-                            invitee_overlapping_intervals[invitee_availability.id] = []
+                            invitee_overlapping_intervals[invitee_availability.id] = [
+                            ]
                         invitee_overlapping_intervals[invitee_availability.id].append(
                             (intersection_interval, invitee_availability.invitee)
                         )
