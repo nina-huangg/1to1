@@ -522,16 +522,16 @@ class InviteeRemindView(APIView):
         users_reminded = []
         for invitation in calendar_invitations:
             if not invitation.confirmed:
-                # subject = f"Reminder: Meeting Invite from {name}"
-                # message = (
-                #     f"You have been invited to a meeting by {name}."
-                #     f"Please respond to the invitation at "
-                #     f"http://{settings.DOMAIN_NAME}/calendar/{id}/invite/{invitation.id}/"
-                # )
-                # email_from = settings.EMAIL_HOST_USER
-                # recipient_list = []
-                # recipient_list.append(invitation.invitee.email)
-                # send_mail(subject, message, email_from, recipient_list)
+                subject = f"Reminder: Meeting Invite from {name}"
+                message = (
+                    f"You have been invited to a meeting by {name}."
+                    f"Please respond to the invitation at "
+                    f"http://{settings.DOMAIN_NAME}/calendar/{id}/invite/{invitation.id}/"
+                )
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = []
+                recipient_list.append(invitation.invitee.email)
+                send_mail(subject, message, email_from, recipient_list)
                 users_reminded.append(
                     invitation.invitee.first_name + " " + invitation.invitee.last_name
                 )
