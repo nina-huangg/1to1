@@ -86,7 +86,7 @@ EMAIL_USE_TLS = True
 
 # DOMAIN_NAME = "slotspotter.tech"
 
-DOMAIN_NAME = "34.130.88.94"
+# DOMAIN_NAME = "34.130.88.94"
 
 
 SIMPLE_JWT = {
