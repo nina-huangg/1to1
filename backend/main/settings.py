@@ -27,7 +27,7 @@ SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # Emails will be sent even in DEBUG mode
 SENDGRID_SANDBOX_MODE_IN_DEBUG = False
 
@@ -170,8 +170,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'db1to1',
-        'USER': 'admin1da906z',
-        'PASSWORD':  'yJn89VDHyf8YArlbsq2y',
+        'USER': 'some',
+        'PASSWORD':  'some',
         'HOST': 'localhost',
         'PORT': ''
     }
