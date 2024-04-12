@@ -318,6 +318,7 @@ class ContactDetailView(APIView):
     """
     View for retrieving contact list of a calendar.
     """
+    permission_classes = [IsAuthenticated]
 
     def get(self, request, id):
         """
