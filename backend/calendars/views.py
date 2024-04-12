@@ -293,7 +293,6 @@ class AddContactView(APIView):
                         f"http://{settings.DOMAIN_NAME}/calendars/{id}/invite/{invitation.id}/"
                     )
                     email_from = settings.DEFAULT_FROM_EMAIL
-                    print(email_from)
                     recipient_list = []
                     recipient_list.append(invitation.invitee.email)
                     send_mail(subject, message, email_from, recipient_list)
